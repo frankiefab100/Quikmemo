@@ -1,0 +1,1 @@
+export const TAGS = ["Cooking", "Fitness", "Goals", "Travel", "Recipes", "Hobby"];

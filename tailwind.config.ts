@@ -6,11 +6,15 @@ export default {
     "./components/**/*.{js,ts,jsx,tsx,mdx}",
     "./app/**/*.{js,ts,jsx,tsx,mdx}",
   ],
+  darkMode: "selector",
   theme: {
     extend: {
-      colors: {
-        background: "var(--background)",
-        foreground: "var(--foreground)",
+      // fontFamily: {
+      //   Bitform: ["Bitform"],
+      //   inter: ["Inter", "sans-serif"],
+      // },
+      boxShadow: {
+        custom: "-14px 10px 44px -21px rgba(0, 0, 0, 0.24)",
       },
     },
   },
