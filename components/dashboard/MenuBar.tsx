@@ -2,6 +2,7 @@ import Image from "next/image";
 import SearchInput from "./SearchInput";
 import { getSession } from "../../lib/getSession";
 import UserDropdown from "./UserDropdown";
+import Link from "next/link";
 
 const MenuBar = async () => {
   const session = await getSession();
@@ -30,7 +31,7 @@ const MenuBar = async () => {
               ></path>
             </svg>
           </button>
-          <a href="/" className="flex">
+          <Link href="/" className="flex">
             <Image
               src="/quikmemo-mark.svg"
               className="h-8 me-1"
@@ -41,7 +42,7 @@ const MenuBar = async () => {
             <span className="self-center text-xl font-normal sm:text-2xl whitespace-nowrap dark:text-white">
               Quikmemo
             </span>
-          </a>
+          </Link>
         </div>
 
         <div className="flex items-center">
