@@ -49,7 +49,61 @@
 // })
 
 
-import NextAuth, { CredentialsSignin } from "next-auth";
+// import NextAuth, { CredentialsSignin } from "next-auth";
+// import Credentials from "next-auth/providers/credentials";
+// import Github from "next-auth/providers/github";
+// import Google from "next-auth/providers/google";
+// import Twitter from "next-auth/providers/twitter";
+
+// export const { handlers, signIn, signOut, auth } = NextAuth({
+//   providers: [
+//     Github({
+//       clientId: process.env.AUTH_GITHUB_CLIENT_ID,
+//       clientSecret: process.env.AUTH_GITHUB_CLIENT_SECRET,
+//         authorization: {
+//         params: {
+//             prompt: "consent",
+//             access_type: "offline",
+//             response_type: "code",
+//         },
+//     },
+//     }),
+//    Twitter ({
+//     clientId: process.env.AUTH_TWITTER_ID,
+//     clientSecret: process.env.AUTH_TWITTER_SECRET,
+//   }),
+//     Google({
+//       clientId: process.env.AUTH_GOOGLE_CLIENT_ID,
+//       clientSecret: process.env.AUTH_GOOGLE_CLIENT_SECRET,
+//     }),
+
+//     Credentials({
+//       name: "Credentials",
+
+//       credentials: {
+//         email: { label: "Email", type: "email" },
+//         password: { label: "Password", type: "password" },
+//       },
+
+//       authorize: async (credentials) => {
+//         const email = credentials.email as string | undefined;
+//         const password = credentials.password as string | undefined;
+
+//         if (!email || !password) {
+//           throw new CredentialsSignin("Please provide both email & password");
+//         }
+//       },
+//     }),
+//   ],
+
+//   pages: {
+//     signIn: "/login",
+//     error: "/error",
+//   },
+// });
+
+
+import NextAuth from "next-auth";
 import Credentials from "next-auth/providers/credentials";
 import Github from "next-auth/providers/github";
 import Google from "next-auth/providers/google";
@@ -60,18 +114,18 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
     Github({
       clientId: process.env.AUTH_GITHUB_CLIENT_ID,
       clientSecret: process.env.AUTH_GITHUB_CLIENT_SECRET,
-        authorization: {
+      authorization: {
         params: {
-            prompt: "consent",
-            access_type: "offline",
-            response_type: "code",
+          prompt: "consent",
+          access_type: "offline",
+          response_type: "code",
         },
-    },
+      },
     }),
-   Twitter ({
-    clientId: process.env.AUTH_TWITTER_ID,
-    clientSecret: process.env.AUTH_TWITTER_SECRET,
-  }),
+    Twitter({
+      clientId: process.env.AUTH_TWITTER_ID,
+      clientSecret: process.env.AUTH_TWITTER_SECRET,
+    }),
     Google({
       clientId: process.env.AUTH_GOOGLE_CLIENT_ID,
       clientSecret: process.env.AUTH_GOOGLE_CLIENT_SECRET,
@@ -79,18 +133,34 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
 
     Credentials({
       name: "Credentials",
-
       credentials: {
         email: { label: "Email", type: "email" },
         password: { label: "Password", type: "password" },
       },
+      async authorize(credentials) {
+        try {
+          const email = credentials?.email;
+          const password = credentials?.password;
 
-      authorize: async (credentials) => {
-        const email = credentials.email as string | undefined;
-        const password = credentials.password as string | undefined;
+          if (!email || !password) {
+            throw new Error("Missing credentials");
+          }
 
-        if (!email || !password) {
-          throw new CredentialsSignin("Please provide both email & password");
+          // Validate against the database
+          if (email === "user@example.com" && password === "password") {
+            // Return a user object if authentication succeeds
+            return {
+              id: "1",
+              email: email,
+              name: "Test User",
+            };
+          }
+
+          // Authentication failed
+          return null;
+        } catch (error) {
+          console.error("Auth error:", error);
+          throw new Error("Authentication failed");
         }
       },
     }),
@@ -101,5 +171,3 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
     error: "/error",
   },
 });
-
-

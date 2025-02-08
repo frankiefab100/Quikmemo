@@ -1,4 +1,11 @@
-const Button = ({ variant = "primary", children, ...props }) => {
+import { ButtonHTMLAttributes, ReactNode } from "react";
+
+interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
+  variant?: "primary" | "outline";
+  children: ReactNode;
+}
+
+const Button = ({ variant = "primary", children, ...props }: ButtonProps) => {
   const baseStyles =
     "flex items-center justify-center py-2 px-4 rounded-lg focus:outline-none transition duration-150";
 

@@ -3,7 +3,7 @@
 // import { User } from "@/models/User";
 import { redirect } from "next/navigation";
 import { CredentialsSignin } from "next-auth";
-import { signIn, signOut  } from "@/auth";
+import { signIn, signOut } from "@/auth";
 
 export const signInUser = async (formData: FormData) => {
   const email = formData.get("email") as string;
@@ -34,21 +34,21 @@ export const registerUser = async (formData: FormData) => {
   }
 
   // existing user
-//   const existingUser = await User.findOne({ email });
-//   if (existingUser) throw new Error("User already exists");
+  //   const existingUser = await User.findOne({ email });
+  //   if (existingUser) throw new Error("User already exists");
 
-//   await User.create({ firstName, lastName, email, password});
-//   console.log(`User created successfully 🥂`);
-//   redirect("/login");
-// };
+  //   await User.create({ firstName, lastName, email, password});
+  //   console.log(`User created successfully 🥂`);
+  //   redirect("/login");
+  // };
 
-// const fetchAllUsers = async () => {
-//   const users = await User.find({});
-//   return users;
+  // const fetchAllUsers = async () => {
+  //   const users = await User.find({});
+  //   return users;
 };
 
 
 export const signOutUser = async () => {
-  "use server"; 
-  await signOut(); 
+  "use server";
+  await signOut();
 };
