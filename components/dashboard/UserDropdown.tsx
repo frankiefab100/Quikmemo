@@ -4,12 +4,18 @@ import { useState, useEffect } from "react";
 import Image from "next/image";
 import { signOutUser } from "@/actions/user";
 import { UserDropdownProps } from "@/types/types";
+import { CircleUser } from "lucide-react";
 
-export default function UserDropdown({
+export const UserDropdown = ({
   userImage,
-  userName,
-  userEmail,
-}: UserDropdownProps) {
+  userName = "User",
+  userEmail = "",
+}: UserDropdownProps) => {
+  // export default function UserDropdown({
+  //   userImage,
+  //   userName,
+  //   userEmail,
+  // }: UserDropdownProps) {
   const [isOpen, setIsOpen] = useState(false);
 
   const toggleDropdown = () => {
@@ -59,25 +65,33 @@ export default function UserDropdown({
         onClick={toggleDropdown}
       >
         <span className="sr-only">user profile</span>
-        <Image
-          className="w-8 h-8 rounded-full"
-          src={userImage}
-          alt={userName}
-          width={50}
-          height={50}
-        />
+        {userImage ? (
+          <Image
+            className="w-8 h-8 rounded-full"
+            src={userImage}
+            alt={userName}
+            width={50}
+            height={50}
+          />
+        ) : (
+          <CircleUser className="w-8 h-8 text-gray-400" />
+        )}
       </button>
 
       {isOpen && (
         <div className="absolute right-0 mt-2 top-12 z-50 text-base list-none bg-white divide-y divide-gray-100 rounded shadow dark:bg-gray-700 dark:divide-gray-600">
           <div className="px-4 py-3" role="none">
-            <Image
-              className="w-8 h-8 rounded-full"
-              src={userImage}
-              alt={userName}
-              width={50}
-              height={50}
-            />
+            {userImage ? (
+              <Image
+                className="w-8 h-8 rounded-full"
+                src={userImage}
+                alt={userName}
+                width={50}
+                height={50}
+              />
+            ) : (
+              <CircleUser className="w-8 h-8 text-gray-400" />
+            )}
             <p className="text-sm text-gray-900 dark:text-white" role="none">
               {userName}
             </p>
@@ -141,4 +155,4 @@ export default function UserDropdown({
       )}
     </div>
   );
-}
+};

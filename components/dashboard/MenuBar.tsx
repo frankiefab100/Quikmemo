@@ -1,8 +1,9 @@
 import Image from "next/image";
 import SearchInput from "./SearchInput";
 import { getSession } from "../../lib/getSession";
-import UserDropdown from "./UserDropdown";
+import { UserDropdown } from "./UserDropdown";
 import Link from "next/link";
+// import { CircleUser } from "lucide-react";
 
 const MenuBar = async () => {
   const session = await getSession();
@@ -45,7 +46,7 @@ const MenuBar = async () => {
           </Link>
         </div>
 
-        <div className="flex items-center">
+        {/* <div className="flex items-center">
           <SearchInput />
 
           {session?.user && (
@@ -53,6 +54,20 @@ const MenuBar = async () => {
               userImage={session.user.image}
               userName={session.user.name}
               userEmail={session.user.email}
+            />
+          )}
+        </div> */}
+        <div className="flex items-center">
+          <SearchInput />
+
+          {session?.user && (
+            <UserDropdown
+              // userImage={
+              //   session.user.image ?? <CircleUser className="w-8 h-8" />
+              // }
+              userImage={session.user.image ?? null}
+              userName={session.user.name ?? "User"}
+              userEmail={session.user.email ?? ""}
             />
           )}
         </div>
