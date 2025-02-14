@@ -1,9 +1,9 @@
 import React from "react";
 import Image from "next/image";
 import Demo from "./Demo";
-import { USECASES_LIST } from "@/constants/usecases";
+import { USECASES } from "@/constants/usecases";
 
-const UseCases = () => {
+const UseCases: React.FC = () => {
   return (
     <div className="py-16 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <div className="text-center space-y-2 mb-12">
@@ -22,17 +22,17 @@ const UseCases = () => {
 
       <div className="flex flex-col items-center">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {USECASES_LIST.map((useCase, index) => (
+          {USECASES.map((item, index) => (
             <div
               key={index}
               className="bg-[#f7f9ff] shadow-[0_2px_2px_0_rgba(7, 10, 45, 0.37)] backdrop-blur-[2.5px] border border-gray-200 rounded-md p-4"
             >
               <div className="w-full">
-                <h2 className="text-xl font-bold mb-2">{useCase.title}</h2>
-                <p className="text-gray-700">{useCase.description}</p>
+                <h2 className="text-xl font-bold mb-2">{item.title}</h2>
+                <p className="text-gray-700">{item.description}</p>
               </div>
               <Image
-                src={useCase.photo}
+                src={item.photo}
                 alt="Plugins"
                 width={80}
                 height={80}

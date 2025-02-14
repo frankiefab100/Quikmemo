@@ -1,7 +1,7 @@
-import { Features } from "@/types/types";
+import { IFeatures } from "@/types/types";
 import { NotebookPen, AudioLines, Heading6, BrainCircuit } from "lucide-react";
 
-export const FEATURES_LIST: Features[] = [
+export const FEATURES: IFeatures[] = [
     {
         id: 1,
         title: "Intuitive Organization",

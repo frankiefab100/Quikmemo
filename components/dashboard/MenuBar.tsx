@@ -1,11 +1,11 @@
 import Image from "next/image";
 import SearchInput from "./SearchInput";
 import { getSession } from "../../lib/getSession";
-import { UserDropdown } from "./UserDropdown";
+import UserDropdown from "./UserDropdown";
 import Link from "next/link";
 // import { CircleUser } from "lucide-react";
 
-const MenuBar = async () => {
+const MenuBar: React.FC = async () => {
   const session = await getSession();
 
   return (

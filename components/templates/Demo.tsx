@@ -1,7 +1,6 @@
 import { Mic } from "lucide-react";
-import React from "react";
 
-const Demo = () => {
+const Demo: React.FC = () => {
   return (
     <div className="mt-12 bg-gray-50 rounded-xl shadow-sm overflow-hidden">
       <div className="p-6">

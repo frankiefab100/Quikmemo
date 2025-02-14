@@ -2,7 +2,7 @@ import Link from "next/link";
 import { Archive, ChevronRight, Home, Tag } from "lucide-react";
 import { TAGS } from "@/constants/tags";
 
-const Sidebar = () => {
+const Sidebar: React.FC = () => {
   return (
     <aside
       id="logo-sidebar"

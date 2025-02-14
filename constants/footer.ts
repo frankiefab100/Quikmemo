@@ -1,6 +1,6 @@
-import { Footer } from "@/types/types";
+import { IFooter } from "@/types/types";
 
-export const FOOTER_LINKS: Footer[] =
+export const FOOTER_LINKS: IFooter[] =
     [
         {
             title: "Company",

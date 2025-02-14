@@ -1,11 +1,11 @@
 import Image from "next/image";
 import { ChevronRight } from "lucide-react";
 import Link from "next/link";
-import { Avatars } from "./templates/Avatars";
+import Avatars from "./templates/Avatars";
 
 export const Hero = () => {
   return (
-    <div className="min-h-screen max-w-7xl mx-auto py-10 md:pt-20 text-center px-4 lg:px-8">
+    <section className="min-h-screen max-w-7xl mx-auto py-10 md:pt-20 text-center px-4 lg:px-8">
       <span className="rounded-[15px] inline-flex center border border-blue-500 text-gray-900 px-3 py-1 text-sm w-fit ">
         <Avatars />
         <p className="text-sm text-gray-400 font-medium translate-x-2">
@@ -46,6 +46,6 @@ export const Hero = () => {
         className="object-cover"
       />
       {/* </div> */}
-    </div>
+    </section>
   );
 };

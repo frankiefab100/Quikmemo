@@ -1,6 +1,6 @@
-import { Testimonials } from "@/types/types";
+import { ITestimonials } from "@/types/types";
 
-export const TESTIMONIALS: Testimonials[] = [
+export const TESTIMONIALS: ITestimonials[] = [
     {
         avatar: "https://mighty.tools/mockmind-api/content/human/102.jpg",
         name: "James",

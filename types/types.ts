@@ -1,60 +1,54 @@
-// import { ReactElement } from "react";
-
-export interface UserDropdownProps {
+export interface IUserDropdown {
     userImage?: string | null;
-    // userImage?: string | ReactElement;
     userName?: string;
     userEmail?: string;
 }
-
-
-export interface Features {
+export interface IFeatures {
     id: number;
     title: string;
     description: string;
     icon: any;
 }
 
-export interface UseCasesProps {
+export interface IUseCases {
     title: string;
     description: string;
     photo: string;
 }
 
-export interface Testimonials {
+export interface ITestimonials {
     avatar: string;
     name: string;
     title: string;
     quote: string
 }
 
-export interface FAQs {
+export interface IFAQs {
     id: number;
     question: string;
     answer: string
 }
 
-export interface Footer {
+export interface IFooter {
     title: string;
     links: string[]
 }
 
-
-export interface Note {
+export interface INote {
     id: number;
     title: string;
     tags: string[];
     timeline: string;
 }
 
-export interface NoteListProps {
+export interface INoteList {
     // notes: Note[];
     // selectedNoteId?: string;
     // onNoteSelect: (id: string) => void;
     onCreateNote: () => void;
 }
 
-export interface NoteEditorProps {
+export interface INoteEditor {
     // title: string;
     // content: string;
     // tags: string[];

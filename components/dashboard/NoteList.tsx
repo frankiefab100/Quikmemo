@@ -3,7 +3,7 @@ import Button from "../ui/Button";
 // import { NoteListProps } from "@/types/types";
 import { Plus } from "lucide-react";
 
-const NoteList = () =>
+const NoteList: React.FC = () =>
   //   {
   //   //   notes,
   //   //   selectedNoteId,

@@ -18,7 +18,8 @@ const avatarData = [
     imgUrl: "https://randomuser.me/api/portraits/women/79.jpg",
   },
 ];
-export const Avatars = () => (
+
+const Avatars: React.FC = () => (
   <div className="flex items-center justify-center -space-x-2">
     {avatarData.map((img) => {
       return (
@@ -36,7 +37,7 @@ export const Avatars = () => (
         </div>
       );
     })}
-
-    {/* <span className="text-sm pl-3">Loved by 50+ users</span> */}
   </div>
 );
+
+export default Avatars;

@@ -1,6 +1,6 @@
 import { Archive, Trash2 } from "lucide-react";
 
-const DeleteArchive = () => {
+const DeleteArchive: React.FC = () => {
   return (
     <div className="dark:bg-gray-800  bg-white pt-20 border-l p-6">
       <button

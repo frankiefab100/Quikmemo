@@ -1,6 +1,6 @@
 import { Search } from "lucide-react";
 
-const SearchInput = () => {
+const SearchInput: React.FC = () => {
   return (
     <form className="max-w-md mx-auto">
       <label

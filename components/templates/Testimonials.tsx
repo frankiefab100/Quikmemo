@@ -1,7 +1,7 @@
 import { TESTIMONIALS } from "@/constants/testimonials";
 import Image from "next/image";
 
-export default function Testimonials() {
+const Testimonials: React.FC = () => {
   return (
     <div className="py-14 max-w-screen-xl mx-auto sm:px-6 lg:px-8">
       <div className="sm:text-center md:mx-auto">
@@ -53,4 +53,6 @@ export default function Testimonials() {
       </div>
     </div>
   );
-}
+};
+
+export default Testimonials;

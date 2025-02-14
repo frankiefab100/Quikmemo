@@ -1,4 +1,4 @@
-import "./globals.css";
+import "../style/globals.css";
 import type { Metadata } from "next";
 import { Raleway } from "next/font/google";
 import { SessionProvider } from "next-auth/react";

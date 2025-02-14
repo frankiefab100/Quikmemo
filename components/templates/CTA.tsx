@@ -1,6 +1,4 @@
-import React from "react";
-
-const CTA = () => {
+const CTA: React.FC = () => {
   return (
     <div className="text-center">
       <h2 className="md:text-3xl text-2xl font-extrabold text-gray-900">

@@ -5,10 +5,11 @@ import Features from "@/components/templates/Features";
 import UseCases from "@/components/templates/UseCases";
 import Testimonials from "@/components/templates/Testimonials";
 import FAQ from "@/components/templates/FAQ";
+import React from "react";
 
 export default function Home() {
   return (
-    <>
+    <React.Fragment>
       {/* <div className="absolute inset-0 -z-10 h-full w-full bg-white [background:radial-gradient(125%_125%_at_50%_10%,#fff_40%,#63e_100%)]"> */}
       <header>
         <Header />
@@ -17,7 +18,6 @@ export default function Home() {
         <div className="absolute bottom-0 left-0 right-0 top-0 bg-[radial-gradient(circle_500px_at_50%_200px,#e4f5fe,transparent)]"></div>
       </div>
 
-      {/* <main> */}
       <main className="pt-60 md:pt-48 lg:pt-40">
         <Hero />
         <Features />
@@ -28,7 +28,6 @@ export default function Home() {
       <footer>
         <Footer />
       </footer>
-      {/* </div> */}
-    </>
+    </React.Fragment>
   );
 }

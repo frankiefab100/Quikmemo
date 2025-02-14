@@ -1,6 +1,6 @@
-import { FAQs } from "@/types/types";
+import { IFAQs } from "@/types/types";
 
-export const FAQS_LIST: FAQs[] = [
+export const FAQS: IFAQs[] = [
     {
         id: 1,
         question: "How is QuikMemo different from other note-taking apps?",

@@ -1,6 +1,6 @@
-import { UseCasesProps } from "@/types/types";
+// import { IUseCases } from "@/types/types";
 
-export const USECASES_LIST: UseCasesProps[] = [
+export const USECASES = [
     {
         title: "Brainstorming Sessions",
         description:

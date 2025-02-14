@@ -15,7 +15,7 @@ import {
 import Button from "../ui/Button";
 // import { NoteEditorProps } from "@/types/types";
 
-const NoteEditor = () =>
+const NoteEditor: React.FC = () =>
   //   {
   //   // title,
   //   // content,

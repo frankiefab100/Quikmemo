@@ -1,10 +1,10 @@
 "use client";
-import { FEATURES_LIST } from "@/constants/features";
+import { FEATURES } from "@/constants/features";
 import Placeholder from "../../public/images/hero-image-light.png";
 import { useState } from "react";
 import Image from "next/image";
 
-export const Features = () => {
+const Features: React.FC = () => {
   const [activeId, setActiveId] = useState<number | null>(1);
 
   const toggleAccordion = (id: number) => {
@@ -39,7 +39,7 @@ export const Features = () => {
           </div>
 
           <ul className="list-none overflow-hidden divide-y divide-gray-200">
-            {FEATURES_LIST.map((tab) => (
+            {FEATURES.map((tab) => (
               <li
                 key={tab.id}
                 onClick={() => toggleAccordion(tab.id)}

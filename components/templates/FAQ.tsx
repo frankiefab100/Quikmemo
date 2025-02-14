@@ -2,9 +2,10 @@
 import Link from "next/link";
 import { useState } from "react";
 import { Minus, Plus } from "lucide-react";
-import { FAQS_LIST } from "@/constants/faq";
+import { FAQS } from "@/constants/faq";
+import Demo from "./Demo";
 
-export default function FAQ() {
+const FAQ: React.FC = () => {
   const [activeId, setActiveId] = useState<number | null>(1);
 
   const toggleAccordion = (id: number) => {
@@ -24,7 +25,7 @@ export default function FAQ() {
         </div>
 
         <div className="max-w-5xl mx-auto mt-12 overflow-hidden border border-gray-200 divide-y divide-gray-200 sm:mt-16 rounded-xl">
-          {FAQS_LIST.map((faq) => (
+          {FAQS.map((faq) => (
             <div key={faq.id} role="region">
               <h3>
                 <button
@@ -77,4 +78,6 @@ export default function FAQ() {
       </div>
     </section>
   );
-}
+};
+
+export default Demo;
