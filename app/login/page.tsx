@@ -2,7 +2,6 @@ import Image from "next/image";
 import { redirect } from "next/navigation";
 import { getSession } from "../../lib/getSession";
 import Button from "./button";
-import { signIn } from "@/auth";
 import { Github, Google, Twitter } from "@/assets/SocialIcons";
 
 const LoginPage = async () => {

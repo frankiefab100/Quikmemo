@@ -3,8 +3,6 @@ import Link from "next/link";
 import { useState } from "react";
 import { Minus, Plus } from "lucide-react";
 import { FAQS } from "@/constants/faq";
-import Demo from "./Demo";
-
 const FAQ: React.FC = () => {
   const [activeId, setActiveId] = useState<number | null>(1);
 
@@ -80,4 +78,4 @@ const FAQ: React.FC = () => {
   );
 };
 
-export default Demo;
+export default FAQ;
