@@ -5,6 +5,7 @@ import Image from "next/image";
 import Avatars from "@/components/templates/Avatars";
 import Button from "./button";
 import { Github, Google, Twitter } from "@/assets/SocialIcons";
+import Input from "@/components/ui/Input";
 
 const RegisterPage = async () => {
   const session = await getSession();
@@ -84,47 +85,26 @@ const RegisterPage = async () => {
           </div>
           <form action={registerUser} className="space-y-5">
             <div className="flex flex-col md:flex-row space-y-2 md:space-y-0 md:space-x-2 mb-4">
-              <div>
-                <label className="font-medium">First Name</label>
-                <input
-                  type="text"
-                  id="firstname"
-                  name="firstname"
-                  required
-                  className="w-full mt-2 px-3 py-2 text-gray-500 bg-transparent outline-none border focus:border-blue-600 shadow-sm rounded-lg"
-                />
-              </div>
-              <div>
-                <label className="font-medium">Last Name</label>
-                <input
-                  type="text"
-                  id="lastname"
-                  name="lastname"
-                  required
-                  className="w-full mt-2 px-3 py-2 text-gray-500 bg-transparent outline-none border focus:border-blue-600 shadow-sm rounded-lg"
-                />
-              </div>
-            </div>
-            <div>
-              <label className="font-medium">Email</label>
-              <input
-                type="email"
-                id="email"
-                name="email"
-                required
-                className="w-full mt-2 px-3 py-2 text-gray-500 bg-transparent outline-none border focus:border-blue-600 shadow-sm rounded-lg"
+              <Input
+                label="First Name"
+                type="firstname"
+                id="firstname"
+                name="firstname"
+              />
+              <Input
+                label="Last Name"
+                type="lastname"
+                id="lastname"
+                name="lastname"
               />
             </div>
-            <div>
-              <label className="font-medium">Password</label>
-              <input
-                type="password"
-                id="password"
-                name="password"
-                required
-                className="w-full mt-2 px-3 py-2 text-gray-500 bg-transparent outline-none border focus:border-blue-600 shadow-sm rounded-lg"
-              />
-            </div>
+            <Input label="Email" type="email" id="email" name="email" />
+            <Input
+              label="Password"
+              type="password"
+              id="password"
+              name="password"
+            />
             {/* Passwords must be between 6 and 12 characters long, containing at least one letter and one number. */}
             <button className="w-full px-4 py-3 text-white font-medium bg-blue-600 hover:bg-blue-500 active:bg-blue-600 rounded-lg duration-150">
               Create account

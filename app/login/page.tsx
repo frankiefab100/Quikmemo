@@ -3,6 +3,7 @@ import { redirect } from "next/navigation";
 import { getSession } from "../../lib/getSession";
 import Button from "./button";
 import { Github, Google, Twitter } from "@/assets/SocialIcons";
+import Input from "@/components/ui/Input";
 
 const LoginPage = async () => {
   const session = await getSession();
@@ -37,29 +38,15 @@ const LoginPage = async () => {
         </div>
         <form
           // action={signInUser}
-
           className="mt-8 space-y-5"
         >
-          <div>
-            <label className="font-medium">Email</label>
-            <input
-              type="email"
-              name="email"
-              id="email"
-              required
-              className="w-full mt-2 px-3 py-2 text-gray-500 bg-transparent outline-none border focus:border-blue-600 shadow-sm rounded-lg"
-            />
-          </div>
-          <div>
-            <label className="font-medium">Password</label>
-            <input
-              type="password"
-              name="password"
-              id="password"
-              required
-              className="w-full mt-2 px-3 py-2 text-gray-500 bg-transparent outline-none border focus:border-blue-600 shadow-sm rounded-lg"
-            />
-          </div>
+          <Input label="Email" type="email" id="email" name="email" />
+          <Input
+            label="Password"
+            type="password"
+            id="password"
+            name="password"
+          />
           <button
             type="submit"
             className="w-full px-4 py-3 text-white font-medium bg-blue-600 hover:bg-blue-500 active:bg-blue-600 rounded-lg duration-150"
