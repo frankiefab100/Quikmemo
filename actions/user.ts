@@ -3,7 +3,7 @@
 // import { User } from "@/models/User";
 import { redirect } from "next/navigation";
 import { CredentialsSignin } from "next-auth";
-import { signIn, signOut } from "@/auth";
+import { signIn, signOut } from "@/lib/auth";
 
 export const signInUser = async (formData: FormData) => {
   const email = formData.get("email") as string;

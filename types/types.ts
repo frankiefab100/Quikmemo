@@ -39,22 +39,19 @@ export interface IFooter {
 export interface INote {
     id: number;
     title: string;
-    tags: string[];
-    timeline: string;
+    content: string;
+    tags?: string[];
+    lastEdited?: string;
 }
 
 export interface INoteList {
-    // notes: Note[];
+    // notes: INote[];
     // selectedNoteId?: string;
     // onNoteSelect: (id: string) => void;
     onCreateNote: () => void;
 }
 
 export interface INoteEditor {
-    // title: string;
-    // content: string;
-    // tags: string[];
-    // lastEdited: string;
     // onArchive: () => void;
     // onDelete: () => void;
     onSave: () => void;
