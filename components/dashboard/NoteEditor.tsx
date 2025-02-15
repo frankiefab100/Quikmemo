@@ -1,61 +1,22 @@
 "use client";
 import { Expand, Clock, Tag } from "lucide-react";
 import Button from "../ui/Button";
-import { useState } from "react";
 import EditorFeature, { featureItems } from "./editorFeature";
-import { INote } from "@/types/types";
-import { NOTES } from "@/app/data/data";
+import { useNotes } from "@/context/NotesContext";
 
 const NoteEditor: React.FC = () => {
-  const [notes, setNotes] = useState<INote[]>(NOTES);
-  const [title, setTitle] = useState("");
-  const [content, setContent] = useState("");
-  const [selectedNote, setSelectedNote] = useState<INote | null>(null);
-  // const [tags, setTags] = useState([]);
-  // const [editDate, setEditDate] = useState(null);
+  const {
+    title,
+    setTitle,
+    content,
+    setContent,
+    selectedNote,
+    setSelectedNote,
+    handleSaveNote,
+    handleUpdateNote,
+  } = useNotes();
 
   const handleCancel = () => {
-    setTitle("");
-    setContent("");
-    setSelectedNote(null);
-  };
-
-  const handleCreateNote = (event: React.FormEvent) => {
-    event.preventDefault();
-
-    console.log("title: ", title);
-    console.log("content: ", content);
-
-    const newNote: INote = {
-      id: notes.length + 1,
-      title: title,
-      content: content,
-    };
-
-    setNotes([newNote, ...notes]);
-    setTitle("");
-    setContent("");
-  };
-
-  const handleUpdateNote = (event: React.FormEvent) => {
-    event.preventDefault();
-
-    console.log("update note");
-    if (!selectedNote) {
-      return;
-    }
-
-    const updatedNote: INote = {
-      id: selectedNote.id,
-      title: title,
-      content: content,
-    };
-
-    const updatedNotesList = notes.map((note) =>
-      note.id === selectedNote.id ? updatedNote : note
-    );
-
-    setNotes(updatedNotesList);
     setTitle("");
     setContent("");
     setSelectedNote(null);
@@ -102,7 +63,7 @@ const NoteEditor: React.FC = () => {
 
       <form
         onSubmit={(event) =>
-          selectedNote ? handleUpdateNote(event) : handleCreateNote(event)
+          selectedNote ? handleUpdateNote(event) : handleSaveNote(event)
         }
         className="flex-1 p-4"
       >

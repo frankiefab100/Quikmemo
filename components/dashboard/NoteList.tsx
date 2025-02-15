@@ -2,28 +2,23 @@
 import Button from "../ui/Button";
 import { Plus } from "lucide-react";
 import { INote } from "@/types/types";
-import { useState } from "react";
-import { NOTES } from "@/app/data/data";
+import { useNotes } from "@/context/NotesContext";
 
 const NoteList: React.FC = () => {
-  const [notes, setNotes] = useState<INote[]>(NOTES);
-  const [title, setTitle] = useState("");
-  const [content, setContent] = useState("");
-  const [selectedNote, setSelectedNote] = useState<INote | null>(null);
-  // const [tags, setTags] = useState([]);
-  // const [editDate, setEditDate] = useState(null);
+  const {
+    notes,
+    selectedNote,
+    setSelectedNote,
+    setTitle,
+    setContent,
+    handleUpdateNote,
+    setNotes,
+  } = useNotes();
 
-  const handleCreateNote = () => {
-    console.log("title: ", title);
-    console.log("content: ", content);
+  const handleCreateNote = (newNote: INote) => {
+    console.log("opens the editor to create new note");
 
-    const newNote: INote = {
-      id: notes.length + 1,
-      title: title,
-      content: content,
-    };
-
-    setNotes([newNote, ...notes]);
+    setNotes((prevNotes) => [newNote, ...prevNotes]);
     setTitle("");
     setContent("");
   };
@@ -35,28 +30,6 @@ const NoteList: React.FC = () => {
     setContent(note.content);
   };
 
-  const handleUpdateNote = () => {
-    console.log("update note");
-    if (!selectedNote) {
-      return;
-    }
-
-    const updatedNote: INote = {
-      id: selectedNote.id,
-      title: title,
-      content: content,
-    };
-
-    const updatedNotesList = notes.map((note) =>
-      note.id === selectedNote.id ? updatedNote : note
-    );
-
-    setNotes(updatedNotesList);
-    setTitle("");
-    setContent("");
-    setSelectedNote(null);
-  };
-
   return (
     <div className="text-gray-900 dark:text-white dark:bg-gray-800  bg-white  border-gray-200  pt-16 flex h-screen flex-col border-r">
       <div className="flex items-center gap-2 p-4 border-b">
@@ -66,7 +39,9 @@ const NoteList: React.FC = () => {
         <Button
           variant="primary"
           onClick={() =>
-            selectedNote ? handleUpdateNote() : handleCreateNote()
+            selectedNote
+              ? handleUpdateNote()
+              : (note: INote) => handleCreateNote(note)
           }
         >
           <Plus className="mr-2 w-4 h-4" />
