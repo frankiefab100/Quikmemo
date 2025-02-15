@@ -3,19 +3,14 @@
 import { useState, useEffect } from "react";
 import Image from "next/image";
 import { signOutUser } from "@/actions/user";
-import { IUserDropdown } from "@/types/types";
+import { IUser } from "@/types/types";
 import { CircleUser } from "lucide-react";
 
-const UserDropdown: React.FC = ({
+const UserDropdown: React.FC<IUser> = ({
   userImage,
   userName = "User",
   userEmail = "",
-}: IUserDropdown) => {
-  // export default function UserDropdown({
-  //   userImage,
-  //   userName,
-  //   userEmail,
-  // }: IUserDropdown) {
+}: IUser) => {
   const [isOpen, setIsOpen] = useState(false);
 
   const toggleDropdown = () => {

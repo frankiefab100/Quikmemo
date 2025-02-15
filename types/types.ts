@@ -1,4 +1,6 @@
-export interface IUserDropdown {
+import { LucideIcon } from "lucide-react";
+
+export interface IUser {
     userImage?: string | null;
     userName?: string;
     userEmail?: string;
@@ -7,7 +9,7 @@ export interface IFeatures {
     id: number;
     title: string;
     description: string;
-    icon: any;
+    icon: LucideIcon;
 }
 
 export interface IUseCases {
