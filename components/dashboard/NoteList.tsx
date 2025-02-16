@@ -38,11 +38,18 @@ const NoteList: React.FC = () => {
       <div className="p-4 w-full">
         <Button
           variant="primary"
-          onClick={() =>
-            selectedNote
-              ? handleUpdateNote()
-              : (note: INote) => handleCreateNote(note)
-          }
+          onClick={() => {
+            if (selectedNote) {
+              handleUpdateNote();
+            } else {
+              const newNote: INote = {
+                id: Date.now(),
+                title: "",
+                content: "",
+              };
+              handleCreateNote(newNote);
+            }
+          }}
         >
           <Plus className="mr-2 w-4 h-4" />
           Create New Note

@@ -1,4 +1,3 @@
-// import { useState } from "react";
 import MenuBar from "@/components/dashboard/MenuBar";
 import Sidebar from "@/components/dashboard/Sidebar";
 import NoteEditor from "@/components/dashboard/NoteEditor";
@@ -15,8 +14,8 @@ const DashboardClient = () => {
         <NotesProvider>
           <NoteList />
           <NoteEditor />
+          <DeleteArchive />
         </NotesProvider>
-        <DeleteArchive />
       </section>
     </div>
   );

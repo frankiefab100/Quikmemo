@@ -42,19 +42,8 @@ export interface INote {
     content: string;
     tags?: string[];
     lastEdited?: string;
-}
-
-export interface INoteList {
-    // notes: INote[];
-    // selectedNoteId?: string;
-    // onNoteSelect: (id: string) => void;
-    onCreateNote: () => void;
-}
-
-export interface INoteEditor {
-    // onArchive: () => void;
-    // onDelete: () => void;
-    onSave: () => void;
-    onCancel: () => void;
+    isArchived?: boolean;
+    createdAt?: Date;
+    updatedAt?: Date;
 }
 

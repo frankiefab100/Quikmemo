@@ -14,6 +14,11 @@ interface NotesContextType {
   setContent: React.Dispatch<React.SetStateAction<string>>;
   handleSaveNote: (event?: FormEvent) => void;
   handleUpdateNote: (event?: FormEvent) => void;
+  handleDeleteNote: (noteId: number) => void;
+  handleArchiveNote: (noteId: number) => void;
+  archivedNotes: INote[];
+  // tags: [];
+  // setTags: React.Dispatch<React.SetStateAction<string[]>>;
 }
 
 const NotesContext = createContext<NotesContextType | undefined>(undefined);
@@ -21,25 +26,26 @@ const NotesContext = createContext<NotesContextType | undefined>(undefined);
 export const NotesProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
-  const [notes, setNotes] = useState<INote[]>(NOTES);
+  const [notes, setNotes] = useState<INote[]>(
+    NOTES.map((note) => ({ ...note, isArchived: false }))
+  );
   const [selectedNote, setSelectedNote] = useState<INote | null>(null);
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
-  //   const [tags, setTags] = useState([]);
-  //   const [editDate, setEditDate] = useState(null);
+  // const [tags, setTags] = useState<[]>([]);
 
   const handleSaveNote = (event?: FormEvent) => {
     if (event) {
       event.preventDefault();
     }
 
-    console.log("title: ", title);
-    console.log("content: ", content);
-
     const newNote: INote = {
       id: notes.length + 1,
       title: title,
       content: content,
+      isArchived: false,
+      createdAt: new Date(),
+      updatedAt: new Date(),
     };
 
     setNotes([newNote, ...notes]);
@@ -52,15 +58,15 @@ export const NotesProvider: React.FC<{ children: React.ReactNode }> = ({
       event.preventDefault();
     }
 
-    console.log("update note");
     if (!selectedNote) {
       return;
     }
 
     const updatedNote: INote = {
-      id: selectedNote.id,
+      ...selectedNote,
       title: title,
       content: content,
+      updatedAt: new Date(),
     };
 
     const updatedNotesList = notes.map((note) =>
@@ -73,10 +79,37 @@ export const NotesProvider: React.FC<{ children: React.ReactNode }> = ({
     setSelectedNote(null);
   };
 
+  const handleDeleteNote = (noteId: number) => {
+    setNotes((prevNotes) => prevNotes.filter((note) => note.id !== noteId));
+    if (selectedNote?.id === noteId) {
+      setSelectedNote(null);
+      setTitle("");
+      setContent("");
+    }
+  };
+
+  const handleArchiveNote = (noteId: number) => {
+    setNotes((prevNotes) =>
+      prevNotes.map((note) =>
+        note.id === noteId
+          ? { ...note, isArchived: !note.isArchived, updatedAt: new Date() }
+          : note
+      )
+    );
+    if (selectedNote?.id === noteId) {
+      setSelectedNote(null);
+      setTitle("");
+      setContent("");
+    }
+  };
+
+  const archivedNotes = notes.filter((note) => note.isArchived);
+  const activeNotes = notes.filter((note) => !note.isArchived);
+
   return (
     <NotesContext.Provider
       value={{
-        notes,
+        notes: activeNotes,
         setNotes,
         selectedNote,
         setSelectedNote,
@@ -86,6 +119,11 @@ export const NotesProvider: React.FC<{ children: React.ReactNode }> = ({
         setContent,
         handleSaveNote,
         handleUpdateNote,
+        handleDeleteNote,
+        handleArchiveNote,
+        archivedNotes,
+        // tags,
+        // setTags,
       }}
     >
       {children}
