@@ -1,7 +1,7 @@
 "use client";
 import Button from "../ui/Button";
 import { Plus } from "lucide-react";
-import { INote } from "@/types/types";
+import type { INote } from "@/types/types";
 import { useNotes } from "@/context/NotesContext";
 
 const NoteList: React.FC = () => {
@@ -11,79 +11,62 @@ const NoteList: React.FC = () => {
     setSelectedNote,
     setTitle,
     setContent,
-    handleUpdateNote,
-    setNotes,
+    setTags,
   } = useNotes();
 
-  const handleCreateNote = (newNote: INote) => {
-    console.log("opens the editor to create new note");
-
-    setNotes((prevNotes) => [newNote, ...prevNotes]);
+  const handleCreateNote = () => {
+    setSelectedNote(null);
     setTitle("");
     setContent("");
+    setTags([]);
   };
 
   const onNoteSelect = (note: INote) => {
-    console.log("selected", note.id, note.title);
     setSelectedNote(note);
     setTitle(note.title);
     setContent(note.content);
+    setTags(note.tags || []);
   };
 
   return (
-    <div className="text-gray-900 dark:text-white dark:bg-gray-800  bg-white  border-gray-200  pt-16 flex h-screen flex-col border-r">
+    <div className="text-gray-900 dark:text-white dark:bg-gray-800 bg-white border-gray-200 pt-16 flex h-screen flex-col border-r">
       <div className="flex items-center gap-2 p-4 border-b">
         <h1 className="text-xl font-semibold">All Notes</h1>
       </div>
       <div className="p-4 w-full">
-        <Button
-          variant="primary"
-          onClick={() => {
-            if (selectedNote) {
-              handleUpdateNote();
-            } else {
-              const newNote: INote = {
-                id: Date.now(),
-                title: "",
-                content: "",
-              };
-              handleCreateNote(newNote);
-            }
-          }}
-        >
-          <Plus className="mr-2 w-4 h-4" />
+        <Button variant="primary" onClick={handleCreateNote}>
+          <span className="pr-2">
+            <Plus className="w-4 h-4" />
+          </span>
           Create New Note
         </Button>
       </div>
 
-      <div className="flex-1">
+      <div className="flex-1 overflow-y-auto">
         <div className="space-y-4 p-4">
           {notes.map((note) => (
             <div
               key={note.id}
-              className="w-full rounded-lg border p-4 text-left transition-colors dark:hover:bg-gray-700 dark:hover:border-gray-900 hover:bg-gray-100 focus:bg-gray-100"
+              className={`w-full rounded-lg border p-4 text-left transition-colors dark:hover:bg-gray-700 dark:hover:border-gray-900 hover:bg-gray-100 focus:bg-gray-100 ${
+                selectedNote?.id === note.id ? "border-blue-500" : ""
+              }`}
               onClick={() => onNoteSelect(note)}
-              //   className={`w-full rounded-lg border p-4 text-left transition-colors hover:bg-muted/50 ${
-              //     selectedNoteId === note.id ? "border-primary bg-muted/50" : ""
-              //   }`}
             >
               <h2 className="text-gray-900 dark:text-white font-semibold text-[1.2rem] leading-6 mb-1">
                 {note.title}
               </h2>
-
-              <div className="flex">
+              <div className="flex flex-wrap gap-2 mt-2">
                 {note.tags?.map((tag, index) => (
                   <span
                     key={index}
-                    className="dark:bg-gray-600 dark:text-gray-400 bg-gray-200 text-gray-800 px-2 py-1 rounded-md text-sm mr-2"
+                    className="dark:bg-gray-600 dark:text-gray-400 bg-gray-200 text-gray-800 px-2 py-1 rounded-md text-xs"
                   >
                     {tag}
                   </span>
                 ))}
               </div>
-
               <p className="mt-2 text-sm dark:text-gray-300 text-gray-600">
-                {note.lastEdited}
+                {new Date(note.updatedAt || note.createdAt).toLocaleString()}
               </p>
             </div>
           ))}

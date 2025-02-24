@@ -3,6 +3,7 @@ import { Expand, Clock, Tag } from "lucide-react";
 import Button from "../ui/Button";
 import EditorFeature, { featureItems } from "./editorFeature";
 import { useNotes } from "@/context/NotesContext";
+import type { FormEvent } from "react";
 
 const NoteEditor: React.FC = () => {
   const {
@@ -10,16 +11,32 @@ const NoteEditor: React.FC = () => {
     setTitle,
     content,
     setContent,
+    tags,
+    setTags,
     selectedNote,
     setSelectedNote,
     handleSaveNote,
     handleUpdateNote,
   } = useNotes();
 
+  const handleSubmit = (event: FormEvent) => {
+    event.preventDefault();
+    if (selectedNote) {
+      handleUpdateNote(selectedNote.id, event);
+    } else {
+      handleSaveNote(event);
+    }
+  };
+
   const handleCancel = () => {
     setTitle("");
     setContent("");
+    setTags([]);
     setSelectedNote(null);
+  };
+
+  const handleTagChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setTags(event.target.value.split(",").map((tag) => tag.trim()));
   };
 
   return (
@@ -33,7 +50,6 @@ const NoteEditor: React.FC = () => {
             onChange={(event) => setTitle(event.target.value)}
             required
           />
-
           <div className="mt-2 block">
             <div className="flex items-center gap-14">
               <span className="flex justify-center items-center text-sm text-gray-900 dark:text-white">
@@ -42,9 +58,12 @@ const NoteEditor: React.FC = () => {
                 </span>
                 Tags
               </span>
-              <div className="flex flex-wrap gap-2 text-gray-900 dark:text-white">
-                Dev, React
-              </div>
+              <input
+                className="flex-1 bg-transparent text-sm text-gray-900 dark:text-white outline-none"
+                placeholder="Enter tags, separated by commas"
+                value={tags.join(", ")}
+                onChange={handleTagChange}
+              />
             </div>
             <div className="flex items-center gap-4">
               <span className="flex justify-center items-center text-sm text-gray-900 dark:text-white">
@@ -54,19 +73,16 @@ const NoteEditor: React.FC = () => {
                 Last edited
               </span>
               <span className="text-sm text-gray-900 dark:text-white">
-                30 Aug 2024
+                {selectedNote?.lastEdited
+                  ? new Date(selectedNote.lastEdited).toLocaleString()
+                  : "Not saved yet"}
               </span>
             </div>
           </div>
         </div>
       </div>
 
-      <form
-        onSubmit={(event) =>
-          selectedNote ? handleUpdateNote(event) : handleSaveNote(event)
-        }
-        className="flex-1 p-4"
-      >
+      <form onSubmit={handleSubmit} className="flex-1 p-4">
         <div className="w-full mb-4 border border-gray-200 rounded-lg bg-gray-50 dark:bg-gray-700 dark:border-gray-600">
           <div className="flex items-center justify-between px-3 py-2 border-b dark:border-gray-600">
             <div className="flex flex-wrap items-center divide-gray-200 sm:divide-x sm:rtl:divide-x-reverse dark:divide-gray-600">
@@ -100,7 +116,9 @@ const NoteEditor: React.FC = () => {
           </div>
         </div>
         <div className="mb-4 flex items-center justify-start gap-2">
-          <Button type="submit">Save Note</Button>
+          <Button type="submit">
+            {selectedNote ? "Update Note" : "Save Note"}
+          </Button>
           <Button variant="outline" onClick={handleCancel}>
             Cancel
           </Button>

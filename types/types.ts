@@ -37,13 +37,13 @@ export interface IFooter {
 }
 
 export interface INote {
-    id: number;
+    id: string;
     title: string;
     content: string;
     tags?: string[];
     lastEdited?: string;
     isArchived?: boolean;
-    createdAt?: Date;
-    updatedAt?: Date;
+    createdAt: Date;
+    updatedAt: Date;
 }
 

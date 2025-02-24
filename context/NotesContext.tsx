@@ -1,9 +1,15 @@
 "use client";
+import type { INote } from "@/types/types";
+import {
+  createContext,
+  type FormEvent,
+  useContext,
+  useState,
+  useEffect,
+} from "react";
 import { NOTES } from "@/app/data/data";
-import { INote } from "@/types/types";
-import React, { createContext, FormEvent, useContext, useState } from "react";
 
-interface NotesContextType {
+export interface NoteContextProps {
   notes: INote[];
   setNotes: React.Dispatch<React.SetStateAction<INote[]>>;
   selectedNote: INote | null;
@@ -12,104 +18,198 @@ interface NotesContextType {
   setTitle: React.Dispatch<React.SetStateAction<string>>;
   content: string;
   setContent: React.Dispatch<React.SetStateAction<string>>;
-  handleSaveNote: (event?: FormEvent) => void;
-  handleUpdateNote: (event?: FormEvent) => void;
-  handleDeleteNote: (noteId: number) => void;
-  handleArchiveNote: (noteId: number) => void;
+  tags: string[];
+  setTags: React.Dispatch<React.SetStateAction<string[]>>;
+  handleSaveNote: (event?: FormEvent) => Promise<void>;
+  handleUpdateNote: (id: string, event?: FormEvent) => Promise<void>;
+  handleDeleteNote: (id: string) => Promise<void>;
+  handleArchiveNote: (id: string) => Promise<void>;
   archivedNotes: INote[];
-  // tags: [];
-  // setTags: React.Dispatch<React.SetStateAction<string[]>>;
 }
 
-const NotesContext = createContext<NotesContextType | undefined>(undefined);
+export const NotesContext = createContext<NoteContextProps | undefined>(
+  undefined
+);
 
 export const NotesProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
   const [notes, setNotes] = useState<INote[]>(
-    NOTES.map((note) => ({ ...note, isArchived: false }))
+    NOTES.map((note) => ({
+      ...note,
+      isArchived: false,
+      createdAt: new Date(note.lastEdited),
+      updatedAt: new Date(note.lastEdited),
+      id: note.id.toString(),
+    }))
   );
   const [selectedNote, setSelectedNote] = useState<INote | null>(null);
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
-  // const [tags, setTags] = useState<[]>([]);
+  const [tags, setTags] = useState<string[]>([]);
 
-  const handleSaveNote = (event?: FormEvent) => {
-    if (event) {
-      event.preventDefault();
+  useEffect(() => {
+    fetchNotes();
+  }, []);
+
+  const fetchNotes = async () => {
+    try {
+      const response = await fetch("/api/notes", {
+        next: { revalidate: 3600 },
+      });
+
+      if (!response.ok) {
+        throw new Error(`Failed to fetch notes: ${response.status}`);
+      }
+      const fetchedNotes = await response.json();
+
+      // // Merge fetched notes with default old notes (if any)
+      // const mergedNotes = [
+      //   ...fetchedNotes,
+      //   ...notes.filter(
+      //     (note) => !fetchedNotes.some((notes: any) => notes.id === note.id)
+      //   ),
+      // ];
+      // setNotes(mergedNotes);
+
+      setNotes(fetchedNotes);
+    } catch (error) {
+      console.error(`Error fetching notes: ${error}`);
     }
-
-    const newNote: INote = {
-      id: notes.length + 1,
-      title: title,
-      content: content,
-      isArchived: false,
-      createdAt: new Date(),
-      updatedAt: new Date(),
-    };
-
-    setNotes([newNote, ...notes]);
-    setTitle("");
-    setContent("");
   };
 
-  const handleUpdateNote = (event?: FormEvent) => {
+  const handleSaveNote = async (event?: FormEvent) => {
     if (event) {
       event.preventDefault();
     }
 
-    if (!selectedNote) {
+    if (!title || !content) {
+      alert("Title and content are required");
       return;
     }
 
-    const updatedNote: INote = {
-      ...selectedNote,
-      title: title,
-      content: content,
-      updatedAt: new Date(),
-    };
+    try {
+      const response = await fetch("/api/notes", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ title, content, tags }),
+      });
 
-    const updatedNotesList = notes.map((note) =>
-      note.id === selectedNote.id ? updatedNote : note
-    );
+      if (!response.ok) {
+        throw new Error(`Failed to save note: ${response.statusText}`);
+      }
 
-    setNotes(updatedNotesList);
-    setTitle("");
-    setContent("");
-    setSelectedNote(null);
-  };
+      const savedNote = await response.json();
 
-  const handleDeleteNote = (noteId: number) => {
-    setNotes((prevNotes) => prevNotes.filter((note) => note.id !== noteId));
-    if (selectedNote?.id === noteId) {
-      setSelectedNote(null);
+      setNotes([savedNote, ...notes]);
       setTitle("");
       setContent("");
+      setTags([]);
+    } catch (error) {
+      console.error(error);
+      alert("An error occurred while saving the note.");
     }
   };
 
-  const handleArchiveNote = (noteId: number) => {
-    setNotes((prevNotes) =>
-      prevNotes.map((note) =>
-        note.id === noteId
-          ? { ...note, isArchived: !note.isArchived, updatedAt: new Date() }
-          : note
-      )
-    );
-    if (selectedNote?.id === noteId) {
+  const handleUpdateNote = async (id: string, event?: FormEvent) => {
+    if (event) {
+      event.preventDefault();
+    }
+
+    try {
+      const response = await fetch(`/api/notes/${id}`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ title, content, tags }),
+      });
+
+      if (!response.ok) {
+        throw new Error(`Failed to update note: ${response.statusText}`);
+      }
+
+      const updatedNote = await response.json();
+
+      setNotes(
+        notes.map((note) => (note.id === updatedNote.id ? updatedNote : note))
+      );
       setSelectedNote(null);
       setTitle("");
       setContent("");
+      setTags([]);
+    } catch (error) {
+      console.error(error);
+      alert("An error occurred while updating the note.");
     }
   };
 
-  const archivedNotes = notes.filter((note) => note.isArchived);
-  const activeNotes = notes.filter((note) => !note.isArchived);
+  const handleDeleteNote = async (id: string) => {
+    try {
+      const response = await fetch(`/api/notes/${id}`, {
+        method: "DELETE",
+      });
+
+      if (!response.ok) {
+        throw new Error(`Failed to delete note: ${response.statusText}`);
+      }
+
+      setNotes(notes.filter((note) => note.id !== id));
+      if (selectedNote?.id === id) {
+        setSelectedNote(null);
+        setTitle("");
+        setContent("");
+        setTags([]);
+      }
+    } catch (error) {
+      console.error(error);
+      alert("An error occurred while deleting the note.");
+    }
+  };
+
+  const handleArchiveNote = async (id: string) => {
+    try {
+      const noteToArchive = notes.find((note) => note.id === id);
+      if (!noteToArchive) return;
+
+      const response = await fetch(`/api/notes/${id}`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          ...noteToArchive,
+          isArchived: !noteToArchive.isArchived,
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error(`Failed to archive note: ${response.statusText}`);
+      }
+
+      const updatedNote = await response.json();
+
+      setNotes(
+        notes.map((note) => (note.id === updatedNote.id ? updatedNote : note))
+      );
+      if (selectedNote?.id === id) {
+        setSelectedNote(null);
+        setTitle("");
+        setContent("");
+        setTags([]);
+      }
+    } catch (error) {
+      console.error(error);
+      alert("An error occurred while archiving the note.");
+    }
+  };
 
   return (
     <NotesContext.Provider
       value={{
-        notes: activeNotes,
+        notes,
         setNotes,
         selectedNote,
         setSelectedNote,
@@ -117,13 +217,13 @@ export const NotesProvider: React.FC<{ children: React.ReactNode }> = ({
         setTitle,
         content,
         setContent,
+        tags,
+        setTags,
         handleSaveNote,
         handleUpdateNote,
         handleDeleteNote,
         handleArchiveNote,
-        archivedNotes,
-        // tags,
-        // setTags,
+        archivedNotes: notes.filter((note) => note.isArchived),
       }}
     >
       {children}
