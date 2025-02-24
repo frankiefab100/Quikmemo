@@ -19,11 +19,13 @@ Quikmemo is an easy-to-use note-taking app that helps you capture your thoughts,
 - [x] Archive Notes
 - [x] View All Notes
 - [x] Toggle Theme from dashboard
-- [ ] Notes and User Data Storage
+- [x] Save Notes in Database
+- [ ] Save User in Database
 - [ ] View Archived and Deleted Notes
 - [ ] Restore Archived and Deleted Notes
 - [ ] View Notes by Specific Tags
 - [ ] Search Notes by Title, Tag, and Content
+- [ ] PWA Feature
 - [ ] WYSIWYG/Markdown Editor and Text formatting
 - [ ] Rich Media Support (Images, links, and files)
 - [ ] AI Assisted Editing
