@@ -120,7 +120,7 @@ export const NotesProvider: React.FC<{ children: React.ReactNode }> = ({
 
     try {
       const response = await fetch(`/api/notes/${id}`, {
-        method: "PUT",
+        method: "PATCH",
         headers: {
           "Content-Type": "application/json",
         },
@@ -175,7 +175,7 @@ export const NotesProvider: React.FC<{ children: React.ReactNode }> = ({
       if (!noteToArchive) return;
 
       const response = await fetch(`/api/notes/${id}`, {
-        method: "PUT",
+        method: "PATCH",
         headers: {
           "Content-Type": "application/json",
         },
