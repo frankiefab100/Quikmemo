@@ -1,5 +1,5 @@
 <div align="center">
-  <img width="80" src="./public/quikmemo-mark.svg" alt="quikmemo logo">
+ <img width="80" src="./public/icons/quikmemo-mark-logo.svg" alt="quikmemo logo">
  <h1>Quikmemo</h1>
  <p>The ultimate note-taking application</p>
 </div>
@@ -18,7 +18,7 @@ Quikmemo is an easy-to-use note-taking app that helps you capture your thoughts,
 - [x] Delete Notes
 - [x] Archive Notes
 - [x] View All Notes
-- [x] Toggle Theme from dashboard
+- [x] Toggle Theme from the dashboard
 - [x] Save Notes in Database
 - [ ] Save User in Database
 - [ ] View Archived and Deleted Notes
@@ -33,7 +33,7 @@ Quikmemo is an easy-to-use note-taking app that helps you capture your thoughts,
 - [ ] Email Template (Welcome, Forgot password and OTP)
 - [ ] Share Notes with other apps
 - [ ] Export Notes in multiple file formats
-- [ ] Website Analytics
+- [x] Website Analytics
 - [ ] Offline Access, Optimal User Experience and Animation
 - [ ] Live Chat Support
 
