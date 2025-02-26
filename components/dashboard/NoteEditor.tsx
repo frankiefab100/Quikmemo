@@ -4,6 +4,7 @@ import Button from "../ui/Button";
 import EditorFeature, { featureItems } from "./editorFeature";
 import { useNotes } from "@/context/NotesContext";
 import type { FormEvent } from "react";
+import Toast from "../ui/Toast";
 
 const NoteEditor: React.FC = () => {
   const {
@@ -17,6 +18,8 @@ const NoteEditor: React.FC = () => {
     setSelectedNote,
     handleSaveNote,
     handleUpdateNote,
+    setShowToast,
+    showToast,
   } = useNotes();
 
   const handleSubmit = (event: FormEvent) => {
@@ -80,6 +83,12 @@ const NoteEditor: React.FC = () => {
             </div>
           </div>
         </div>
+      </div>
+
+      <div>
+        {showToast && (
+          <Toast type="success" onClose={() => setShowToast(false)} />
+        )}
       </div>
 
       <form onSubmit={handleSubmit} className="flex-1 p-4">

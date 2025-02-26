@@ -25,6 +25,8 @@ export interface NoteContextProps {
   handleDeleteNote: (id: string) => Promise<void>;
   handleArchiveNote: (id: string) => Promise<void>;
   archivedNotes: INote[];
+  setShowToast: React.Dispatch<React.SetStateAction<boolean>>;
+  showToast: boolean;
 }
 
 export const NotesContext = createContext<NoteContextProps | undefined>(
@@ -47,6 +49,7 @@ export const NotesProvider: React.FC<{ children: React.ReactNode }> = ({
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
   const [tags, setTags] = useState<string[]>([]);
+  const [showToast, setShowToast] = useState<boolean>(false);
 
   useEffect(() => {
     fetchNotes();
@@ -97,16 +100,20 @@ export const NotesProvider: React.FC<{ children: React.ReactNode }> = ({
         body: JSON.stringify({ title, content, tags }),
       });
 
-      if (!response.ok) {
-        throw new Error(`Failed to save note: ${response.statusText}`);
-      }
-
       const savedNote = await response.json();
 
-      setNotes([savedNote, ...notes]);
-      setTitle("");
-      setContent("");
-      setTags([]);
+      if (response.ok) {
+        setNotes([savedNote, ...notes]);
+        setTitle("");
+        setContent("");
+        setTags([]);
+
+        setShowToast(true);
+      } else {
+        // setError(data.error);
+        // toast.error('Failed to fetch notes');
+        throw new Error(`Failed to save note: ${response.statusText}`);
+      }
     } catch (error) {
       console.error(error);
       alert("An error occurred while saving the note.");
@@ -224,6 +231,8 @@ export const NotesProvider: React.FC<{ children: React.ReactNode }> = ({
         handleDeleteNote,
         handleArchiveNote,
         archivedNotes: notes.filter((note) => note.isArchived),
+        setShowToast,
+        showToast,
       }}
     >
       {children}

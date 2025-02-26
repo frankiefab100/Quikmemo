@@ -1,11 +1,12 @@
 import Header from ".././components/global/Header";
 import Footer from "@/components/global/Footer";
-import { Hero } from "@/components/Hero";
+import { Hero } from "@/components/templates/Hero";
 import Features from "@/components/templates/Features";
 import UseCases from "@/components/templates/UseCases";
 import Testimonials from "@/components/templates/Testimonials";
 import FAQ from "@/components/templates/FAQ";
 import React from "react";
+import Modal from "@/components/ui/Modal";
 
 export default function Home() {
   return (
@@ -20,6 +21,7 @@ export default function Home() {
 
       <main className="pt-60 md:pt-48 lg:pt-40">
         <Hero />
+        <Modal />
         <Features />
         <UseCases />
         <Testimonials />

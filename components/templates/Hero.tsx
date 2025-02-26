@@ -1,8 +1,8 @@
 import Image from "next/image";
 import { ChevronRight } from "lucide-react";
 import Link from "next/link";
-import Avatars from "./templates/Avatars";
-import HeroImg from "../assets/images/hero-image-dark.png";
+import Avatars from "../shared/Avatars";
+import HeroImg from "@/assets/images/hero-image-dark.png";
 
 export const Hero = () => {
   return (

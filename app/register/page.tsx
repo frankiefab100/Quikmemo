@@ -2,7 +2,7 @@ import { registerUser } from "../../actions/user";
 import { getSession } from "../../lib/getSession";
 import { redirect } from "next/navigation";
 import Image from "next/image";
-import Avatars from "@/components/templates/Avatars";
+import Avatars from "@/components/shared/Avatars";
 import Button from "./button";
 import { Github, Google, Twitter } from "@/assets/SocialIcons";
 import Input from "@/components/ui/Input";
