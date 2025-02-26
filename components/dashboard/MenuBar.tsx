@@ -34,13 +34,13 @@ const MenuBar: React.FC = async () => {
           </button>
           <Link href="/" className="flex">
             <Image
-              src="/quikmemo-mark.svg"
-              className="h-8 me-1"
-              alt="QuikMemo Logo"
+              src="/icons/quikmemo-mark-logo.svg"
+              className="h-8 w-8"
+              alt="QuikMemo logo"
               width={50}
               height={50}
             />
-            <span className="self-center text-xl font-normal sm:text-2xl whitespace-nowrap dark:text-white">
+            <span className="ml-2 text-xl font-normal sm:text-2xl whitespace-nowrap dark:text-white">
               Quikmemo
             </span>
           </Link>

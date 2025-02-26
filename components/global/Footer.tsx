@@ -11,8 +11,8 @@ export default function Footer() {
           <div className="col-span-2 md:col-span-4">
             <Image
               className="w-auto h-9"
-              src="/quikmemo-full-black.svg"
-              alt="Quikmemo Logo"
+              src="/icons/quikmemo-full-lockup-logo.svg"
+              alt="Quikmemo logo"
               width={150}
               height={36}
             />

@@ -1,6 +1,6 @@
 "use client";
 import { FEATURES } from "@/constants/features";
-import Placeholder from "../../public/images/hero-image-light.png";
+import Placeholder from "../../assets/images/hero-image-light.png";
 import { useState } from "react";
 import Image from "next/image";
 

@@ -2,6 +2,7 @@ import Image from "next/image";
 import { ChevronRight } from "lucide-react";
 import Link from "next/link";
 import Avatars from "./templates/Avatars";
+import HeroImg from "../assets/images/hero-image-dark.png";
 
 export const Hero = () => {
   return (
@@ -37,15 +38,15 @@ export const Hero = () => {
         </button>
       </Link>
 
-      {/* <div className="relative max-w-4xl mx-auto aspect-video rounded-xl overflow-hidden bg-gray-900"> */}
-      <Image
-        src="/images/hero-image-dark.png"
-        alt="QuikMemo Demo"
-        width={1400}
-        height={900}
-        className="object-cover"
-      />
-      {/* </div> */}
+      <div className="max-w-5xl mx-auto rounded-md overflow-hidden">
+        <Image
+          src={HeroImg}
+          alt="QuikMemo Demo"
+          width={1400}
+          height={900}
+          className="object-cover"
+        />
+      </div>
     </section>
   );
 };

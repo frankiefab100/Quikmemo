@@ -17,7 +17,7 @@ const RegisterPage = async () => {
       <div className="relative flex-1 hidden items-center justify-center h-screen bg-gray-900 lg:flex">
         <div className="relative z-10 w-full max-w-md">
           <Image
-            src="/quikmemo-full-white.svg"
+            src="/icons/quikmemo-full-lockup-logo-white.svg"
             alt="Quikmemo logo"
             width={220}
             height={220}

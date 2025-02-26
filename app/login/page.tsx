@@ -15,7 +15,7 @@ const LoginPage = async () => {
       <div className="max-w-sm w-full text-gray-600">
         <div className="text-center">
           <Image
-            src="/quikmemo-mark.svg"
+            src="/icons/quikmemo-mark-logo.svg"
             className="mx-auto"
             alt="Quikmemo logo"
             width={50}

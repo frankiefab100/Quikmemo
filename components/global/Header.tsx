@@ -2,7 +2,6 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import Image from "next/image";
 import { ChevronDown, Menu, X } from "lucide-react";
 
 export default function Header() {
@@ -30,14 +29,26 @@ export default function Header() {
               className="flex items-center space-x-2"
               onClick={() => setIsMobileMenuOpen(false)}
             >
-              <Image
-                className="w-auto h-9"
-                src="/quikmemo-mark.svg"
-                alt="Quikmemo Logo"
-                width={150}
-                height={36}
-              />
-              <span className="text-xl font-normal">Quikmemo</span>
+              <picture>
+                <source
+                  media="(min-width: 1024px)"
+                  srcSet="/icons/quikmemo-full-lockup-logo.svg"
+                  width="150px"
+                  height="auto"
+                />
+                <source
+                  media="(min-width: 768px)"
+                  srcSet="/icons/quikmemo-full-lockup-logo.svg"
+                  width="140px"
+                  height="auto"
+                />
+                <img
+                  src="/icons/quikmemo-mark-logo.svg"
+                  width="40px"
+                  height="auto"
+                  alt="Quikmemo logo"
+                />
+              </picture>
             </Link>
 
             <div className="hidden md:flex items-center space-x-8">
