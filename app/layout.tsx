@@ -2,6 +2,7 @@ import "../style/globals.css";
 import type { Metadata } from "next";
 import { Raleway } from "next/font/google";
 import { SessionProvider } from "next-auth/react";
+import Script from "next/script";
 
 const raleway = Raleway({
   subsets: ["latin"],
@@ -10,8 +11,9 @@ const raleway = Raleway({
 });
 
 export const metadata: Metadata = {
-  title: "Quikmemo",
-  description: "Your modern and elegant note-taking app",
+  title: "Quikmemo | Note-Taking App",
+  description:
+    "A modern and elegant note-taking app designed to help users capture, organize, and manage their notes efficiently.",
   applicationName: "Quikmemo",
   themeColor: "#000000",
   icons: [
@@ -23,37 +25,53 @@ export const metadata: Metadata = {
     },
   ],
   manifest: "/manifest.json",
-  keywords: ["quikmemo", "note-taking", "app"],
+  keywords: [
+    "note-taking",
+    "productivity",
+    "organization",
+    "task management",
+    "event planning ",
+    "project management",
+    "personal journaling",
+    "creative writing",
+    "brainstorming sessions",
+    "notes",
+  ],
   viewport: {
     width: "device-width",
     initialScale: 1,
     maximumScale: 1,
   },
+  authors: [{ name: "Franklin Ohaegbulam", url: "https://frankiefab.com" }],
   openGraph: {
-    title: "Quikmemo",
-    description: "Your modern and elegant note-taking app",
-    url: "URL_ADDRESSikmemo.vercel.app/",
+    title: "Quikmemo | Note-Taking App",
+    description:
+      "A modern and elegant note-taking app designed to help users capture, organize, and manage their notes efficiently.",
+    url: "https://quikmemo.vercel.app/",
     siteName: "Quikmemo",
     locale: "en_US",
     type: "website",
     images: [
       {
-        url: "/favicon.ico",
-        width: 800,
-        height: 600,
+        url: "/opengraph-image.png",
+        width: 1200,
+        height: 630,
         alt: "Quikmemo",
       },
     ],
   },
   twitter: {
+    title: "Quikmemo | Note-Taking App",
+    description:
+      "A modern and elegant note-taking app designed to help users capture, organize, and manage their notes efficiently.",
     card: "summary_large_image",
-    title: "Quikmemo",
-    description: "Your modern and elegant note-taking app",
+    creator: "@frankiefab100",
+    site: "https://frankiefab.com",
     images: [
       {
-        url: "/favicon.ico",
-        width: 800,
-        height: 600,
+        url: "/opengraph-image.png",
+        width: 1200,
+        height: 630,
         alt: "Quikmemo",
       },
     ],
@@ -67,6 +85,13 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
+      <head>
+        <Script
+          defer
+          src="https://cloud.umami.is/script.js"
+          data-website-id={process.env.UMAMI_WEBSITE_ID}
+        />
+      </head>
       <body className={`${raleway.className} bg-white`}>
         <SessionProvider>{children}</SessionProvider>
       </body>
