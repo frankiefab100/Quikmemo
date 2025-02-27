@@ -1,9 +1,16 @@
 "use client";
 import { Archive, Trash2 } from "lucide-react";
 import { useNotes } from "@/context/NotesContext";
+import { useState } from "react";
+import Modal from "../ui/Modal";
 
 const DeleteArchive = () => {
   const { selectedNote, handleDeleteNote, handleArchiveNote } = useNotes();
+  const [isOpen, setIsOpen] = useState(false);
+
+  const handleOpenModal = () => {
+    setIsOpen(true);
+  };
 
   const onArchive = () => {
     if (selectedNote) {
@@ -12,14 +19,13 @@ const DeleteArchive = () => {
   };
 
   const onDelete = () => {
+    handleOpenModal();
+  };
+
+  const handleConfirmDelete = () => {
     if (selectedNote) {
-      if (
-        window.confirm(
-          "Are you sure you want to delete this note? This action cannot be undone."
-        )
-      ) {
-        handleDeleteNote(selectedNote.id);
-      }
+      handleDeleteNote(selectedNote.id);
+      setIsOpen(false);
     }
   };
 
@@ -53,6 +59,14 @@ const DeleteArchive = () => {
         </span>
         Delete Note
       </button>
+
+      {isOpen && (
+        <Modal
+          isOpen={isOpen}
+          onClose={() => setIsOpen(false)}
+          onConfirm={handleConfirmDelete}
+        />
+      )}
     </div>
   );
 };

@@ -47,3 +47,8 @@ export interface INote {
     updatedAt: Date;
 }
 
+export interface ModalProps {
+    isOpen: boolean;
+    onClose: () => void;
+    onConfirm: () => void;
+}
