@@ -27,6 +27,10 @@ export interface NoteContextProps {
   archivedNotes: INote[];
   setShowToast: React.Dispatch<React.SetStateAction<boolean>>;
   showToast: boolean;
+  setLoading: React.Dispatch<React.SetStateAction<boolean>>;
+  loading: boolean;
+  setError: React.Dispatch<React.SetStateAction<string | null>>;
+  error: string | null;
 }
 
 export const NotesContext = createContext<NoteContextProps | undefined>(
@@ -50,12 +54,16 @@ export const NotesProvider: React.FC<{ children: React.ReactNode }> = ({
   const [content, setContent] = useState("");
   const [tags, setTags] = useState<string[]>([]);
   const [showToast, setShowToast] = useState<boolean>(false);
+  const [loading, setLoading] = useState<boolean>(false);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     fetchNotes();
   }, []);
 
   const fetchNotes = async () => {
+    setLoading(true);
+
     try {
       const response = await fetch("/api/notes", {
         next: { revalidate: 3600 },
@@ -77,7 +85,9 @@ export const NotesProvider: React.FC<{ children: React.ReactNode }> = ({
 
       setNotes(fetchedNotes);
     } catch (error) {
-      console.error(`Error fetching notes: ${error}`);
+      if (error instanceof Error) setError("Failed to fetch notes");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -110,13 +120,14 @@ export const NotesProvider: React.FC<{ children: React.ReactNode }> = ({
 
         setShowToast(true);
       } else {
-        // setError(data.error);
-        // toast.error('Failed to fetch notes');
         throw new Error(`Failed to save note: ${response.statusText}`);
       }
     } catch (error) {
-      console.error(error);
-      alert("An error occurred while saving the note.");
+      setError(
+        error instanceof Error
+          ? error.message
+          : "An error occurred while saving the note."
+      );
     }
   };
 
@@ -148,8 +159,11 @@ export const NotesProvider: React.FC<{ children: React.ReactNode }> = ({
       setContent("");
       setTags([]);
     } catch (error) {
-      console.error(error);
-      alert("An error occurred while updating the note.");
+      setError(
+        error instanceof Error
+          ? error.message
+          : "An error occurred while updating the note."
+      );
     }
   };
 
@@ -171,8 +185,11 @@ export const NotesProvider: React.FC<{ children: React.ReactNode }> = ({
         setTags([]);
       }
     } catch (error) {
-      console.error(error);
-      alert("An error occurred while deleting the note.");
+      setError(
+        error instanceof Error
+          ? error.message
+          : "An error occurred while deleting the note."
+      );
     }
   };
 
@@ -208,8 +225,11 @@ export const NotesProvider: React.FC<{ children: React.ReactNode }> = ({
         setTags([]);
       }
     } catch (error) {
-      console.error(error);
-      alert("An error occurred while archiving the note.");
+      setError(
+        error instanceof Error
+          ? error.message
+          : "An error occurred while archiving the note."
+      );
     }
   };
 
@@ -233,6 +253,10 @@ export const NotesProvider: React.FC<{ children: React.ReactNode }> = ({
         archivedNotes: notes.filter((note) => note.isArchived),
         setShowToast,
         showToast,
+        setLoading,
+        loading,
+        setError,
+        error,
       }}
     >
       {children}

@@ -3,6 +3,8 @@ import Button from "../ui/Button";
 import { Plus } from "lucide-react";
 import type { INote } from "@/types/types";
 import { useNotes } from "@/context/NotesContext";
+import LoadingSpinner from "../shared/loading";
+import ErrorPage from "@/app/error";
 
 const NoteList: React.FC = () => {
   const {
@@ -12,6 +14,8 @@ const NoteList: React.FC = () => {
     setTitle,
     setContent,
     setTags,
+    loading,
+    error,
   } = useNotes();
 
   const handleCreateNote = () => {
@@ -27,6 +31,9 @@ const NoteList: React.FC = () => {
     setContent(note.content);
     setTags(note.tags || []);
   };
+
+  if (loading) return <LoadingSpinner />;
+  if (error) return <ErrorPage />;
 
   return (
     <div className="text-gray-900 dark:text-white dark:bg-gray-800 bg-white border-gray-200 pt-16 flex h-screen flex-col border-r">
