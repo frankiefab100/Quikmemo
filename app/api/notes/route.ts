@@ -1,9 +1,9 @@
 import { NextResponse } from "next/server"
-import { prisma } from "@/lib/prisma"
+import { db } from "@/lib/prisma"
 
 export async function GET() {
     try {
-        const notes = await prisma.note.findMany({
+        const notes = await db.note.findMany({
             orderBy: {
                 updatedAt: "desc",
                 // createdAt: "desc",
@@ -25,7 +25,7 @@ export async function POST(request: Request) {
             return new NextResponse("Title and Content required", { status: 400 });
         }
 
-        const note = await prisma.note.create({
+        const note = await db.note.create({
             data: {
                 title,
                 content,

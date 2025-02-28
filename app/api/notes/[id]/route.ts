@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server"
-import { prisma } from "@/lib/prisma"
+import { db } from "@/lib/prisma"
 
 export async function PATCH(request: Request, props: {
     params: Promise<{ id: string }>;
@@ -8,7 +8,7 @@ export async function PATCH(request: Request, props: {
         const params = await props.params;
 
         const { title, content, tags, isArchived } = await request.json()
-        const updatedNote = await prisma.note.update({
+        const updatedNote = await db.note.update({
 
             where: params,
             data: { title, content, tags, isArchived },
@@ -28,7 +28,7 @@ export async function DELETE(request: Request, props: {
 }) {
     try {
         const params = await props.params;
-        await prisma.note.delete({
+        await db.note.delete({
             where: params,
         });
         return NextResponse.json("Note deleted successfully", { status: 200 });
