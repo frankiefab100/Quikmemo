@@ -3,12 +3,12 @@
 import { useState, useEffect } from "react";
 import Image from "next/image";
 import { signOutUser } from "@/actions/user";
-import { IUser } from "@/types/types";
+import type { IUser } from "@/types/types";
 import { CircleUser } from "lucide-react";
 
 const UserDropdown: React.FC<IUser> = ({
   userImage,
-  userName = "User",
+  userName,
   userEmail = "",
 }: IUser) => {
   const [isOpen, setIsOpen] = useState(false);
@@ -64,7 +64,7 @@ const UserDropdown: React.FC<IUser> = ({
           <Image
             className="w-8 h-8 rounded-full"
             src={userImage}
-            alt={userName}
+            alt={`${userName} photo`}
             width={50}
             height={50}
           />
@@ -75,29 +75,24 @@ const UserDropdown: React.FC<IUser> = ({
 
       {isOpen && (
         <div className="absolute right-0 mt-2 top-12 z-50 text-base list-none bg-white divide-y divide-gray-100 rounded shadow dark:bg-gray-700 dark:divide-gray-600">
-          <div className="px-4 py-3" role="none">
+          <div className="px-4 py-3">
             {userImage ? (
               <Image
                 className="w-8 h-8 rounded-full"
                 src={userImage}
-                alt={userName}
+                alt={`${userName} photo`}
                 width={50}
                 height={50}
               />
             ) : (
               <CircleUser className="w-8 h-8 text-gray-400" />
             )}
-            <p className="text-sm text-gray-900 dark:text-white" role="none">
-              {userName}
-            </p>
-            <p
-              className="text-sm font-medium text-gray-900 truncate dark:text-gray-300"
-              role="none"
-            >
+            <p className="text-sm text-gray-900 dark:text-white">{userName}</p>
+            <p className="text-sm font-medium text-gray-900 truncate dark:text-gray-300">
               {userEmail}
             </p>
           </div>
-          <ul className="py-1" role="none">
+          <ul className="py-1">
             <li>
               <a
                 href="#"

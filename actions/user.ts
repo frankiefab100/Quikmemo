@@ -1,9 +1,24 @@
-"use server";
-
-// import { User } from "@/models/User";
 import { redirect } from "next/navigation";
-import { CredentialsSignin } from "next-auth";
+import { AuthError } from "next-auth";
 import { signIn, signOut } from "@/lib/auth";
+import { db } from "@/lib/prisma";
+import { revalidatePath } from "next/cache";
+import { saltAndHashPassword } from "@/utils/helpers";
+
+
+const getUserByEmail = async (email: string) => {
+  try {
+    const user = await db.user.findUnique({
+      where: {
+        email,
+      }
+    });
+    return user;
+  } catch (error) {
+    console.error(error);
+    return null;
+  }
+}
 
 export const signInUser = async (formData: FormData) => {
   const email = formData.get("email") as string;
@@ -16,39 +31,75 @@ export const signInUser = async (formData: FormData) => {
       email,
       password,
     });
+    redirect("/");
   } catch (error) {
-    const someError = error as CredentialsSignin;
-    return someError.cause;
+    if (error instanceof AuthError) {
+      switch (error.type) {
+        case "CredentialsSignin":
+          return { error: "Invalid credentials" };
+        default:
+          return { error: "Something went wrong!" };
+      }
+    }
+    throw error;
   }
-  redirect("/");
-};
+}
 
 export const registerUser = async (formData: FormData) => {
-  const firstName = formData.get("firstname") as string;
-  const lastName = formData.get("lastname") as string;
   const email = formData.get("email") as string;
   const password = formData.get("password") as string;
+  const firstName = formData.get("firstName") as string;
+  const lastName = formData.get("lastName") as string;
 
-  if (!firstName || !lastName || !email || !password) {
+  if (!email || !password || !firstName || !lastName) {
     throw new Error("Please fill all fields");
   }
 
-  // existing user
-  //   const existingUser = await User.findOne({ email });
-  //   if (existingUser) throw new Error("User already exists");
+  const existingUser = await getUserByEmail(email);
+  if (existingUser) {
+    throw new Error("User already exists");
+  }
 
-  //   await User.create({ firstName, lastName, email, password});
-  //   console.log(`User created successfully 🥂`);
-  //   redirect("/login");
-  // };
-
-  // const fetchAllUsers = async () => {
-  //   const users = await User.find({});
-  //   return users;
-};
-
+  await db.user.create({
+    data: {
+      firstName: firstName,
+      lastName: lastName,
+      email,
+      hashedPassword: saltAndHashPassword(password),
+    },
+  });
+  redirect("/login");
+}
 
 export const signOutUser = async () => {
-  "use server";
-  await signOut();
-};
+  try {
+    await signOut();
+  } catch (error) {
+    console.error("Error signing out:", error);
+  }
+}
+
+export const signWithCredentials = async (formData: FormData) => {
+  const email = formData.get("email") as string;
+  const password = formData.get("password") as string;
+
+  try {
+    await signIn("credentials", {
+      redirect: false,
+      callbackUrl: "/",
+      email,
+      password,
+    });
+    revalidatePath("/dashboard");
+  } catch (error) {
+    if (error instanceof AuthError) {
+      switch (error.type) {
+        case "CredentialsSignin":
+          return { error: "Invalid credentials" };
+        default:
+          return { error: "Something went wrong!" };
+      }
+    }
+    throw error;
+  }
+}
