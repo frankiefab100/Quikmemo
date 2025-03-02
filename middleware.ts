@@ -1,18 +1,61 @@
-import { NextResponse } from "next/server"
-import type { NextRequest } from "next/server"
-import { auth } from "./lib/auth"
+// // import NextAuth from "next-auth"
+// // import { authConfig } from "./auth.config"
 
-export async function middleware(request: NextRequest) {
-  const session = await auth()
+// // export const { auth: middleware } = NextAuth(authConfig)
 
-  if (!session && request.nextUrl.pathname.startsWith("/dashboard")) {
-    const loginUrl = new URL("/login", request.nextUrl.origin)
-    return NextResponse.redirect(loginUrl.toString())
+// import { NextResponse } from "next/server"
+// import type { NextRequest } from "next/server"
+// import { auth } from "./lib/auth"
+
+// export async function middleware(request: NextRequest) {
+//   const session = await auth()
+
+//   if (!session && request.nextUrl.pathname.startsWith("/dashboard")) {
+//     const loginUrl = new URL("/login", request.nextUrl.origin)
+//     return NextResponse.redirect(loginUrl.toString())
+//   }
+
+//   return NextResponse.next()
+// }
+
+// export const config = {
+//   matcher: ["/dashboard/:path*"],
+// }
+
+import { NextResponse } from "next/server";
+import { auth } from "@/lib/auth";
+import { apiAuthPrefix, authRoutes, publicRoutes } from "@/utils/helpers";
+
+export default auth((req) => {
+  const { nextUrl } = req;
+  const isLoggedIn = !!req.auth;
+
+  const isApiAuthRoute = nextUrl.pathname.startsWith(apiAuthPrefix);
+  const isPublicRotue = publicRoutes.includes(nextUrl.pathname);
+  const isAuthRoute = authRoutes.includes(nextUrl.pathname);
+
+  // if it is an API Next Auth route, we don't want to redirect
+  if (isApiAuthRoute) return;
+
+  if (isAuthRoute) {
+    if (isLoggedIn) {
+      // if the user is already logged in and is in sign-in or sign-up page
+      // redirect to the default logged in page (which is dashboard in this case)
+      console.log("redirecting to dashboard");
+      return NextResponse.redirect(new URL("/dashboard", nextUrl));
+    }
+    // if the user is not logged in and is in sign-in or sign-up page, let them be
+    return;
   }
 
-  return NextResponse.next()
-}
+  if (!isLoggedIn && !isPublicRotue) {
+    // if the user is not logged in and is not in a public route, redirect to sign-in page
+    return NextResponse.redirect(new URL("/login", nextUrl));
+  }
+
+  return;
+});
 
 export const config = {
-  matcher: ["/dashboard/:path*"],
-}
+  matcher: ["/((?!.+\\.[\\w]+$|_next).*)", "/", "/(api|trpc)(.*)"],
+};

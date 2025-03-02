@@ -2,14 +2,14 @@
 
 import { useState, useEffect } from "react";
 import Image from "next/image";
-import { signOutUser } from "@/actions/user";
 import type { IUser } from "@/types/types";
 import { CircleUser } from "lucide-react";
+import { signOutUser } from "@/actions/user";
 
 const UserDropdown: React.FC<IUser> = ({
   userImage,
   userName,
-  userEmail = "",
+  userEmail,
 }: IUser) => {
   const [isOpen, setIsOpen] = useState(false);
 
@@ -39,7 +39,6 @@ const UserDropdown: React.FC<IUser> = ({
 
   useEffect(() => {
     const mediaQuery = window.matchMedia("(prefers-color-scheme: dark)");
-
     const handleChange = (e: MediaQueryListEvent) => {
       setTheme(e.matches ? "dark" : "light");
     };
@@ -133,14 +132,15 @@ const UserDropdown: React.FC<IUser> = ({
               <span className="ms-3 text-sm font-medium text-gray-900 dark:text-gray-300"></span>
             </label>
           </ul>
-          <form action={signOutUser} className="p-4">
+          <div className="p-4">
             <button
-              type="submit"
+              type="button"
+              onClick={signOutUser}
               className="w-full px-5 py-2.5 text-sm font-medium text-center text-white bg-blue-700 rounded-lg active:bg-blue-600 focus:ring-blue-200 hover:bg-blue-800"
             >
               Sign Out
             </button>
-          </form>
+          </div>
         </div>
       )}
     </div>

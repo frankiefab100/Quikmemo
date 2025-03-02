@@ -1,105 +1,60 @@
-import { redirect } from "next/navigation";
+"use server";
+import { SignInValues, SignUpValues, signUpSchema } from "../lib/formSchema";
+import { PrismaClientKnownRequestError } from "@prisma/client/runtime/library";
 import { AuthError } from "next-auth";
+import { hashSync } from "bcryptjs";
+import { redirect } from "next/navigation";
 import { signIn, signOut } from "@/lib/auth";
 import { db } from "@/lib/prisma";
-import { revalidatePath } from "next/cache";
-import { saltAndHashPassword } from "@/utils/helpers";
 
-
-const getUserByEmail = async (email: string) => {
+export const signInAction = async (signInValues: SignInValues) => {
   try {
-    const user = await db.user.findUnique({
-      where: {
-        email,
-      }
-    });
-    return user;
-  } catch (error) {
-    console.error(error);
-    return null;
-  }
-}
-
-export const signInUser = async (formData: FormData) => {
-  const email = formData.get("email") as string;
-  const password = formData.get("password") as string;
-
-  try {
-    await signIn("credentials", {
-      redirect: false,
-      callbackUrl: "/",
-      email,
-      password,
-    });
-    redirect("/");
+    await signIn("credentials", signInValues);
   } catch (error) {
     if (error instanceof AuthError) {
       switch (error.type) {
         case "CredentialsSignin":
-          return { error: "Invalid credentials" };
+          return { error: "Invalid Credentials" };
         default:
-          return { error: "Something went wrong!" };
+          return { error: "An error occurred" };
       }
     }
     throw error;
   }
-}
+  redirect("/");
+};
 
-export const registerUser = async (formData: FormData) => {
-  const email = formData.get("email") as string;
-  const password = formData.get("password") as string;
-  const firstName = formData.get("firstName") as string;
-  const lastName = formData.get("lastName") as string;
-
-  if (!email || !password || !firstName || !lastName) {
-    throw new Error("Please fill all fields");
+export const signUpAction = async (signUpValues: SignUpValues) => {
+  const { data } = await signUpSchema.safeParseAsync(signUpValues);
+  if (!data) return { error: "Invalid data" };
+  try {
+    await db.user.create({
+      data: {
+        ...data,
+        password: hashSync(data.password, 12),
+      },
+    });
+  } catch (error) {
+    if (error instanceof PrismaClientKnownRequestError) {
+      console.log(error.code);
+      switch (error.code) {
+        case "P2002":
+          return { error: "Email already exists" };
+        default:
+          return { error: "An error occurred" };
+      }
+    }
+    return { error: "An error occurred" };
   }
-
-  const existingUser = await getUserByEmail(email);
-  if (existingUser) {
-    throw new Error("User already exists");
-  }
-
-  await db.user.create({
-    data: {
-      firstName: firstName,
-      lastName: lastName,
-      email,
-      hashedPassword: saltAndHashPassword(password),
-    },
-  });
   redirect("/login");
+};
+
+export const signInUser = async (provider: string) => {
+  const result = await signIn(provider);
+  return result;
 }
 
 export const signOutUser = async () => {
-  try {
-    await signOut();
-  } catch (error) {
-    console.error("Error signing out:", error);
-  }
-}
-
-export const signWithCredentials = async (formData: FormData) => {
-  const email = formData.get("email") as string;
-  const password = formData.get("password") as string;
-
-  try {
-    await signIn("credentials", {
-      redirect: false,
-      callbackUrl: "/",
-      email,
-      password,
-    });
-    revalidatePath("/dashboard");
-  } catch (error) {
-    if (error instanceof AuthError) {
-      switch (error.type) {
-        case "CredentialsSignin":
-          return { error: "Invalid credentials" };
-        default:
-          return { error: "Something went wrong!" };
-      }
-    }
-    throw error;
-  }
+  const result = await signOut();
+  return result
 }

@@ -1,14 +1,25 @@
+"use client";
 import Image from "next/image";
 import { redirect } from "next/navigation";
-import { getSession } from "../../lib/getSession";
 import Button from "./button";
 import { Github, Google, Twitter } from "@/assets/SocialIcons";
 import Input from "@/components/ui/Input";
+import { signInAction } from "@/actions/user";
+import { useFormStatus } from "react-dom";
 
-const LoginPage = async () => {
-  const session = await getSession();
-  const user = session?.user;
-  if (user) redirect("/dashboard");
+const LoginPage = () => {
+  const { pending } = useFormStatus();
+
+  const handleFormSubmit = async (formData: FormData) => {
+    const email = formData.get("email") as string;
+    const password = formData.get("password") as string;
+    const res = await signInAction({ email, password });
+    if (res.error) {
+      alert(res.error);
+      return;
+    }
+    redirect("/dashboard");
+  };
 
   return (
     <main className="w-full h-screen flex flex-col items-center justify-center px-4">
@@ -36,10 +47,7 @@ const LoginPage = async () => {
             </p>
           </div>
         </div>
-        <form
-          // action={signInUser}
-          className="mt-8 space-y-5"
-        >
+        <form action={handleFormSubmit} className="mt-8 space-y-5">
           <Input label="Email" type="email" id="email" name="email" />
           <Input
             label="Password"
@@ -49,9 +57,10 @@ const LoginPage = async () => {
           />
           <button
             type="submit"
+            aria-disabled={pending}
             className="w-full px-4 py-3 text-white font-medium bg-blue-600 hover:bg-blue-500 active:bg-blue-600 rounded-lg duration-150"
           >
-            Sign in
+            {pending ? "Logging in..." : "Sign in"}
           </button>
         </form>
 
@@ -62,7 +71,6 @@ const LoginPage = async () => {
               Or continue with
             </p>
           </div>
-
           <Button provider="google" text="Continue with Google" Icon={Google} />
           <Button provider="github" text="Continue with GitHub" Icon={Github} />
           <Button

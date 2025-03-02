@@ -1,16 +1,34 @@
-import { registerUser } from "../../actions/user";
-import { getSession } from "../../lib/getSession";
-import { redirect } from "next/navigation";
+"use client";
+import { signUpAction } from "../../actions/user";
 import Image from "next/image";
 import Avatars from "@/components/shared/Avatars";
 import Button from "./button";
 import { Github, Google, Twitter } from "@/assets/SocialIcons";
 import Input from "@/components/ui/Input";
+import { signUpSchema } from "@/lib/formSchema";
+import { useFormStatus } from "react-dom";
 
-const RegisterPage = async () => {
-  const session = await getSession();
-  const user = session?.user;
-  if (user) redirect("/dashboard");
+const RegisterPage = () => {
+  const { pending } = useFormStatus();
+
+  const handleFormSubmit = async (formData: FormData) => {
+    const formValues = {
+      firstName: formData.get("firstName") as string,
+      lastName: formData.get("lastName") as string,
+      email: formData.get("email") as string,
+      password: formData.get("password") as string,
+    };
+
+    const { error } = await signUpSchema.safeParseAsync(formValues);
+    if (error) {
+      alert(error.issues[0].message);
+    }
+
+    const res = await signUpAction(formValues);
+    if (res?.error) {
+      alert(res.error);
+    }
+  };
 
   return (
     <main className="w-full flex">
@@ -49,10 +67,9 @@ const RegisterPage = async () => {
       </div>
       <div className="flex-1 flex items-center justify-center h-screen">
         <div className="w-full max-w-md space-y-8 px-4 bg-white text-gray-600 sm:px-0">
-          <div className="">
+          <div className="text-left">
             <Image
-              src="/quikmemo-full-black.svg"
-              className="lg:hidden"
+              src="/icons/quikmemo-full-lockup-logo.svg"
               alt="Quikmemo logo"
               width={180}
               height={180}
@@ -73,9 +90,9 @@ const RegisterPage = async () => {
             </div>
           </div>
           <div className="grid grid-cols-3 gap-x-3">
-            <Button Icon={Google} />
-            <Button Icon={Github} />
-            <Button Icon={Twitter} />
+            <Button provider="google" Icon={Google} />
+            <Button provider="github" Icon={Github} />
+            <Button provider="twitter" Icon={Twitter} />
           </div>
           <div className="relative">
             <span className="block w-full h-px bg-gray-300"></span>
@@ -83,19 +100,19 @@ const RegisterPage = async () => {
               Or continue with
             </p>
           </div>
-          <form action={registerUser} className="space-y-5">
+          <form action={handleFormSubmit} className="space-y-5">
             <div className="flex flex-col md:flex-row space-y-2 md:space-y-0 md:space-x-2 mb-4">
               <Input
                 label="First Name"
-                type="firstname"
-                id="firstname"
-                name="firstname"
+                type="text"
+                id="firstName"
+                name="firstName"
               />
               <Input
                 label="Last Name"
-                type="lastname"
-                id="lastname"
-                name="lastname"
+                type="text"
+                id="lastName"
+                name="lastName"
               />
             </div>
             <Input label="Email" type="email" id="email" name="email" />
@@ -105,9 +122,12 @@ const RegisterPage = async () => {
               id="password"
               name="password"
             />
-            {/* Passwords must be between 6 and 12 characters long, containing at least one letter and one number. */}
-            <button className="w-full px-4 py-3 text-white font-medium bg-blue-600 hover:bg-blue-500 active:bg-blue-600 rounded-lg duration-150">
-              Create account
+            <button
+              type="submit"
+              aria-disabled={pending}
+              className="w-full px-4 py-3 text-white font-medium bg-blue-600 hover:bg-blue-500 active:bg-blue-600 rounded-lg duration-150"
+            >
+              {pending ? "Creating account..." : "Create account"}
             </button>
           </form>
         </div>
