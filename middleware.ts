@@ -7,7 +7,7 @@ export default auth((req) => {
   const isLoggedIn = !!req.auth;
 
   const isApiAuthRoute = nextUrl.pathname.startsWith(apiAuthPrefix);
-  const isPublicRotue = publicRoutes.includes(nextUrl.pathname);
+  const isPublicRoute = publicRoutes.includes(nextUrl.pathname);
   const isAuthRoute = authRoutes.includes(nextUrl.pathname);
 
   // if it is an API Next Auth route, we don't want to redirect
@@ -20,7 +20,7 @@ export default auth((req) => {
     return;
   }
 
-  if (!isLoggedIn && !isPublicRotue) {
+  if (!isLoggedIn && !isPublicRoute) {
     return NextResponse.redirect(new URL("/login", nextUrl));
   }
 
