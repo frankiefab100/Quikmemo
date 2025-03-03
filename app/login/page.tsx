@@ -1,24 +1,32 @@
 "use client";
 import Image from "next/image";
-import { redirect } from "next/navigation";
+import { useRouter } from "next/navigation";
 import Button from "./button";
 import { Github, Google, Twitter } from "@/assets/SocialIcons";
 import Input from "@/components/ui/Input";
 import { signInAction } from "@/actions/user";
-import { useFormStatus } from "react-dom";
+import { useForm } from "react-hook-form";
+import { signInSchema, type SignInValues } from "@/lib/formSchema";
+import { zodResolver } from "@hookform/resolvers/zod";
 
 const LoginPage = () => {
-  const { pending } = useFormStatus();
+  const router = useRouter();
 
-  const handleFormSubmit = async (formData: FormData) => {
-    const email = formData.get("email") as string;
-    const password = formData.get("password") as string;
-    const res = await signInAction({ email, password });
+  const {
+    register,
+    handleSubmit,
+    formState: { errors, isSubmitting },
+  } = useForm<SignInValues>({
+    resolver: zodResolver(signInSchema),
+  });
+
+  const onSubmit = async (data: SignInValues) => {
+    const res = await signInAction(data);
     if (res.error) {
       alert(res.error);
       return;
     }
-    redirect("/dashboard");
+    router.push("/dashboard");
   };
 
   return (
@@ -47,20 +55,31 @@ const LoginPage = () => {
             </p>
           </div>
         </div>
-        <form action={handleFormSubmit} className="mt-8 space-y-5">
-          <Input label="Email" type="email" id="email" name="email" />
-          <Input
-            label="Password"
-            type="password"
-            id="password"
-            name="password"
-          />
+        <form onSubmit={handleSubmit(onSubmit)} className="mt-8 space-y-5">
+          <div>
+            <Input
+              label="Email"
+              type="email"
+              id="email"
+              {...register("email")}
+              error={errors.email?.message}
+            />
+          </div>
+          <div>
+            <Input
+              label="Password"
+              type="password"
+              id="password"
+              {...register("password")}
+              error={errors.password?.message}
+            />
+          </div>
           <button
             type="submit"
-            aria-disabled={pending}
-            className="w-full px-4 py-3 text-white font-medium bg-blue-600 hover:bg-blue-500 active:bg-blue-600 rounded-lg duration-150"
+            disabled={isSubmitting}
+            className="w-full px-4 py-3 text-white font-medium bg-blue-600 hover:bg-blue-500 active:bg-blue-600 rounded-lg duration-150 disabled:bg-blue-300"
           >
-            {pending ? "Logging in..." : "Sign in"}
+            {isSubmitting ? "Logging in..." : "Sign in"}
           </button>
         </form>
 

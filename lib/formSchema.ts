@@ -12,10 +12,9 @@ export type SignInValues = z.infer<typeof signInSchema>;
 export const signUpSchema = object({
     email: string({ required_error: "Email is required" }).email("Invalid email"),
     password: string({ required_error: "Password is required" })
-        // Passwords must be between 6 and 12 characters long, 
-        // containing at least one letter and one number.        
         .min(8, "Password must be more than 8 characters")
-        .max(32, "Password must be less than 32 characters"),
+        .max(32, "Password must be less than 32 characters")
+        .regex(/^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,32}$/, "Password must contain at least one letter and one number"),
     firstName: string({ required_error: "First Name is required" })
         .min(4, "First Name is required")
         .max(32, "First Name must be less than 32 characters"),

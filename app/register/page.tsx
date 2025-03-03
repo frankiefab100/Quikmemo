@@ -5,26 +5,26 @@ import Avatars from "@/components/shared/Avatars";
 import Button from "./button";
 import { Github, Google, Twitter } from "@/assets/SocialIcons";
 import Input from "@/components/ui/Input";
-import { signUpSchema } from "@/lib/formSchema";
-import { useFormStatus } from "react-dom";
+import { signUpSchema, SignUpValues } from "@/lib/formSchema";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
 
 const RegisterPage = () => {
-  const { pending } = useFormStatus();
+  const {
+    register,
+    handleSubmit,
+    formState: { errors, isSubmitting },
+  } = useForm<SignUpValues>({
+    resolver: zodResolver(signUpSchema),
+  });
 
-  const handleFormSubmit = async (formData: FormData) => {
-    const formValues = {
-      firstName: formData.get("firstName") as string,
-      lastName: formData.get("lastName") as string,
-      email: formData.get("email") as string,
-      password: formData.get("password") as string,
-    };
-
-    const { error } = await signUpSchema.safeParseAsync(formValues);
+  const onSubmit = async (data: SignUpValues) => {
+    const { error } = await signUpSchema.safeParseAsync(data);
     if (error) {
       alert(error.issues[0].message);
     }
 
-    const res = await signUpAction(formValues);
+    const res = await signUpAction(data);
     if (res?.error) {
       alert(res.error);
     }
@@ -100,34 +100,46 @@ const RegisterPage = () => {
               Or continue with
             </p>
           </div>
-          <form action={handleFormSubmit} className="space-y-5">
+          <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
             <div className="flex flex-col md:flex-row space-y-2 md:space-y-0 md:space-x-2 mb-4">
               <Input
                 label="First Name"
                 type="text"
                 id="firstName"
-                name="firstName"
+                {...register("firstName")}
+                error={errors.firstName?.message}
               />
               <Input
                 label="Last Name"
                 type="text"
                 id="lastName"
-                name="lastName"
+                {...register("lastName")}
+                error={errors.lastName?.message}
               />
             </div>
-            <Input label="Email" type="email" id="email" name="email" />
+            <Input
+              label="Email"
+              type="email"
+              id="email"
+              {...register("email")}
+              error={errors.email?.message}
+            />
             <Input
               label="Password"
               type="password"
               id="password"
-              name="password"
+              {...register("password")}
+              error={
+                errors.password?.message &&
+                "Password must be 8-32 characters long and contain at least one letter and one number"
+              }
             />
             <button
               type="submit"
-              aria-disabled={pending}
+              aria-disabled={isSubmitting}
               className="w-full px-4 py-3 text-white font-medium bg-blue-600 hover:bg-blue-500 active:bg-blue-600 rounded-lg duration-150"
             >
-              {pending ? "Creating account..." : "Create account"}
+              {isSubmitting ? "Creating account..." : "Create account"}
             </button>
           </form>
         </div>

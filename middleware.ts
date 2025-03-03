@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { auth } from "@/lib/auth";
-import { apiAuthPrefix, authRoutes, publicRoutes } from "@/utils/helpers";
+import { apiAuthPrefix, authRoutes, publicRoutes } from "@/utils/routes";
 
 export default auth((req) => {
   const { nextUrl } = req;
