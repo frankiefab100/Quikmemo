@@ -3,7 +3,6 @@ import Button from "../ui/Button";
 import { Plus } from "lucide-react";
 import type { INote } from "@/types/types";
 import { useNotes } from "@/context/NotesContext";
-import LoadingSpinner from "../shared/loading";
 import ErrorPage from "@/app/error";
 
 const NoteList: React.FC = () => {
@@ -14,7 +13,6 @@ const NoteList: React.FC = () => {
     setTitle,
     setContent,
     setTags,
-    loading,
     error,
   } = useNotes();
 
@@ -32,13 +30,12 @@ const NoteList: React.FC = () => {
     setTags(note.tags || []);
   };
 
-  if (loading) return <LoadingSpinner />;
   if (error) return <ErrorPage />;
 
   return (
-    <div className="text-gray-900 dark:text-white dark:bg-gray-800 bg-white border-gray-200 pt-16 flex h-screen flex-col border-r">
-      <div className="flex items-center gap-2 p-4 border-b">
-        <h1 className="text-xl font-semibold">All Notes</h1>
+    <div className="text-gray-900 dark:text-white bg-white dark:bg-gray-800 border-r border-gray-200 dark:border-gray-700 flex flex-col h-full">
+      <div className="flex items-center gap-2 p-4 border-b border-gray-200 dark:border-gray-700">
+        <h1 className="text-xl font-semibold">Notes</h1>
       </div>
       <div className="p-4 w-full">
         <Button variant="primary" onClick={handleCreateNote}>
@@ -54,8 +51,10 @@ const NoteList: React.FC = () => {
           {notes.map((note) => (
             <div
               key={note.id}
-              className={`w-full rounded-lg border p-4 text-left transition-colors dark:hover:bg-gray-700 dark:hover:border-gray-900 hover:bg-gray-100 focus:bg-gray-100 ${
-                selectedNote?.id === note.id ? "border-blue-500" : ""
+              className={`w-full rounded-lg p-4 text-left transition-colors border border-gray-200 dark:border-gray-700 hover:border-gray-300 dark:hover:border-gray-500 ${
+                selectedNote?.id === note.id
+                  ? "border-blue-500 dark:border-blue-400"
+                  : ""
               }`}
               onClick={() => onNoteSelect(note)}
             >
@@ -66,7 +65,7 @@ const NoteList: React.FC = () => {
                 {note.tags?.map((tag, index) => (
                   <span
                     key={index}
-                    className="dark:bg-gray-600 dark:text-gray-400 bg-gray-200 text-gray-800 px-2 py-1 rounded-md text-xs"
+                    className="bg-gray-200 dark:bg-gray-600 text-gray-800 dark:text-gray-200  px-2 py-1 rounded-md text-xs"
                   >
                     {tag}
                   </span>

@@ -1,51 +1,57 @@
 import Link from "next/link";
-import { Archive, ChevronRight, Home, Tag } from "lucide-react";
-import { TAGS } from "@/constants/tags";
+import SidebarItem from "./ui/sidebarItem";
+import {
+  ArchiveRestore,
+  ChevronDown,
+  FileText,
+  Home,
+  Star,
+  Tag,
+  Trash,
+} from "lucide-react";
 
 const Sidebar: React.FC = () => {
   return (
-    <aside
-      id="logo-sidebar"
-      className=" w-1/5 pt-24 fixed top-0 left-0 z-40 h-screen transition-transform -translate-x-full bg-white border-r border-gray-200 sm:translate-x-0 dark:bg-gray-800 dark:border-gray-700"
-      aria-label="Sidebar"
-    >
-      <div className="h-full px-3 pb-4 overflow-y-auto bg-white dark:bg-gray-800">
-        <ul className="space-y-2 font-medium">
-          <Link
-            href="#"
-            className="flex justify-between items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700"
-          >
-            <div className="flex justify-center">
-              <Home className="h-5 w-5" />
-              <span className="ms-3">All Notes</span>
-            </div>
+    <aside id="sidebar" className="fixed h-full z-10">
+      <div className="bg-[#fbfbfc] dark:bg-[#1e2531] flex flex-col w-full lg:max-w-[16%] md:max-w-[25%] max-w-[25vw] h-full fixed overflow-hidden whitespace-nowrap scrollbar hover:overflow-y-scroll z-10">
+        <div className="pt-3">
+          <SidebarItem Icon={Home} name="All Notes" />
+        </div>
 
-            <ChevronRight className="h-5 w-5" />
-          </Link>
-          <Link
-            href="#"
-            className="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700"
-          >
-            <Archive className="h-5 w-5" />
-            <span className="ms-3">Archived Notes</span>
-          </Link>
-          <h3 className="flex items-center p-2 text-gray-900 dark:text-white">
+        <div className="py-2">
+          <h2 className="text-gray-500 dark:text-gray-400 font-semibold text-sm pl-6 my-2">
+            Recents
+          </h2>
+          <SidebarItem Icon={FileText} name="Recent Note 1" />
+          <SidebarItem Icon={FileText} name="Recent Note 2" />
+          <SidebarItem Icon={FileText} name="Recent Note 3" />
+        </div>
+
+        <div className="py-2">
+          <h2 className="text-gray-500 dark:text-gray-400 font-semibold text-sm pl-6 my-2">
             Tags
-          </h3>
+          </h2>
+          <SidebarItem Icon={Tag} name="Personal" />
+          <SidebarItem Icon={Tag} name="Travel" />
+          <SidebarItem Icon={Tag} name="Journal" />
+          <SidebarItem Icon={Tag} name="Budget" />
+          <Link
+            href="#"
+            className="flex items-center text-gray-500 dark:text-gray-400 text-sm py-2 px-6"
+          >
+            <ChevronDown className="w-5 h-5" />
+            <span className="ml-2 text-xs">See More</span>
+          </Link>
+        </div>
 
-          {TAGS.map((tag, index) => {
-            return (
-              <Link
-                href="#"
-                key={index}
-                className="flex items-center p-2 text-gray-900 rounded-lg dark:text-white"
-              >
-                <Tag className="h-5 w-5" />
-                <span className="ms-3">{tag}</span>
-              </Link>
-            );
-          })}
-        </ul>
+        <div className="py-2">
+          <h2 className="text-gray-500 dark:text-gray-400 font-semibold text-sm pl-6 my-2">
+            More
+          </h2>
+          <SidebarItem Icon={Star} name="Favorites" />
+          <SidebarItem Icon={ArchiveRestore} name="Archived Notes" />
+          <SidebarItem Icon={Trash} name="Trash" />
+        </div>
       </div>
     </aside>
   );

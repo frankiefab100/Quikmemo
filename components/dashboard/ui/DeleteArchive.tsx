@@ -2,7 +2,7 @@
 import { Archive, Trash2 } from "lucide-react";
 import { useNotes } from "@/context/NotesContext";
 import { useState } from "react";
-import Modal from "../ui/Modal";
+import Modal from "../../ui/Modal";
 
 const DeleteArchive = () => {
   const { selectedNote, handleDeleteNote, handleArchiveNote } = useNotes();

@@ -1,10 +1,11 @@
 "use client";
-import { Expand, Clock, Tag } from "lucide-react";
+import { CircleEllipsis, Clock, Tag } from "lucide-react";
 import Button from "../ui/Button";
-import EditorFeature, { featureItems } from "./editorFeature";
+import EditorFeature, { featureItems } from "./ui/editorFeature";
 import { useNotes } from "@/context/NotesContext";
-import type { FormEvent } from "react";
+import { type FormEvent } from "react";
 import Toast from "../ui/Toast";
+// import DeleteArchive from "./ui/DeleteArchive";
 
 const NoteEditor: React.FC = () => {
   const {
@@ -42,17 +43,30 @@ const NoteEditor: React.FC = () => {
     setTags(event.target.value.split(",").map((tag) => tag.trim()));
   };
 
+  // const [ellipsisOption, SetEllipsisOption] = useState<boolean>(true);
+  // const toggleEllipsis = () => {
+  //   SetEllipsisOption((prev) => !prev);
+  // };
+
   return (
-    <div className="dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 bg-white border-gray-200 text-white pt-16 flex flex-col">
-      <div className="flex items-center justify-between border-b p-4">
-        <div className="flex-1">
+    <div className="bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700">
+      <div className="flex items-center justify-between p-4 border-b border-gray-200 dark:border-gray-700">
+        <div className="relative flex-1">
           <input
-            className="text-gray-900 dark:text-white w-full bg-transparent text-2xl font-semibold outline-none placeholder:text-muted-foreground"
+            className="w-full text-gray-900 dark:text-white bg-transparent text-2xl font-semibold outline-none placeholder:text-muted-foreground"
             placeholder="Note title"
             value={title}
             onChange={(event) => setTitle(event.target.value)}
-            required
           />
+          {/* {ellipsisOption ? ( */}
+          <CircleEllipsis
+            // onClick={toggleEllipsis}
+            className="absolute right-0 top-0 text-gray-700 dark:text-gray-200"
+          />
+          {/*  ) : (
+             <DeleteArchive />
+           )} */}
+
           <div className="mt-2 block">
             <div className="flex items-center gap-14">
               <span className="flex justify-center items-center text-sm text-gray-900 dark:text-white">
@@ -78,7 +92,7 @@ const NoteEditor: React.FC = () => {
               <span className="text-sm text-gray-900 dark:text-white">
                 {selectedNote?.lastEdited
                   ? new Date(selectedNote.lastEdited).toLocaleString()
-                  : "Not saved yet"}
+                  : ""}
               </span>
             </div>
           </div>
@@ -92,45 +106,34 @@ const NoteEditor: React.FC = () => {
       </div>
 
       <form onSubmit={handleSubmit} className="flex-1 p-4">
-        <div className="w-full mb-4 border border-gray-200 rounded-lg bg-gray-50 dark:bg-gray-700 dark:border-gray-600">
-          <div className="flex items-center justify-between px-3 py-2 border-b dark:border-gray-600">
-            <div className="flex flex-wrap items-center divide-gray-200 sm:divide-x sm:rtl:divide-x-reverse dark:divide-gray-600">
-              {featureItems.map((feature) => (
-                <EditorFeature
-                  key={feature.label}
-                  label={feature.label}
-                  Icon={feature.Icon}
-                />
-              ))}
-            </div>
-            <button
-              type="button"
-              data-tooltip-target="tooltip-fullscreen"
-              className="p-2 text-gray-500 rounded cursor-pointer sm:ms-auto hover:text-gray-900 hover:bg-gray-100 dark:text-gray-400 dark:hover:text-white dark:hover:bg-gray-600"
-            >
-              <Expand className="w-4 h-4" />
-              <span className="sr-only">Full screen</span>
-            </button>
+        <div className="flex items-center justify-between mb-2 border-b dark:border-gray-600">
+          <div className="flex flex-wrap items-center divide-gray-200 sm:divide-x sm:rtl:divide-x-reverse dark:divide-gray-600">
+            {featureItems.map((feature) => (
+              <EditorFeature
+                key={feature.label}
+                label={feature.label}
+                Icon={feature.Icon}
+              />
+            ))}
           </div>
-          <div className="px-4 bg-white rounded-b-lg dark:bg-gray-800">
-            <textarea
-              id="editor"
-              className="block w-full h-[45vh] resize-none px-0 text-sm text-gray-800 bg-white border-0 dark:bg-gray-800 focus:ring-0 dark:text-white dark:placeholder-gray-400"
-              placeholder="Write a note..."
-              value={content}
-              onChange={(event) => setContent(event.target.value)}
-              rows={10}
-              required
-            ></textarea>
+          <div className="flex justify-between">
+            <Button type="submit">
+              {selectedNote ? "Update Note" : "Save Note"}
+            </Button>
+            <Button variant="outline" onClick={handleCancel}>
+              Cancel
+            </Button>
           </div>
         </div>
-        <div className="mb-4 flex items-center justify-start gap-2">
-          <Button type="submit">
-            {selectedNote ? "Update Note" : "Save Note"}
-          </Button>
-          <Button variant="outline" onClick={handleCancel}>
-            Cancel
-          </Button>
+        <div className="w-full">
+          <textarea
+            id="editor"
+            className="w-full h-[80vh] px-1 text-base text-gray-800 dark:text-white bg-white dark:bg-gray-800 focus:outline-none focus:ring-0 placeholder-gray-400 dark:placeholder-gray-400"
+            placeholder="Write a note..."
+            value={content}
+            onChange={(event) => setContent(event.target.value)}
+            rows={10}
+          ></textarea>
         </div>
       </form>
     </div>

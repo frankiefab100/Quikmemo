@@ -1,6 +1,5 @@
 import { LucideIcon } from "lucide-react";
 import {
-  CalendarDays,
   Download,
   FileCode,
   FileImage,
@@ -8,7 +7,6 @@ import {
   ListOrdered,
   MapPin,
   Paperclip,
-  Settings,
 } from "lucide-react";
 
 interface EditorProps {
@@ -23,8 +21,6 @@ export const featureItems = [
   { label: "Format code", Icon: FileCode },
   { label: "Add emoji", Icon: Laugh },
   { label: "Add list", Icon: ListOrdered },
-  { label: "Settings", Icon: Settings },
-  { label: "Timeline", Icon: CalendarDays },
   { label: "Download", Icon: Download },
 ];
 
