@@ -12,7 +12,7 @@ import {
 
 const Sidebar: React.FC = () => {
   return (
-    <aside id="sidebar" className="fixed h-full z-10">
+    <aside id="sidebar" className="md:flex fixed h-full z-10 hidden">
       <div className="bg-[#fbfbfc] dark:bg-[#1e2531] flex flex-col w-full lg:max-w-[16%] md:max-w-[25%] max-w-[25vw] h-full fixed overflow-hidden whitespace-nowrap scrollbar hover:overflow-y-scroll z-10">
         <div className="pt-3">
           <SidebarItem Icon={Home} name="All Notes" />

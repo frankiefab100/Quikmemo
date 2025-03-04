@@ -61,11 +61,11 @@ const UserDropdown: React.FC<IUser> = ({
         <span className="sr-only">user profile</span>
         {userImage ? (
           <Image
-            className="rounded-full"
+            className="rounded-full md:w-8 md:h-8"
             src={userImage}
             alt={`${userName} photo`}
-            width={40}
-            height={40}
+            width={50}
+            height={50}
           />
         ) : (
           <CircleUser className="w-8 h-8 text-gray-400" />

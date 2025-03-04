@@ -3,7 +3,7 @@ import Button from "../ui/Button";
 import { Plus } from "lucide-react";
 import type { INote } from "@/types/types";
 import { useNotes } from "@/context/NotesContext";
-import ErrorPage from "@/app/error";
+// import ErrorPage from "@/app/error";
 
 const NoteList: React.FC = () => {
   const {
@@ -13,7 +13,7 @@ const NoteList: React.FC = () => {
     setTitle,
     setContent,
     setTags,
-    error,
+    // error,
   } = useNotes();
 
   const handleCreateNote = () => {
@@ -30,10 +30,10 @@ const NoteList: React.FC = () => {
     setTags(note.tags || []);
   };
 
-  if (error) return <ErrorPage />;
+  // if (error) return <ErrorPage />;
 
   return (
-    <div className="text-gray-900 dark:text-white bg-white dark:bg-gray-800 border-r border-gray-200 dark:border-gray-700 flex flex-col h-full">
+    <div className="text-gray-900 dark:text-white bg-white dark:bg-gray-800 border-r border-gray-200 dark:border-gray-700 md:flex flex-col h-full hidden">
       <div className="flex items-center gap-2 p-4 border-b border-gray-200 dark:border-gray-700">
         <h1 className="text-xl font-semibold">Notes</h1>
       </div>
