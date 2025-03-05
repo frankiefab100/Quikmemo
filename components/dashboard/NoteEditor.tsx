@@ -3,10 +3,11 @@ import { ChevronLeft, CircleEllipsis, Clock, Tag } from "lucide-react";
 import Button from "../ui/Button";
 import EditorFeature, { featureItems } from "./ui/editorFeature";
 import { useNotes } from "@/context/NotesContext";
-import { useState, type FormEvent } from "react";
+import { useCallback, useState, type FormEvent } from "react";
 import Toast from "../ui/Toast";
 import Link from "next/link";
 import DeleteArchive from "./ui/DeleteArchive";
+import { useClickOutside } from "@/hook/useClickOutside";
 
 const NoteEditor: React.FC = () => {
   const {
@@ -46,6 +47,11 @@ const NoteEditor: React.FC = () => {
 
   const [showDeleteArchive, setShowDeleteArchive] = useState(false);
 
+  const closeDeleteArchive = useCallback(() => {
+    setShowDeleteArchive(false);
+  }, []);
+  const deleteArchiveRef = useClickOutside(closeDeleteArchive);
+
   return (
     <div className="bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700">
       <div className="m-3 md:hidden flex justify-between">
@@ -78,7 +84,9 @@ const NoteEditor: React.FC = () => {
 
           <div className="relative">
             {showDeleteArchive ? (
-              <DeleteArchive />
+              <div ref={deleteArchiveRef}>
+                <DeleteArchive onClose={closeDeleteArchive} />
+              </div>
             ) : (
               <CircleEllipsis
                 onClick={() => setShowDeleteArchive(true)}
