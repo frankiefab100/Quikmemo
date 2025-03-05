@@ -3,10 +3,10 @@ import { ChevronLeft, CircleEllipsis, Clock, Tag } from "lucide-react";
 import Button from "../ui/Button";
 import EditorFeature, { featureItems } from "./ui/editorFeature";
 import { useNotes } from "@/context/NotesContext";
-import { type FormEvent } from "react";
+import { useState, type FormEvent } from "react";
 import Toast from "../ui/Toast";
 import Link from "next/link";
-// import DeleteArchive from "./ui/DeleteArchive";
+import DeleteArchive from "./ui/DeleteArchive";
 
 const NoteEditor: React.FC = () => {
   const {
@@ -44,10 +44,7 @@ const NoteEditor: React.FC = () => {
     setTags(event.target.value.split(",").map((tag) => tag.trim()));
   };
 
-  // const [ellipsisOption, SetEllipsisOption] = useState<boolean>(true);
-  // const toggleEllipsis = () => {
-  //   SetEllipsisOption((prev) => !prev);
-  // };
+  const [showDeleteArchive, setShowDeleteArchive] = useState(false);
 
   return (
     <div className="bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700">
@@ -78,25 +75,26 @@ const NoteEditor: React.FC = () => {
             value={title}
             onChange={(event) => setTitle(event.target.value)}
           />
-          {/* {ellipsisOption ? ( */}
-          <CircleEllipsis
-            // onClick={toggleEllipsis}
-            className="absolute right-0 top-0 text-gray-700 dark:text-gray-200"
-          />
-          {/*  ) : (
-             <DeleteArchive />
-           )} */}
+
+          <div className="relative">
+            {showDeleteArchive ? (
+              <DeleteArchive />
+            ) : (
+              <CircleEllipsis
+                onClick={() => setShowDeleteArchive(true)}
+                className="absolute right-0 top-0 text-gray-700 dark:text-gray-200 cursor-pointer"
+              />
+            )}
+          </div>
 
           <div className="mt-2 block">
             <div className="flex items-center gap-14">
               <span className="flex justify-center items-center text-sm text-gray-900 dark:text-white">
-                <span className="pr-2">
-                  <Tag className="w-3 h-3" />
-                </span>
+                <Tag className="w-3 h-3 mr-2" />
                 Tags
               </span>
               <input
-                className="flex-1 bg-transparent text-sm text-gray-900 dark:text-white outline-none"
+                className="flex-1 bg-transparent text-sm text-gray-900 dark:text-white outline-none placeholder:italic"
                 placeholder="Enter tags, separated by commas"
                 value={tags.join(", ")}
                 onChange={handleTagChange}
@@ -104,15 +102,18 @@ const NoteEditor: React.FC = () => {
             </div>
             <div className="flex items-center gap-4">
               <span className="flex justify-center items-center text-sm text-gray-900 dark:text-white">
-                <span className="pr-2">
-                  <Clock className="w-3 h-3" />
-                </span>
+                <Clock className="w-3 h-3 mr-2" />
                 Last edited
               </span>
+
               <span className="text-sm text-gray-900 dark:text-white">
-                {selectedNote?.lastEdited
-                  ? new Date(selectedNote.lastEdited).toLocaleString()
-                  : ""}
+                {selectedNote?.lastEdited ? (
+                  new Date(selectedNote.lastEdited).toLocaleString()
+                ) : (
+                  <span className="text-xs italic text-gray-600 dark:text-gray-400">
+                    DD/MM/YYYY, 00:00:00 AM
+                  </span>
+                )}
               </span>
             </div>
           </div>
@@ -148,7 +149,7 @@ const NoteEditor: React.FC = () => {
         <div className="w-full">
           <textarea
             id="editor"
-            className="w-full h-[80vh] px-1 text-base text-gray-800 dark:text-white bg-white dark:bg-gray-800 focus:outline-none focus:ring-0 placeholder-gray-400 dark:placeholder-gray-400"
+            className="w-full min-h-[71vh] px-1 text-base text-gray-800 dark:text-white bg-white dark:bg-gray-800 focus:outline-none focus:ring-0 placeholder-gray-400 dark:placeholder-gray-400"
             placeholder="Write a note..."
             value={content}
             onChange={(event) => setContent(event.target.value)}

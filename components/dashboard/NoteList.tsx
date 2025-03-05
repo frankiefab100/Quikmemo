@@ -33,7 +33,10 @@ const NoteList: React.FC = () => {
   // if (error) return <ErrorPage />;
 
   return (
-    <div className="text-gray-900 dark:text-white bg-white dark:bg-gray-800 border-r border-gray-200 dark:border-gray-700 md:flex flex-col h-full hidden">
+    <div
+      id="#notes"
+      className="text-gray-900 dark:text-white bg-white dark:bg-gray-800 border-r border-gray-200 dark:border-gray-700 md:flex flex-col h-full hidden"
+    >
       <div className="flex items-center gap-2 p-4 border-b border-gray-200 dark:border-gray-700">
         <h1 className="text-xl font-semibold">Notes</h1>
       </div>

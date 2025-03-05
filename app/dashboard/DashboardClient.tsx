@@ -20,7 +20,7 @@ const DashboardClient = () => {
       >
         <div
           className="
-        lg:max-w-[100%] grid lg:grid-cols-[300px_minmax(600px,_1fr)] md:grid-cols-[200px_minmax(300px,_1fr)] grid-cols-1 overflow-hidden "
+        lg:max-w-[100%] grid lg:grid-cols-[300px_minmax(600px,_1fr)] md:grid-cols-[200px_minmax(300px,_1fr)] grid-cols-1 overflow-hidden"
         >
           <NotesProvider>
             <NoteList />

@@ -40,7 +40,7 @@ const Sidebar: React.FC = () => {
             className="flex items-center text-gray-500 dark:text-gray-400 text-sm py-2 px-6"
           >
             <ChevronDown className="w-5 h-5" />
-            <span className="ml-2 text-xs">See More</span>
+            <span className="ml-2 text-sm">See More</span>
           </Link>
         </div>
 
