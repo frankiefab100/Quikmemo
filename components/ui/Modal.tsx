@@ -10,7 +10,7 @@ const Modal: React.FC<ModalProps> = ({ isOpen, onClose, onConfirm }) => {
           aria-hidden="true"
           className="flex items-center justify-center fixed top-0 right-0 left-0 z-50 w-full md:inset-0 h-modal md:h-full"
         >
-          <div className="relative p-4 w-full max-w-md h-full md:h-auto text-center bg-white rounded-lg shadow dark:bg-gray-800 sm:p-5">
+          <div className="relative p-4 w-full max-w-md h-full md:h-auto text-center rounded-md shadow bg-gray-100 dark:bg-gray-700 sm:p-5">
             <button
               type="button"
               onClick={onClose}

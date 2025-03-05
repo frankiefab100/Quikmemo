@@ -54,10 +54,10 @@ const NoteList: React.FC = () => {
           {notes.map((note) => (
             <div
               key={note.id}
-              className={`w-full rounded-lg p-4 text-left transition-colors border border-gray-200 dark:border-gray-700 hover:border-gray-300 dark:hover:border-gray-500 ${
+              className={`w-full rounded-lg p-4 text-left transition-colors border hover:border-gray-300 dark:hover:border-gray-500 ${
                 selectedNote?.id === note.id
-                  ? "border-blue-500 dark:border-blue-400"
-                  : ""
+                  ? "border-blue-300 dark:border-blue-400"
+                  : "border-gray-200 dark:border-gray-700"
               }`}
               onClick={() => onNoteSelect(note)}
             >
