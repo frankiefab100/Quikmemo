@@ -1,5 +1,5 @@
 <div align="center">
- <img width="80" src="./public/icons/quikmemo-mark-logo.svg" alt="quikmemo logo">
+ <img width="60" src="./public/icons/quikmemo-mark-logo.svg" alt="quikmemo logo">
  <h1>Quikmemo</h1>
  <p>The ultimate note-taking application</p>
 </div>
@@ -12,7 +12,8 @@ Quikmemo is an easy-to-use note-taking app that helps you capture your thoughts,
 
 ## Features/Roadmap
 
-- [x] User Authentication (User Registration and Password Reset - WIP)
+- [x] User Authentication and Session Management
+- [ ] Password Reset
 - [x] Create Notes
 - [x] Edit Notes
 - [x] Delete Notes
@@ -20,7 +21,7 @@ Quikmemo is an easy-to-use note-taking app that helps you capture your thoughts,
 - [x] View All Notes
 - [x] Toggle Theme from the dashboard
 - [x] Save Notes in Database
-- [ ] Save User in Database
+- [x] Save User in Database
 - [ ] View Archived and Deleted Notes
 - [ ] Restore Archived and Deleted Notes
 - [ ] View Notes by Specific Tags
@@ -34,8 +35,7 @@ Quikmemo is an easy-to-use note-taking app that helps you capture your thoughts,
 - [ ] Share Notes with other apps
 - [ ] Export Notes in multiple file formats
 - [x] Website Analytics
-- [ ] Offline Access, Optimal User Experience and Animation
-- [ ] Live Chat Support
+- [ ] Offline Access, Optimal User Experience with Smooth Animation
 
 > [!IMPORTANT]
 > - [x] indicates features that are fully implemented.
@@ -47,10 +47,14 @@ Quikmemo is an easy-to-use note-taking app that helps you capture your thoughts,
 - [TypeScript](https://www.typescriptlang.org/)
 - [Tailwind CSS](https://tailwindcss.com/)
 - [Auth.js (fka Next-auth)](https://authjs.dev/)
+  - [Bcryt](https://github.com/dcodeIO/bcrypt.js) - For hashing passwords and managing authentication securely.
+  - [Zod](https://zod.dev/) - For schema validation.
+  - [React Hook Form](https://react-hook-form.com/) - For managing form state and validation.
 - [Prisma](https://prisma.io/)
 - [MongoDB](https://mongodb.com/)
 - [Motion (fka Framer Motion)](https://motion.dev/)
 - [Umami Analytics](https://umami.is/)
+- [Vercel](https://vercel.com/)
 
 ## Quick Start
 
