@@ -2,7 +2,7 @@ import Link from "next/link";
 import SidebarItem from "./ui/sidebarItem";
 import {
   ArchiveRestore,
-  ChevronDown,
+  Ellipsis,
   FileText,
   Home,
   Star,
@@ -35,12 +35,13 @@ const Sidebar: React.FC = () => {
           <SidebarItem Icon={Tag} name="Travel" />
           <SidebarItem Icon={Tag} name="Journal" />
           <SidebarItem Icon={Tag} name="Budget" />
+          <SidebarItem Icon={Tag} name="Shopping" />
           <Link
             href="#"
             className="flex items-center text-gray-500 dark:text-gray-400 text-sm py-2 px-6"
           >
-            <ChevronDown className="w-5 h-5" />
-            <span className="ml-2 text-sm">See More</span>
+            <Ellipsis className="w-5 h-5" />
+            <span className="ml-2 text-sm">View More</span>
           </Link>
         </div>
 

@@ -1,11 +1,11 @@
 import React from "react";
 import {
   ArchiveRestore,
-  FileText,
   Home,
   LucideIcon,
-  Settings,
+  Star,
   Tags,
+  Trash,
 } from "lucide-react";
 import Link from "next/link";
 
@@ -34,11 +34,11 @@ const MobileNav = () => {
       className="md:hidden fixed z-10 w-full bottom-0"
     >
       <div className="grid grid-cols-5 gap-4 align-center bg-[#fbfbfc] dark:bg-[#1e2531] text-gray-500 dark:text-gray-400 font-normal text-sm">
-        <MobileNavItem Icon={Home} name="Home" />
-        <MobileNavItem Icon={FileText} name="Notes" />
+        <MobileNavItem Icon={Home} name="Notes" />
         <MobileNavItem Icon={Tags} name="Tags" />
+        <MobileNavItem Icon={Star} name="Favorites" />
         <MobileNavItem Icon={ArchiveRestore} name="Archived" />
-        <MobileNavItem Icon={Settings} name="Settings" />
+        <MobileNavItem Icon={Trash} name="Trash" />
       </div>
     </div>
   );
