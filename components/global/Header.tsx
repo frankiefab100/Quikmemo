@@ -4,7 +4,7 @@ import { useState } from "react";
 import Link from "next/link";
 import { ChevronDown, Menu, X } from "lucide-react";
 
-export default function Header() {
+export default function Navbar() {
   const [isFeaturesOpen, setIsFeaturesOpen] = useState(false);
   const [isUseCasesOpen, setIsUseCasesOpen] = useState(false);
   const [isResourcesOpen, setIsResourcesOpen] = useState(false);
