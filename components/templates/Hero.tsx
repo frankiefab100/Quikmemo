@@ -29,7 +29,7 @@ export const Hero: React.FC = () => {
 
       <button className="my-10 mx-auto rounded-full px-6 py-3.5 text-white bg-blue-600 hover:bg-blue-700 duration-150">
         <Link href="/register" role="button" className="flex justify-center">
-          Try QuikMemo
+          Try Quikmemo
           <ChevronRight className="h-6 w-6" />
         </Link>
       </button>
@@ -43,7 +43,6 @@ export const Hero: React.FC = () => {
           className="object-cover"
         />
       </div>
-      {/* </div> */}
     </section>
   );
 };

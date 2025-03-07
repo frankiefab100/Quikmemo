@@ -28,7 +28,7 @@ const FAQ: React.FC = () => {
                 <button
                   onClick={() => toggleAccordion(faq.id)}
                   aria-expanded={activeId === faq.id}
-                  className="flex items-center justify-between w-full px-6 py-5 text-lg font-semibold text-left text-gray-900 sm:p-6"
+                  className="flex items-center justify-between w-full px-6 py-3 text-lg font-semibold text-left text-gray-900 sm:p-6"
                 >
                   <span>{faq.question}</span>
                   <span className="ml-4 text-white bg-white-300 rounded-full">

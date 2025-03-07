@@ -5,7 +5,7 @@ import { FOOTER_LINKS } from "@/constants/footer";
 
 export default function Footer() {
   return (
-    <div className="py-10 bg-blue-50 sm:pt-16 lg:pt-24">
+    <div className="py-10 sm:pt-16 lg:pt-24">
       <div className="px-4 mx-auto sm:px-6 lg:px-8 max-w-7xl">
         <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-12 gap-y-12 gap-x-8 xl:gap-x-12">
           <div className="col-span-2 md:col-span-4">
@@ -16,9 +16,8 @@ export default function Footer() {
               width={150}
               height={36}
             />
-            <p className="text-sm leading-relaxed text-gray-600 mt-1">
-              Join hundreds of users who are already experiencing the future of
-              note-taking.
+            <p className="text-sm font-semibold leading-relaxed text-gray-600 mt-1">
+              Where ideas and inspirations live.
             </p>
           </div>
           {FOOTER_LINKS.map((section, index) => (
@@ -69,16 +68,15 @@ export default function Footer() {
                 href: "https://github.com",
               },
             ].map((item, index) => (
-              <li key={index}>
-                <Link
-                  href={item.href}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="flex items-center justify-center text-gray-800 transition-all duration-200 bg-transparent border border-gray-300 rounded-full w-7 h-7 focus:bg-blue-600 hover:text-white focus:text-white hover:bg-blue-600 hover:border-blue-600 focus:border-blue-600"
-                >
-                  {item.icon}
-                </Link>
-              </li>
+              <Link
+                key={index}
+                href={item.href}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center justify-center text-gray-800 transition-all duration-200 bg-transparent border border-gray-300 rounded-full w-7 h-7 focus:bg-blue-600 hover:text-white focus:text-white hover:bg-blue-600 hover:border-blue-600 focus:border-blue-600"
+              >
+                {item.icon}
+              </Link>
             ))}
           </ul>
         </div>
