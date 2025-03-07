@@ -54,7 +54,7 @@ const NoteEditor: React.FC = () => {
 
   return (
     <div className="bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700">
-      <div className="m-3 md:hidden flex justify-between">
+      <div className="md:hidden flex justify-between">
         <Link
           href="/"
           className="flex items-center text-sm text-gray-600 hover:text-gray-400 dark:text-gray-200 dark:hover:text-gray-500"
@@ -135,8 +135,8 @@ const NoteEditor: React.FC = () => {
       </div>
 
       <form onSubmit={handleSubmit} className="flex-1 p-4">
-        <div className="flex items-center justify-between mb-2 border-b dark:border-gray-600">
-          <div className="flex flex-wrap items-center divide-gray-200 sm:divide-x sm:rtl:divide-x-reverse dark:divide-gray-600">
+        <div className="flex items-center justify-between">
+          <div className="flex flex-wrap items-center w-full mb-3 border-b divide-gray-200 sm:divide-x sm:rtl:divide-x-reverse dark:divide-gray-600">
             {featureItems.map((feature) => (
               <EditorFeature
                 key={feature.label}
