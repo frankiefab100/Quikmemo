@@ -1,5 +1,4 @@
 "use client";
-import Link from "next/link";
 import { useState } from "react";
 import { Minus, Plus } from "lucide-react";
 import { FAQS } from "@/constants/faq";
@@ -11,7 +10,7 @@ const FAQ: React.FC = () => {
   };
 
   return (
-    <section className="py-16 bg-gray-50 sm:py-16 lg:py-20">
+    <section className="py-16">
       <div className="px-4 mx-auto sm:px-6 lg:px-8 max-w-7xl">
         <div className="max-w-2xl mx-auto text-center space-y-2">
           <h2 className="lg:text-4xl md:text-3xl text-2xl font-semibold tracking-tight text-gray-900">
@@ -50,28 +49,6 @@ const FAQ: React.FC = () => {
               )}
             </div>
           ))}
-        </div>
-
-        <div className="max-w-5xl mx-auto mt-8 overflow-hidden text-center bg-gray-100 sm:mt-12 rounded-xl">
-          <div className="px-6 py-12 sm:p-12">
-            <div className="mx-auto">
-              <h3 className="mt-6 text-2xl font-semibold text-gray-900">
-                Try Quikmemo for free today
-              </h3>
-              <p className="mt-2 text-base font-normal text-gray-600">
-                Transform your thoughts into organized notes effortlessly.
-              </p>
-              <div className="mt-1">
-                <Link
-                  href="#"
-                  title="Start Live Chat"
-                  className="inline-flex items-center justify-center px-6 py-4 font-semibold text-white transition-all duration-200 bg-blue-600 rounded-md hover:bg-blue-700 focus:bg-blue-700 mt-7"
-                >
-                  Start writing – it&apos;s free
-                </Link>
-              </div>
-            </div>
-          </div>
         </div>
       </div>
     </section>

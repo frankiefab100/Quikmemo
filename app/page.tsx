@@ -6,6 +6,7 @@ import UseCases from "@/components/templates/UseCases";
 import Testimonials from "@/components/templates/Testimonials";
 import FAQ from "@/components/templates/FAQ";
 import React from "react";
+import CTA from "@/components/templates/CTA";
 
 export default function Home() {
   return (
@@ -18,12 +19,13 @@ export default function Home() {
         <div className="absolute bottom-0 left-0 right-0 top-0 bg-[radial-gradient(circle_500px_at_50%_200px,#e4f5fe,transparent)]"></div>
       </div>
 
-      <main className="pt-60 md:pt-48 lg:pt-40">
+      <main>
         <Hero />
         <Features />
         <UseCases />
         <Testimonials />
         <FAQ />
+        <CTA />
       </main>
       <footer>
         <Footer />

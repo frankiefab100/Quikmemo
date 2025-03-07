@@ -1,4 +1,5 @@
 import { LucideIcon } from "lucide-react";
+import { StaticImageData } from "next/image";
 import {
     type FormEvent
 } from "react";
@@ -18,7 +19,7 @@ export interface IFeatures {
 export interface IUseCases {
     title: string;
     description: string;
-    photo: string;
+    photo: StaticImageData;
 }
 
 export interface ITestimonials {

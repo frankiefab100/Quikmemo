@@ -4,18 +4,16 @@ import Link from "next/link";
 import Avatars from "../shared/Avatars";
 import HeroImg from "@/assets/images/hero-image-dark.png";
 
-export const Hero = () => {
+export const Hero: React.FC = () => {
   return (
-    <section className="min-h-screen max-w-7xl mx-auto py-10 md:pt-20 text-center px-4 lg:px-8">
-      <span className="rounded-[15px] inline-flex center border border-blue-500 text-gray-900 px-3 py-1 text-sm w-fit ">
+    <section className="flex flex-col items-center justify-center text-center pt-60 md:pt-72 px-4 lg:px-8">
+      <span className=" px-3 py-1 rounded-[15px] inline-flex border border-blue-300">
         <Avatars />
-        <p className="text-sm text-gray-400 font-medium translate-x-2">
-          Join 50+ users
-        </p>
+        <p className="ml-2 text-sm text-gray-500 font-medium">Join 50+ users</p>
       </span>
 
       <div className="mt-2 space-y-2">
-        <h1 className="text-3xl font-extrabold text-gray-900 sm:text-4xl md:text-5xl">
+        <h1 className="text-4xl md:text-5xl lg:text-6xl font-extrabold text-gray-900">
           The Ultimate{" "}
           <span className="text-transparent bg-clip-text bg-gradient-to-r to-sky-600 from-sky-400">
             Note-Taking
@@ -23,22 +21,20 @@ export const Hero = () => {
           {""} Companion
         </h1>
 
-        <p className="md:text-xl text-lg text-gray-500 mb-12 max-w-2xl mx-auto">
-          Jot down ideas, inspiration, and organize your tasks seamlessly.
+        <p className="lg:text-xl md:text-lg text-base text-gray-500 mb-12 max-w-2xl mx-auto">
+          Write down your ideas, inspiration, and organize your tasks
+          seamlessly.
         </p>
       </div>
 
-      <Link
-        href="/register"
-        className="flex flex-wrap justify-center gap-4 my-16"
-      >
-        <button className="flex items-center gap-2 px-6 py-3.5 text-white bg-blue-600 rounded-lg duration-150 hover:bg-blue-700 active:shadow-lg">
+      <button className="my-10 mx-auto rounded-full px-6 py-3.5 text-white bg-blue-600 hover:bg-blue-700 duration-150">
+        <Link href="/register" role="button" className="flex justify-center">
           Try QuikMemo
           <ChevronRight className="h-6 w-6" />
-        </button>
-      </Link>
+        </Link>
+      </button>
 
-      <div className="max-w-5xl mx-auto rounded-md overflow-hidden">
+      <div className="mt-10 max-w-6xl mx-auto rounded-md overflow-hidden">
         <Image
           src={HeroImg}
           alt="QuikMemo Demo"
@@ -47,6 +43,7 @@ export const Hero = () => {
           className="object-cover"
         />
       </div>
+      {/* </div> */}
     </section>
   );
 };

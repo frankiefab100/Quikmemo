@@ -14,7 +14,6 @@ const UseCases: React.FC = () => {
           From draft to detailed documentation
         </h3>
         <p className="text-gray-500 max-w-2xl mx-auto">
-          {/* <p className="text-base lg:text-lg text-gray-500 max-w-2xl mx-auto"> */}
           Whether you&apos;re a writer, student, professional, or anyone in
           between, Quikmemo makes it incredibly simple to get started.
         </p>

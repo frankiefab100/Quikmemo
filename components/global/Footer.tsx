@@ -5,7 +5,7 @@ import { FOOTER_LINKS } from "@/constants/footer";
 
 export default function Footer() {
   return (
-    <div className="py-10 bg-white sm:pt-16 lg:pt-24">
+    <div className="py-10 bg-blue-50 sm:pt-16 lg:pt-24">
       <div className="px-4 mx-auto sm:px-6 lg:px-8 max-w-7xl">
         <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-12 gap-y-12 gap-x-8 xl:gap-x-12">
           <div className="col-span-2 md:col-span-4">
@@ -16,8 +16,9 @@ export default function Footer() {
               width={150}
               height={36}
             />
-            <p className="text-base leading-relaxed text-gray-600 mt-1">
-              Your favorite note-taking app.
+            <p className="text-sm leading-relaxed text-gray-600 mt-1">
+              Join hundreds of users who are already experiencing the future of
+              note-taking.
             </p>
           </div>
           {FOOTER_LINKS.map((section, index) => (
