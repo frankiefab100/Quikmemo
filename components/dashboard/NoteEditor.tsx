@@ -135,8 +135,8 @@ const NoteEditor: React.FC = () => {
       </div>
 
       <form onSubmit={handleSubmit} className="flex-1 p-4">
-        <div className="flex items-center justify-between">
-          <div className="flex flex-wrap items-center w-full mb-3 border-b divide-gray-200 sm:divide-x sm:rtl:divide-x-reverse dark:divide-gray-600">
+        <div className="flex items-center justify-between mb-3">
+          <div className="flex flex-wrap items-center">
             {featureItems.map((feature) => (
               <EditorFeature
                 key={feature.label}
@@ -146,18 +146,22 @@ const NoteEditor: React.FC = () => {
             ))}
           </div>
           <div className="md:flex justify-between hidden">
-            <Button type="submit">
-              {selectedNote ? "Update Note" : "Save Note"}
+            <Button type="submit" variant="secondary">
+              {selectedNote ? "Update" : "Save"}
             </Button>
-            <Button variant="outline" onClick={handleCancel}>
+            <Button
+              style={{ marginLeft: "5px" }}
+              variant="outline"
+              onClick={handleCancel}
+            >
               Cancel
             </Button>
           </div>
         </div>
-        <div className="w-full">
+        <div className="w-full border-t divide-gray-200 dark:divide-gray-600">
           <textarea
             id="editor"
-            className="w-full min-h-[71vh] px-1 text-base text-gray-800 dark:text-white bg-white dark:bg-gray-800 focus:outline-none focus:ring-0 placeholder-gray-400 dark:placeholder-gray-400"
+            className="w-full min-h-[71vh] py-1 text-base text-gray-800 dark:text-white bg-white dark:bg-gray-800 focus:outline-none focus:ring-0 placeholder-gray-400 dark:placeholder-gray-400"
             placeholder="Write a note..."
             value={content}
             onChange={(event) => setContent(event.target.value)}
