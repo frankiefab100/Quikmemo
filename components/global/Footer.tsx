@@ -29,7 +29,7 @@ export default function Footer() {
                 {section.links.map((link, idx) => (
                   <li key={idx}>
                     <Link
-                      href="#"
+                      href={link}
                       title={link}
                       className="flex text-sm text-gray-800 transition-all duration-200 hover:text-blue-700 focus:text-blue-700"
                     >
@@ -46,7 +46,7 @@ export default function Footer() {
 
         <div className="sm:flex sm:items-center sm:justify-between">
           <p className="text-sm text-gray-600">
-            &copy; Copyright 2024, All Rights Reserved by Quikmemo
+            &copy; Copyright 2025, All Rights Reserved by Quikmemo
           </p>
 
           <ul className="flex items-center mt-5 space-x-3 md:order-3 sm:mt-0">
