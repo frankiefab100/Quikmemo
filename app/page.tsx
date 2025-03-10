@@ -1,11 +1,11 @@
-import Navbar from ".././components/global/Header";
+import React from "react";
+import Navbar from "@/components/global/Header";
 import Footer from "@/components/global/Footer";
 import { Hero } from "@/components/templates/Hero";
 import Features from "@/components/templates/Features";
 import UseCases from "@/components/templates/UseCases";
 import Testimonials from "@/components/templates/Testimonials";
 import FAQ from "@/components/templates/FAQ";
-import React from "react";
 import CTA from "@/components/templates/CTA";
 
 export default function Home() {
