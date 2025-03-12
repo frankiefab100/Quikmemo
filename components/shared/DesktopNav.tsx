@@ -1,5 +1,6 @@
 "use client";
 import Link from "next/link";
+import type React from "react";
 import { ChevronDown } from "lucide-react";
 import { useRef, useState } from "react";
 import { useClickOutside } from "@/hook/useClickOutside";
@@ -33,6 +34,7 @@ const DropdownItem = ({
     <Link
       href={href}
       className="group flex items-start gap-2 p-3 transition-colors hover:bg-gray-50"
+      data-testid={`dropdown-item-${title.toLowerCase().replace(/\s+/g, "-")}`}
     >
       <div className="flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-md bg-blue-50 text-blue-600 group-hover:bg-blue-100">
         <Icon className="h-5 w-5" />
@@ -78,14 +80,16 @@ const DesktopNav: React.FC = () => {
         className="relative"
         onMouseEnter={() => handleMouseEnter("features")}
         onMouseLeave={handleMouseLeave}
+        data-testid="features-dropdown-container"
       >
         <button
           onClick={() => handleDropdownToggle("features")}
           className="group inline-flex items-center text-base font-medium text-gray-700 hover:text-blue-600 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"
           aria-expanded={activeDropdown === "features"}
           aria-haspopup="true"
+          data-testid="features-dropdown-button"
         >
-          <span>Features</span>
+          Features
           <ChevronDown
             className={`ml-1 h-4 w-4 transition-transform duration-200 ${
               activeDropdown === "features" ? "rotate-180" : ""
@@ -94,13 +98,18 @@ const DesktopNav: React.FC = () => {
           />
         </button>
         {activeDropdown === "features" && (
-          <div className="mt-5 w-full rounded-xl bg-white p-2 lg:absolute lg:left-0 lg:top-full lg:w-[850px] lg:p-8 shadow">
+          <div
+            className="mt-5 w-full rounded-xl bg-white p-2 lg:absolute lg:left-0 lg:top-full lg:w-[850px] lg:p-8 shadow"
+            onMouseEnter={() => handleMouseEnter("features")}
+            onMouseLeave={handleMouseLeave}
+            data-testid="features-dropdown-content"
+          >
             <div className="grid gap-4 lg:grid-cols-[2fr_1fr]">
               <div>
                 <h4 className="border-b border-gray-200 pb-3 mb-3 text-sm font-semibold text-gray-900">
                   Get Started
                 </h4>
-                <div className="space-y-2">
+                <div data-testid="features-list" className="space-y-2">
                   <DropdownItem
                     icon={FilePenLine}
                     title="WYSIWYG Editor"
@@ -157,12 +166,14 @@ const DesktopNav: React.FC = () => {
         className="relative"
         onMouseEnter={() => handleMouseEnter("resources")}
         onMouseLeave={handleMouseLeave}
+        data-testid="resources-dropdown-container"
       >
         <button
           onClick={() => handleDropdownToggle("resources")}
           className="group inline-flex items-center text-base font-medium text-gray-700 hover:text-blue-600 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"
           aria-expanded={activeDropdown === "resources"}
           aria-haspopup="true"
+          data-testid="resources-dropdown-button"
         >
           <span>Resources</span>
           <ChevronDown
@@ -174,7 +185,12 @@ const DesktopNav: React.FC = () => {
         </button>
 
         {activeDropdown === "resources" && (
-          <div className="mt-5 w-full rounded-lg bg-white p-2 lg:absolute lg:left-0 lg:top-full lg:w-[650px] lg:p-8 shadow">
+          <div
+            className="mt-5 w-full rounded-lg bg-white p-2 lg:absolute lg:left-0 lg:top-full lg:w-[650px] lg:p-8 shadow"
+            onMouseEnter={() => handleMouseEnter("resources")}
+            onMouseLeave={handleMouseLeave}
+            data-testid="resources-dropdown-content"
+          >
             <div className="relative grid grid-cols-2 gap-2">
               <DropdownItem
                 icon={BookOpen}
@@ -208,12 +224,14 @@ const DesktopNav: React.FC = () => {
       <Link
         href="/solutions"
         className="text-base font-medium text-gray-700 hover:text-blue-600"
+        data-testid="solutions-link"
       >
         Solutions
       </Link>
       <Link
         href="/company"
         className="text-base font-medium text-gray-700 hover:text-blue-600"
+        data-testid="company-link"
       >
         Company
       </Link>
