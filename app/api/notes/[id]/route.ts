@@ -2,7 +2,9 @@ import { NextResponse } from "next/server"
 import { db } from "@/lib/prisma"
 import { getSession } from "@/lib/getSession"
 
-export async function PATCH(request: Request, { params }: { params: { id: string } }) {
+export async function PATCH(request: Request, props: {
+    params: Promise<{ id: string }>;
+}) {
     try {
         const session = await getSession()
         if (!session?.user?.email) {
@@ -17,7 +19,7 @@ export async function PATCH(request: Request, { params }: { params: { id: string
         if (!user) {
             return NextResponse.json({ error: "User not found" }, { status: 404 })
         }
-
+        const params = await props.params;
         const existingNote = await db.note.findUnique({
             where: {
                 id: params.id,
@@ -50,7 +52,9 @@ export async function PATCH(request: Request, { params }: { params: { id: string
     }
 }
 
-export async function DELETE(request: Request, { params }: { params: { id: string } }) {
+export async function DELETE(request: Request, props: {
+    params: Promise<{ id: string }>;
+}) {
     try {
         const session = await getSession()
         if (!session?.user?.email) {
@@ -66,6 +70,7 @@ export async function DELETE(request: Request, { params }: { params: { id: strin
             return NextResponse.json({ error: "User not found" }, { status: 404 })
         }
 
+        const params = await props.params;
         const existingNote = await db.note.findUnique({
             where: {
                 id: params.id,
