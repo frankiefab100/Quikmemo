@@ -1,12 +1,11 @@
 import type { NextAuthConfig } from "next-auth";
-import Github from "next-auth/providers/github";
-import Google from "next-auth/providers/google";
-import Twitter from "next-auth/providers/twitter";
-import { signInSchema } from "./lib/formSchema";
-import { compare } from "bcryptjs";
-import Credentials from "next-auth/providers/credentials";
-import { db } from "./lib/prisma";
-
+import Github from "next-auth/providers/github"
+import Google from "next-auth/providers/google"
+import Twitter from "next-auth/providers/twitter"
+import { signInSchema } from "./lib/formSchema"
+import { compare } from "bcryptjs"
+import Credentials from "next-auth/providers/credentials"
+import { db } from "./lib/prisma"
 
 export const authConfig = {
     providers: [
@@ -30,10 +29,8 @@ export const authConfig = {
             clientSecret: process.env.AUTH_TWITTER_SECRET,
         }),
 
-
         Credentials({
             async authorize(credentials) {
-                // Validate the fields
                 const validatedFields = signInSchema.safeParse(credentials);
                 if (!validatedFields.success) {
                     return null;
@@ -48,14 +45,13 @@ export const authConfig = {
                     return null;
                 }
 
-                // Check the password
                 const isPasswordMatch = await compare(password, user.password);
                 if (!isPasswordMatch) {
                     return null;
                 }
-
                 return user;
             },
         }),
     ],
-} satisfies NextAuthConfig;
+} satisfies NextAuthConfig
+

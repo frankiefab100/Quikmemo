@@ -1,4 +1,5 @@
 "use client";
+import type React from "react";
 import type { INote } from "@/types/types";
 import type { NoteContextProps } from "@/types/types";
 import {
@@ -8,7 +9,7 @@ import {
   useState,
   useEffect,
 } from "react";
-import { NOTES } from "@/app/data/data";
+import { useSession } from "next-auth/react";
 
 export const NotesContext = createContext<NoteContextProps | undefined>(
   undefined
@@ -17,15 +18,7 @@ export const NotesContext = createContext<NoteContextProps | undefined>(
 export const NotesProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
-  const [notes, setNotes] = useState<INote[]>(
-    NOTES.map((note) => ({
-      ...note,
-      isArchived: false,
-      createdAt: new Date(note.lastEdited),
-      updatedAt: new Date(note.lastEdited),
-      id: note.id.toString(),
-    }))
-  );
+  const [notes, setNotes] = useState<INote[]>([]);
   const [selectedNote, setSelectedNote] = useState<INote | null>(null);
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
@@ -34,35 +27,35 @@ export const NotesProvider: React.FC<{ children: React.ReactNode }> = ({
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
 
+  const { data: session, status } = useSession();
+
+  // Fetch notes when session changes
   useEffect(() => {
-    fetchNotes();
-  }, []);
+    if (status === "authenticated" && session?.user) {
+      fetchNotes();
+    }
+  }, [session, status]);
 
   const fetchNotes = async () => {
+    if (status !== "authenticated" || !session?.user) return;
     setLoading(true);
+    setError(null);
 
     try {
-      const response = await fetch("/api/notes", {
-        next: { revalidate: 10 },
-      });
+      const response = await fetch("/api/notes");
 
       if (!response.ok) {
-        throw new Error(`Failed to fetch notes: ${response.status}`);
+        const errorData = await response.json();
+        throw new Error(
+          errorData.error || `Failed to fetch notes: ${response.status}`
+        );
       }
+
       const fetchedNotes = await response.json();
-
-      // // Merge fetched notes with default old notes (if any)
-      // const mergedNotes = [
-      //   ...fetchedNotes,
-      //   ...notes.filter(
-      //     (note) => !fetchedNotes.some((notes: any) => notes.id === note.id)
-      //   ),
-      // ];
-      // setNotes(mergedNotes);
-
       setNotes(fetchedNotes);
     } catch (error) {
-      if (error instanceof Error) setError("Failed to fetch notes");
+      console.error("Error fetching notes:", error);
+      setNotes([]);
     } finally {
       setLoading(false);
     }
@@ -74,9 +67,12 @@ export const NotesProvider: React.FC<{ children: React.ReactNode }> = ({
     }
 
     if (!title || !content) {
-      alert("Title and content are required");
+      setError("Title and content are required");
       return;
     }
+
+    setLoading(true);
+    setError(null);
 
     try {
       const response = await fetch("/api/notes", {
@@ -84,27 +80,35 @@ export const NotesProvider: React.FC<{ children: React.ReactNode }> = ({
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ title, content, tags }),
+        body: JSON.stringify({
+          title,
+          content,
+          tags: tags || [],
+        }),
       });
 
-      const savedNote = await response.json();
-
-      if (response.ok) {
-        setNotes([savedNote, ...notes]);
-        setTitle("");
-        setContent("");
-        setTags([]);
-
-        setShowToast(true);
-      } else {
-        throw new Error(`Failed to save note: ${response.statusText}`);
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(
+          errorData.error || `Failed to save note: ${response.statusText}`
+        );
       }
+
+      const savedNote = await response.json();
+      setNotes((prevNotes) => [savedNote, ...prevNotes]);
+      setTitle("");
+      setContent("");
+      setTags([]);
+      setShowToast(true);
     } catch (error) {
+      console.error("Error saving note:", error);
       setError(
         error instanceof Error
           ? error.message
           : "An error occurred while saving the note."
       );
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -113,48 +117,74 @@ export const NotesProvider: React.FC<{ children: React.ReactNode }> = ({
       event.preventDefault();
     }
 
+    if (!title || !content) {
+      setError("Title and content are required");
+      return;
+    }
+
+    setLoading(true);
+    setError(null);
+
     try {
       const response = await fetch(`/api/notes/${id}`, {
         method: "PATCH",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ title, content, tags }),
+        body: JSON.stringify({
+          title,
+          content,
+          tags,
+        }),
       });
 
       if (!response.ok) {
-        throw new Error(`Failed to update note: ${response.statusText}`);
+        const errorData = await response.json();
+        throw new Error(
+          errorData.error || `Failed to update note: ${response.statusText}`
+        );
       }
 
       const updatedNote = await response.json();
 
-      setNotes(
-        notes.map((note) => (note.id === updatedNote.id ? updatedNote : note))
+      setNotes((prevNotes) =>
+        prevNotes.map((note) =>
+          note.id === updatedNote.id ? updatedNote : note
+        )
       );
       setSelectedNote(null);
       setTitle("");
       setContent("");
       setTags([]);
+      setShowToast(true);
     } catch (error) {
+      console.error("Error updating note:", error);
       setError(
         error instanceof Error
           ? error.message
           : "An error occurred while updating the note."
       );
+    } finally {
+      setLoading(false);
     }
   };
 
   const handleDeleteNote = async (id: string) => {
     try {
+      setLoading(true);
+      setError(null);
       const response = await fetch(`/api/notes/${id}`, {
         method: "DELETE",
       });
 
       if (!response.ok) {
-        throw new Error(`Failed to delete note: ${response.statusText}`);
+        const errorData = await response.json();
+        throw new Error(
+          errorData.error || `Failed to delete note: ${response.statusText}`
+        );
       }
 
-      setNotes(notes.filter((note) => note.id !== id));
+      setNotes((prevNotes) => prevNotes.filter((note) => note.id !== id));
       if (selectedNote?.id === id) {
         setSelectedNote(null);
         setTitle("");
@@ -162,16 +192,21 @@ export const NotesProvider: React.FC<{ children: React.ReactNode }> = ({
         setTags([]);
       }
     } catch (error) {
+      console.error("Error deleting note:", error);
       setError(
         error instanceof Error
           ? error.message
           : "An error occurred while deleting the note."
       );
+    } finally {
+      setLoading(false);
     }
   };
 
   const handleArchiveNote = async (id: string) => {
     try {
+      setLoading(true);
+      setError(null);
       const noteToArchive = notes.find((note) => note.id === id);
       if (!noteToArchive) return;
 
@@ -181,19 +216,23 @@ export const NotesProvider: React.FC<{ children: React.ReactNode }> = ({
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          ...noteToArchive,
           isArchived: !noteToArchive.isArchived,
         }),
       });
 
       if (!response.ok) {
-        throw new Error(`Failed to archive note: ${response.statusText}`);
+        const errorData = await response.json();
+        throw new Error(
+          errorData.error || `Failed to archive note: ${response.statusText}`
+        );
       }
 
       const updatedNote = await response.json();
 
-      setNotes(
-        notes.map((note) => (note.id === updatedNote.id ? updatedNote : note))
+      setNotes((prevNotes) =>
+        prevNotes.map((note) =>
+          note.id === updatedNote.id ? updatedNote : note
+        )
       );
       if (selectedNote?.id === id) {
         setSelectedNote(null);
@@ -202,11 +241,14 @@ export const NotesProvider: React.FC<{ children: React.ReactNode }> = ({
         setTags([]);
       }
     } catch (error) {
+      console.error("Error archiving note:", error);
       setError(
         error instanceof Error
           ? error.message
           : "An error occurred while archiving the note."
       );
+    } finally {
+      setLoading(false);
     }
   };
 

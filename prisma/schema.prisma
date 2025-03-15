@@ -17,6 +17,8 @@ model Note {
   isArchived Boolean  @default(false)
   createdAt  DateTime @default(now())
   updatedAt  DateTime @updatedAt
+  userId     String   @db.ObjectId
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
 enum UserRole {
@@ -34,6 +36,7 @@ model User {
   image         String?
   accounts      Account[]
   sessions      Session[]
+  notes         Note[]
   role          UserRole?       @default(ADMIN)
   Authenticator Authenticator[]
   createdAt     DateTime        @default(now())
