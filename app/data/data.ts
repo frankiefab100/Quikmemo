@@ -1,26 +1,18 @@
 export const NOTES = [
   {
-    id: 1,
-    title: "React Performance Optimization",
-    content: " Lorem ipsum dolor sit amet, consectetur adipisicing elit.",
-    tags: ["Dev", "React", "Recipes"],
-    lastEdited: new Date().toISOString(),
+    id: "1",
+    title: "Quick Tips",
+    content: "1. Create new notes with the `Create New Note` button\n2. Add tags to organize your notes\n3. Archive notes you don't need right now\n4. Use the editor toolbar for formatting\n5. Save notes",
+    tags: ["tips", "help"],
     userId: "",
+    lastEdited: new Date().toISOString(),
   },
   {
-    id: 2,
-    title: "Japan Travel Planning",
-    content: " Lorem ipsum dolor sit amet, consectetur adipisicing elit.",
-    tags: ["Travel", "Goals"],
-    lastEdited: new Date().toISOString(),
+    id: "2",
+    title: "Welcome to Quikmemo!",
+    content: "This is your first note. Feel free to edit or delete it.\n\nSome features you can try:\n- Edit this note\n- Add tags\n- Archive it\n- Create new notes\n- Delete notes\n\nThank you for choosing Quikmemo!",
+    tags: ["welcome", "getting-started"],
     userId: "",
-  },
-  {
-    id: 3,
-    title: "Favorite Pasta Recipes",
-    content: " Lorem ipsum dolor sit amet, consectetur adipisicing elit.",
-    tags: ["Personal", "Cook", "Recipes"],
     lastEdited: new Date().toISOString(),
-    userId: "",
-  },
+  }
 ]
