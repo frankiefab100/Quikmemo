@@ -8,26 +8,26 @@ const DashboardClient = () => {
   return (
     <div>
       <Navbar />
-      <Sidebar />
+      <NotesProvider>
+        <Sidebar />
 
-      <main
-        //  className={`transition-all duration-300 ${
-        //   isSidebarOpen
-        //     ? "ml-0 md:ml-40 lg:ml-[16%]"
-        //     : "ml-[15%] md:ml-[5.8%] lg:ml-[4.8%]"
-        // }`}
-        className="ml-0 md:ml-40 lg:ml-[16%]"
-      >
-        <div
-          className="
-        lg:max-w-[100%] grid lg:grid-cols-[300px_minmax(600px,_1fr)] md:grid-cols-[200px_minmax(300px,_1fr)] grid-cols-1 overflow-hidden"
+        <main
+          //  className={`transition-all duration-300 ${
+          //   isSidebarOpen
+          //     ? "ml-0 md:ml-40 lg:ml-[16%]"
+          //     : "ml-[15%] md:ml-[5.8%] lg:ml-[4.8%]"
+          // }`}
+          className="ml-0 md:ml-40 lg:ml-[16%]"
         >
-          <NotesProvider>
+          <div
+            className="
+        lg:max-w-[100%] grid lg:grid-cols-[300px_minmax(600px,_1fr)] md:grid-cols-[200px_minmax(300px,_1fr)] grid-cols-1 overflow-hidden"
+          >
             <NoteList />
             <NoteEditor />
-          </NotesProvider>
-        </div>
-      </main>
+          </div>
+        </main>
+      </NotesProvider>
     </div>
   );
 };

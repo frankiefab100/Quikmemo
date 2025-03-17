@@ -20,6 +20,7 @@ export const NotesProvider: React.FC<{ children: React.ReactNode }> = ({
 }) => {
   const [notes, setNotes] = useState<INote[]>([]);
   const [selectedNote, setSelectedNote] = useState<INote | null>(null);
+  const [filteredNotes, setFilteredNotes] = useState<INote[]>([]);
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
   const [tags, setTags] = useState<string[]>([]);
@@ -35,6 +36,11 @@ export const NotesProvider: React.FC<{ children: React.ReactNode }> = ({
       fetchNotes();
     }
   }, [session, status]);
+
+  // Set filtered notes to all non-archived notes by default
+  useEffect(() => {
+    setFilteredNotes(notes.filter((note) => !note.isArchived));
+  }, [notes]);
 
   const fetchNotes = async () => {
     if (status !== "authenticated" || !session?.user) return;
@@ -259,6 +265,8 @@ export const NotesProvider: React.FC<{ children: React.ReactNode }> = ({
         setNotes,
         selectedNote,
         setSelectedNote,
+        filteredNotes,
+        setFilteredNotes,
         title,
         setTitle,
         content,

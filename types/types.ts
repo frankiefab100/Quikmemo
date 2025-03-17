@@ -56,35 +56,14 @@ export interface ModalProps {
     onClose: () => void;
     onConfirm: () => void;
 }
-// export interface NoteContextProps {
-//     notes: INote[];
-//     setNotes: React.Dispatch<React.SetStateAction<INote[]>>;
-//     selectedNote: INote | null;
-//     setSelectedNote: React.Dispatch<React.SetStateAction<INote | null>>;
-//     title: string;
-//     setTitle: React.Dispatch<React.SetStateAction<string>>;
-//     content: string;
-//     setContent: React.Dispatch<React.SetStateAction<string>>;
-//     tags: string[];
-//     setTags: React.Dispatch<React.SetStateAction<string[]>>;
-//     handleSaveNote: (event?: FormEvent) => Promise<void>;
-//     handleUpdateNote: (id: string, event?: FormEvent) => Promise<void>;
-//     handleDeleteNote: (id: string) => Promise<void>;
-//     handleArchiveNote: (id: string) => Promise<void>;
-//     archivedNotes: INote[];
-//     setShowToast: React.Dispatch<React.SetStateAction<boolean>>;
-//     showToast: boolean;
-//     setLoading: React.Dispatch<React.SetStateAction<boolean>>;
-//     loading: boolean;
-//     setError: React.Dispatch<React.SetStateAction<string | null>>;
-//     error: string | null;
-// }
 
 export interface NoteContextProps {
     notes: INote[]
     setNotes: (notes: INote[]) => void
     selectedNote: INote | null
     setSelectedNote: (note: INote | null) => void
+    filteredNotes: INote[]
+    setFilteredNotes: (notes: INote[]) => void
     title: string
     setTitle: (title: string) => void
     content: string

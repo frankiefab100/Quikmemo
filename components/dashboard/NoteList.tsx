@@ -7,14 +7,13 @@ import { useNotes } from "@/context/NotesContext";
 
 const NoteList: React.FC = () => {
   const {
-    notes,
     selectedNote,
     setSelectedNote,
+    filteredNotes,
     setTitle,
     setContent,
     setTags,
     loading,
-    error,
   } = useNotes();
 
   const handleCreateNote = () => {
@@ -43,18 +42,6 @@ const NoteList: React.FC = () => {
     );
   }
 
-  if (error) {
-    return (
-      <div className="text-gray-900 dark:text-white bg-white dark:bg-gray-800 border-r border-gray-200 dark:border-gray-700 md:flex flex-col h-full hidden">
-        <div className="flex items-center justify-center h-full">
-          <p className="text-center text-red-500 dark:text-red-400">
-            Unable to fetch notes
-          </p>
-        </div>
-      </div>
-    );
-  }
-
   return (
     <div
       id="#notes"
@@ -74,17 +61,17 @@ const NoteList: React.FC = () => {
 
       <div className="flex-1 overflow-y-auto">
         <div className="space-y-4 p-4">
-          {notes.length === 0 ? (
+          {filteredNotes.length === 0 ? (
             <div className="text-center p-4">
               <p className="text-gray-500 dark:text-gray-400 mb-2">
-                No notes yet
+                No notes found
               </p>
               <p className="text-sm text-gray-400 dark:text-gray-500">
                 Click the `Create New Note` button to get started
               </p>
             </div>
           ) : (
-            notes.map((note) => (
+            filteredNotes.map((note: INote) => (
               <div
                 key={note.id}
                 className={`w-full rounded-lg p-4 text-left transition-colors border hover:border-gray-300 dark:hover:border-gray-500 cursor-pointer ${
