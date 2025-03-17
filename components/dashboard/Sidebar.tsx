@@ -1,38 +1,61 @@
-"use client";
-import type React from "react";
-import type { LucideIcon } from "lucide-react";
+import Link from "next/link";
+import SidebarItem from "./ui/sidebarItem";
+import {
+  ArchiveRestore,
+  Ellipsis,
+  FileText,
+  Home,
+  Star,
+  Tag,
+  Trash,
+} from "lucide-react";
 
-interface SidebarItemProps {
-  Icon: LucideIcon;
-  name: string;
-  isActive?: boolean;
-  onClick?: () => void;
-}
-
-const SidebarItem: React.FC<SidebarItemProps> = ({
-  Icon,
-  name,
-  isActive = false,
-  onClick,
-}) => {
+const Sidebar: React.FC = () => {
   return (
-    <button
-      onClick={onClick}
-      className={`flex items-center text-sm py-2 px-4 my-1 mx-2 rounded-md w-full text-left transition duration-300 ease-in-out
-        ${
-          isActive
-            ? "bg-blue-100 text-blue-700 dark:bg-blue-900 dark:text-blue-200"
-            : "text-gray-900 dark:text-white hover:bg-gray-200 hover:dark:bg-gray-700"
-        }`}
-    >
-      <Icon
-        className={`mr-3 w-5 h-5 ${
-          isActive ? "text-blue-600 dark:text-blue-300" : ""
-        }`}
-      />
-      <span>{name}</span>
-    </button>
+    <aside id="sidebar" className="md:flex fixed h-full z-10 hidden">
+      <div className="bg-[#fbfbfc] dark:bg-[#1e2531] flex flex-col w-full lg:max-w-[16%] md:max-w-[25%] max-w-[25vw] h-full fixed overflow-hidden whitespace-nowrap scrollbar hover:overflow-y-scroll z-10">
+        <div className="pt-3">
+          <SidebarItem Icon={Home} name="All Notes" />
+        </div>
+
+        <div className="py-2">
+          <h2 className="text-gray-500 dark:text-gray-400 font-semibold text-sm pl-6 my-2">
+            Recents
+          </h2>
+          <SidebarItem Icon={FileText} name="Recent Note 1" />
+          <SidebarItem Icon={FileText} name="Recent Note 2" />
+          <SidebarItem Icon={FileText} name="Recent Note 3" />
+        </div>
+
+        <div className="py-2">
+          <h2 className="text-gray-500 dark:text-gray-400 font-semibold text-sm pl-6 my-2">
+            Tags
+          </h2>
+          <SidebarItem Icon={Tag} name="Personal" />
+          <SidebarItem Icon={Tag} name="Travel" />
+          <SidebarItem Icon={Tag} name="Journal" />
+          <SidebarItem Icon={Tag} name="Budget" />
+          <SidebarItem Icon={Tag} name="Shopping" />
+          <Link
+            href="#"
+            className="flex items-center text-gray-500 dark:text-gray-400 text-sm py-2 px-6"
+          >
+            <Ellipsis className="w-5 h-5" />
+            <span className="ml-2 text-sm">View More</span>
+          </Link>
+        </div>
+
+        <div className="py-2">
+          <h2 className="text-gray-500 dark:text-gray-400 font-semibold text-sm pl-6 my-2">
+            More
+          </h2>
+          <SidebarItem Icon={Star} name="Favorites" />
+          <SidebarItem Icon={ArchiveRestore} name="Archived Notes" />
+          <SidebarItem Icon={Trash} name="Trash" />
+        </div>
+      </div>
+    </aside>
   );
 };
 
-export default SidebarItem;
+export default Sidebar;
