@@ -59,7 +59,7 @@ export interface ModalProps {
     onConfirm: () => void;
 }
 
-export type NoteFilter = "all" | "archived" | "favorites" | "trash";
+export type NoteFilter = "all" | "tag" | "archived" | "favorites" | "trash";
 
 export interface NoteContextProps {
     notes: INote[]
@@ -72,6 +72,8 @@ export interface NoteContextProps {
     setContent: (content: string) => void
     tags: string[]
     setTags: (tags: string[]) => void
+    selectedTag: string | null
+    setSelectedTag: (tag: string | null) => void
     currentFilterType: NoteFilter
     setCurrentFilterType: (filter: NoteFilter) => void
     handleSaveNote: (event?: FormEvent) => Promise<void>

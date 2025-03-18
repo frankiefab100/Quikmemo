@@ -14,6 +14,7 @@ const NoteList: React.FC = () => {
     setTitle,
     setContent,
     setTags,
+    selectedTag,
     loading,
   } = useNotes();
 
@@ -32,6 +33,10 @@ const NoteList: React.FC = () => {
   };
 
   const filteredNotes = notes.filter((note) => {
+    if (selectedTag && !note.tags?.includes(selectedTag)) {
+      return false;
+    }
+
     switch (currentFilterType) {
       case "archived":
         return note.isArchived;

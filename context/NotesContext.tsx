@@ -27,6 +27,7 @@ export const NotesProvider: React.FC<{ children: React.ReactNode }> = ({
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
   const [currentFilterType, setCurrentFilterType] = useState<NoteFilter>("all");
+  const [selectedTag, setSelectedTag] = useState<string | null>(null);
 
   const { data: session, status } = useSession();
 
@@ -268,6 +269,8 @@ export const NotesProvider: React.FC<{ children: React.ReactNode }> = ({
         setContent,
         tags,
         setTags,
+        selectedTag,
+        setSelectedTag,
         handleSaveNote,
         handleUpdateNote,
         handleDeleteNote,

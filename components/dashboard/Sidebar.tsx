@@ -1,5 +1,4 @@
 "use client";
-import Link from "next/link";
 import type React from "react";
 import SidebarItem from "./ui/sidebarItem";
 import {
@@ -12,18 +11,38 @@ import {
   Trash,
 } from "lucide-react";
 import { useNotes } from "@/context/NotesContext";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { NoteFilter } from "@/types/types";
 
 const Sidebar: React.FC = () => {
-  const { notes, currentFilterType, setCurrentFilterType } = useNotes();
+  const {
+    notes,
+    currentFilterType,
+    setCurrentFilterType,
+    selectedTag,
+    setSelectedTag,
+  } = useNotes();
+
+  const [showAllTags, setShowAllTags] = useState(false);
 
   const archivedCount = notes.filter((note) => note.isArchived).length;
   const favoritesCount = notes.filter((note) => note.isFavorite).length;
   const trashCount = notes.filter((note) => note.isDeleted).length;
 
+  const allTags = Array.from(
+    new Set(notes.flatMap((note) => note.tags || []))
+  ).sort();
+  // Display only first 5 tags unless "View More" is clicked
+  const displayedTags = showAllTags ? allTags : allTags.slice(0, 5);
+
   const handleItemClick = (filter: NoteFilter) => {
     setCurrentFilterType(filter);
+    setSelectedTag(null);
+  };
+
+  const handleTagClick = (tag: string) => {
+    setSelectedTag(tag);
+    setCurrentFilterType("all");
   };
 
   useEffect(() => {
@@ -70,43 +89,34 @@ const Sidebar: React.FC = () => {
           <h2 className="text-gray-500 dark:text-gray-400 font-semibold text-sm pl-6 my-2">
             Tags
           </h2>
-          <SidebarItem
-            Icon={Tag}
-            name="Personal"
-            isActive={false}
-            onClick={() => {}}
-          />
-          <SidebarItem
-            Icon={Tag}
-            name="Travel"
-            isActive={false}
-            onClick={() => {}}
-          />
-          <SidebarItem
-            Icon={Tag}
-            name="Journal"
-            isActive={false}
-            onClick={() => {}}
-          />
-          <SidebarItem
-            Icon={Tag}
-            name="Budget"
-            isActive={false}
-            onClick={() => {}}
-          />
-          <SidebarItem
-            Icon={Tag}
-            name="Shopping"
-            isActive={false}
-            onClick={() => {}}
-          />
-          <Link
-            href="#"
-            className="flex items-center text-gray-500 dark:text-gray-400 text-sm py-2 px-6"
-          >
-            <Ellipsis className="w-5 h-5" />
-            <span className="ml-2 text-sm">View More</span>
-          </Link>
+          {displayedTags.length > 0 ? (
+            <>
+              {displayedTags.map((tag) => (
+                <SidebarItem
+                  key={tag}
+                  Icon={Tag}
+                  name={tag}
+                  isActive={selectedTag === tag}
+                  onClick={() => handleTagClick(tag)}
+                />
+              ))}
+              {allTags.length > 5 && (
+                <button
+                  onClick={() => setShowAllTags(!showAllTags)}
+                  className="flex items-center text-gray-500 dark:text-gray-400 text-sm py-2 px-6 w-full hover:bg-gray-100 dark:hover:bg-gray-800"
+                >
+                  <Ellipsis className="w-5 h-5" />
+                  <span className="ml-2 text-sm">
+                    {showAllTags ? "Show Less" : "View More"}
+                  </span>
+                </button>
+              )}
+            </>
+          ) : (
+            <div className="text-gray-400 dark:text-gray-500 text-sm pl-6 py-2">
+              No tags found
+            </div>
+          )}
         </div>
 
         <div className="py-2">
