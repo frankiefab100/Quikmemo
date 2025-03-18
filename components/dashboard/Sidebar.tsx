@@ -13,6 +13,7 @@ import {
 import { useNotes } from "@/context/NotesContext";
 import { useEffect, useState } from "react";
 import { NoteFilter } from "@/types/types";
+import truncateText from "@/utils/truncateText";
 
 const Sidebar: React.FC = () => {
   const {
@@ -21,6 +22,8 @@ const Sidebar: React.FC = () => {
     setCurrentFilterType,
     selectedTag,
     setSelectedTag,
+    selectedNote,
+    setSelectedNote,
   } = useNotes();
 
   const [showAllTags, setShowAllTags] = useState(false);
@@ -28,6 +31,13 @@ const Sidebar: React.FC = () => {
   const archivedCount = notes.filter((note) => note.isArchived).length;
   const favoritesCount = notes.filter((note) => note.isFavorite).length;
   const trashCount = notes.filter((note) => note.isDeleted).length;
+
+  const recentNotes = [...notes]
+    .sort(
+      (a, b) =>
+        new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime()
+    )
+    .slice(0, 3);
 
   const allTags = Array.from(
     new Set(notes.flatMap((note) => note.tags || []))
@@ -42,6 +52,11 @@ const Sidebar: React.FC = () => {
 
   const handleTagClick = (tag: string) => {
     setSelectedTag(tag);
+    setCurrentFilterType("all");
+  };
+
+  const handleRecentNoteClick = (noteId: string) => {
+    setSelectedNote(notes.find((note) => note.id === noteId) || null);
     setCurrentFilterType("all");
   };
 
@@ -65,24 +80,22 @@ const Sidebar: React.FC = () => {
           <h2 className="text-gray-500 dark:text-gray-400 font-semibold text-sm pl-6 my-2">
             Recents
           </h2>
-          <SidebarItem
-            Icon={FileText}
-            name="Recent Note 1"
-            isActive={false}
-            onClick={() => {}}
-          />
-          <SidebarItem
-            Icon={FileText}
-            name="Recent Note 2"
-            isActive={false}
-            onClick={() => {}}
-          />
-          <SidebarItem
-            Icon={FileText}
-            name="Recent Note 3"
-            isActive={false}
-            onClick={() => {}}
-          />
+
+          {recentNotes.length > 0 ? (
+            recentNotes.map((note) => (
+              <SidebarItem
+                key={note.id}
+                Icon={FileText}
+                name={truncateText(note.title, 20)}
+                isActive={selectedNote?.id === note.id}
+                onClick={() => handleRecentNoteClick(note.id)}
+              />
+            ))
+          ) : (
+            <div className="text-gray-400 dark:text-gray-500 text-sm pl-6 py-2">
+              No recent notes
+            </div>
+          )}
         </div>
 
         <div className="py-2">
