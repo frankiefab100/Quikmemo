@@ -16,7 +16,11 @@ import { useEffect } from "react";
 import { NoteFilter } from "@/types/types";
 
 const Sidebar: React.FC = () => {
-  const { currentFilterType, setCurrentFilterType } = useNotes();
+  const { notes, currentFilterType, setCurrentFilterType } = useNotes();
+
+  const archivedCount = notes.filter((note) => note.isArchived).length;
+  const favoritesCount = notes.filter((note) => note.isFavorite).length;
+  const trashCount = notes.filter((note) => note.isDeleted).length;
 
   const handleItemClick = (filter: NoteFilter) => {
     setCurrentFilterType(filter);
@@ -114,18 +118,21 @@ const Sidebar: React.FC = () => {
             name="Favorites"
             isActive={currentFilterType === "favorites"}
             onClick={() => handleItemClick("favorites")}
+            badgeCount={favoritesCount}
           />
           <SidebarItem
             Icon={ArchiveRestore}
             name="Archived Notes"
             isActive={currentFilterType === "archived"}
             onClick={() => handleItemClick("archived")}
+            badgeCount={archivedCount}
           />
           <SidebarItem
             Icon={Trash}
             name="Trash"
             isActive={currentFilterType === "trash"}
             onClick={() => handleItemClick("trash")}
+            badgeCount={trashCount}
           />
         </div>
       </div>
