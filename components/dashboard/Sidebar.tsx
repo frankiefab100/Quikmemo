@@ -1,7 +1,6 @@
 "use client";
 import Link from "next/link";
 import type React from "react";
-
 import SidebarItem from "./ui/sidebarItem";
 import {
   ArchiveRestore,
@@ -13,47 +12,19 @@ import {
   Trash,
 } from "lucide-react";
 import { useNotes } from "@/context/NotesContext";
-import { useState, useEffect } from "react";
+import { useEffect } from "react";
+import { NoteFilter } from "@/types/types";
 
 const Sidebar: React.FC = () => {
-  const { notes, setFilteredNotes } = useNotes();
-  const [activeItem, setActiveItem] = useState("All Notes");
+  const { currentFilterType, setCurrentFilterType } = useNotes();
 
-  // Set default view to "All Notes" on component mount
-  useEffect(() => {
-    handleItemClick("All Notes");
-  }, [notes]);
-
-  const handleItemClick = (itemName: string) => {
-    setActiveItem(itemName);
-
-    switch (itemName) {
-      case "All Notes":
-        setFilteredNotes(notes.filter((note) => !note.isArchived));
-        break;
-      case "Archived Notes":
-        setFilteredNotes(notes.filter((note) => note.isArchived));
-        break;
-      case "Favorites":
-        // setFilteredNotes(notes.filter((note) => !note.isFavorite));
-        break;
-      case "Trash":
-        setFilteredNotes(notes.filter((note) => !note.isArchived));
-        break;
-      default:
-        if (itemName.startsWith("Recent")) {
-          setFilteredNotes(notes.filter((note) => !note.isArchived));
-        } else {
-          setFilteredNotes(
-            notes.filter(
-              (note) => !note.isArchived
-              // && note.tags.includes(itemName)
-            )
-          );
-        }
-        break;
-    }
+  const handleItemClick = (filter: NoteFilter) => {
+    setCurrentFilterType(filter);
   };
+
+  useEffect(() => {
+    setCurrentFilterType("all");
+  }, [setCurrentFilterType]);
 
   return (
     <aside id="sidebar" className="md:flex fixed h-full z-10 hidden">
@@ -62,8 +33,8 @@ const Sidebar: React.FC = () => {
           <SidebarItem
             Icon={Home}
             name="All Notes"
-            isActive={activeItem === "All Notes"}
-            onClick={() => handleItemClick("All Notes")}
+            isActive={currentFilterType === "all"}
+            onClick={() => handleItemClick("all")}
           />
         </div>
 
@@ -74,20 +45,20 @@ const Sidebar: React.FC = () => {
           <SidebarItem
             Icon={FileText}
             name="Recent Note 1"
-            isActive={activeItem === "Recent Note 1"}
-            onClick={() => handleItemClick("Recent Note 1")}
+            isActive={false}
+            onClick={() => {}}
           />
           <SidebarItem
             Icon={FileText}
             name="Recent Note 2"
-            isActive={activeItem === "Recent Note 2"}
-            onClick={() => handleItemClick("Recent Note 2")}
+            isActive={false}
+            onClick={() => {}}
           />
           <SidebarItem
             Icon={FileText}
             name="Recent Note 3"
-            isActive={activeItem === "Recent Note 3"}
-            onClick={() => handleItemClick("Recent Note 3")}
+            isActive={false}
+            onClick={() => {}}
           />
         </div>
 
@@ -98,32 +69,32 @@ const Sidebar: React.FC = () => {
           <SidebarItem
             Icon={Tag}
             name="Personal"
-            isActive={activeItem === "Personal"}
-            onClick={() => handleItemClick("Personal")}
+            isActive={false}
+            onClick={() => {}}
           />
           <SidebarItem
             Icon={Tag}
             name="Travel"
-            isActive={activeItem === "Travel"}
-            onClick={() => handleItemClick("Travel")}
+            isActive={false}
+            onClick={() => {}}
           />
           <SidebarItem
             Icon={Tag}
             name="Journal"
-            isActive={activeItem === "Journal"}
-            onClick={() => handleItemClick("Journal")}
+            isActive={false}
+            onClick={() => {}}
           />
           <SidebarItem
             Icon={Tag}
             name="Budget"
-            isActive={activeItem === "Budget"}
-            onClick={() => handleItemClick("Budget")}
+            isActive={false}
+            onClick={() => {}}
           />
           <SidebarItem
             Icon={Tag}
             name="Shopping"
-            isActive={activeItem === "Shopping"}
-            onClick={() => handleItemClick("Shopping")}
+            isActive={false}
+            onClick={() => {}}
           />
           <Link
             href="#"
@@ -141,20 +112,20 @@ const Sidebar: React.FC = () => {
           <SidebarItem
             Icon={Star}
             name="Favorites"
-            isActive={activeItem === "Favorites"}
-            onClick={() => handleItemClick("Favorites")}
+            isActive={currentFilterType === "favorites"}
+            onClick={() => handleItemClick("favorites")}
           />
           <SidebarItem
             Icon={ArchiveRestore}
             name="Archived Notes"
-            isActive={activeItem === "Archived Notes"}
-            onClick={() => handleItemClick("Archived Notes")}
+            isActive={currentFilterType === "archived"}
+            onClick={() => handleItemClick("archived")}
           />
           <SidebarItem
             Icon={Trash}
             name="Trash"
-            isActive={activeItem === "Trash"}
-            onClick={() => handleItemClick("Trash")}
+            isActive={currentFilterType === "trash"}
+            onClick={() => handleItemClick("trash")}
           />
         </div>
       </div>

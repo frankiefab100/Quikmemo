@@ -1,6 +1,6 @@
 "use client";
 import type React from "react";
-import type { INote } from "@/types/types";
+import type { INote, NoteFilter } from "@/types/types";
 import type { NoteContextProps } from "@/types/types";
 import {
   createContext,
@@ -20,13 +20,13 @@ export const NotesProvider: React.FC<{ children: React.ReactNode }> = ({
 }) => {
   const [notes, setNotes] = useState<INote[]>([]);
   const [selectedNote, setSelectedNote] = useState<INote | null>(null);
-  const [filteredNotes, setFilteredNotes] = useState<INote[]>([]);
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
   const [tags, setTags] = useState<string[]>([]);
   const [showToast, setShowToast] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
+  const [currentFilterType, setCurrentFilterType] = useState<NoteFilter>("all");
 
   const { data: session, status } = useSession();
 
@@ -36,11 +36,6 @@ export const NotesProvider: React.FC<{ children: React.ReactNode }> = ({
       fetchNotes();
     }
   }, [session, status]);
-
-  // Set filtered notes to all non-archived notes by default
-  useEffect(() => {
-    setFilteredNotes(notes.filter((note) => !note.isArchived));
-  }, [notes]);
 
   const fetchNotes = async () => {
     if (status !== "authenticated" || !session?.user) return;
@@ -265,8 +260,8 @@ export const NotesProvider: React.FC<{ children: React.ReactNode }> = ({
         setNotes,
         selectedNote,
         setSelectedNote,
-        filteredNotes,
-        setFilteredNotes,
+        currentFilterType,
+        setCurrentFilterType,
         title,
         setTitle,
         content,
@@ -277,7 +272,6 @@ export const NotesProvider: React.FC<{ children: React.ReactNode }> = ({
         handleUpdateNote,
         handleDeleteNote,
         handleArchiveNote,
-        archivedNotes: notes.filter((note) => note.isArchived),
         setShowToast,
         showToast,
         setLoading,

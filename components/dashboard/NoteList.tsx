@@ -7,9 +7,10 @@ import { useNotes } from "@/context/NotesContext";
 
 const NoteList: React.FC = () => {
   const {
+    notes,
+    currentFilterType,
     selectedNote,
     setSelectedNote,
-    filteredNotes,
     setTitle,
     setContent,
     setTags,
@@ -30,6 +31,48 @@ const NoteList: React.FC = () => {
     setTags(note.tags || []);
   };
 
+  const filteredNotes = notes.filter((note) => {
+    switch (currentFilterType) {
+      case "archived":
+        return note.isArchived;
+      case "favorites":
+        return note.isFavorite;
+      case "trash":
+        return note.isDeleted;
+      case "all":
+      default:
+        return !note.isArchived && !note.isDeleted;
+    }
+  });
+
+  const getCurrentFilterHeading = () => {
+    switch (currentFilterType) {
+      case "archived":
+        return "Archived Notes";
+      case "favorites":
+        return "Favorite Notes";
+      case "trash":
+        return "Trash";
+      case "all":
+      default:
+        return "All Notes";
+    }
+  };
+
+  const setEmptyFilterMessage = () => {
+    switch (currentFilterType) {
+      case "archived":
+        return "No archived notes";
+      case "favorites":
+        return "No favorite notes";
+      case "trash":
+        return "Trash is empty";
+      case "all":
+      default:
+        return "No notes yet";
+    }
+  };
+
   if (loading) {
     return (
       <div className="text-gray-900 dark:text-white bg-white dark:bg-gray-800 border-r border-gray-200 dark:border-gray-700 md:flex flex-col h-full hidden">
@@ -48,27 +91,32 @@ const NoteList: React.FC = () => {
       className="text-gray-900 dark:text-white bg-white dark:bg-gray-800 border-r border-gray-200 dark:border-gray-700 md:flex flex-col h-full hidden"
     >
       <div className="flex items-center gap-2 p-4 border-b border-gray-200 dark:border-gray-700">
-        <h1 className="text-xl font-semibold">Notes</h1>
+        <h1 className="text-xl font-semibold">{getCurrentFilterHeading()}</h1>
       </div>
-      <div className="p-4 w-full">
-        <Button variant="primary" onClick={handleCreateNote}>
-          <span className="pr-2">
-            <Plus className="w-4 h-4" />
-          </span>
-          Create New Note
-        </Button>
-      </div>
+
+      {currentFilterType === "all" && (
+        <div className="p-4 w-full">
+          <Button variant="primary" onClick={handleCreateNote}>
+            <span className="pr-2">
+              <Plus className="w-4 h-4" />
+            </span>
+            Create New Note
+          </Button>
+        </div>
+      )}
 
       <div className="flex-1 overflow-y-auto">
         <div className="space-y-4 p-4">
           {filteredNotes.length === 0 ? (
             <div className="text-center p-4">
               <p className="text-gray-500 dark:text-gray-400 mb-2">
-                No notes found
+                {setEmptyFilterMessage()}
               </p>
-              <p className="text-sm text-gray-400 dark:text-gray-500">
-                Click the `Create New Note` button to get started
-              </p>
+              {currentFilterType === "all" && (
+                <p className="text-sm text-gray-400 dark:text-gray-500">
+                  Click the `Create New Note` button to get started
+                </p>
+              )}
             </div>
           ) : (
             filteredNotes.map((note: INote) => (
@@ -81,9 +129,14 @@ const NoteList: React.FC = () => {
                 }`}
                 onClick={() => onNoteSelect(note)}
               >
-                <h2 className="text-gray-900 dark:text-white font-semibold text-[1.2rem] leading-6 mb-1">
-                  {note.title}
-                </h2>
+                <div className="flex items-center justify-between">
+                  <h2 className="text-gray-900 dark:text-white font-semibold text-[1.2rem] leading-6 mb-1">
+                    {note.title}
+                  </h2>
+                  {note.isFavorite && (
+                    <span className="text-yellow-500">★</span>
+                  )}
+                </div>
                 <div className="flex flex-wrap gap-2 mt-2">
                   {note.tags?.map((tag, index) => (
                     <span
