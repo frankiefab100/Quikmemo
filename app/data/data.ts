@@ -5,7 +5,11 @@ export const NOTES = [
     content: "1. Create new notes with the `Create New Note` button\n2. Add tags to organize your notes\n3. Archive notes you don't need right now\n4. Use the editor toolbar for formatting\n5. Save notes",
     tags: ["tips", "help"],
     userId: "",
-    lastEdited: new Date().toISOString(),
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString(),
+    isArchived: false,
+    isFavorite: false,
+    isDeleted: false,
   },
   {
     id: "2",
@@ -13,6 +17,10 @@ export const NOTES = [
     content: "This is your first note. Feel free to edit or delete it.\n\nSome features you can try:\n- Edit this note\n- Add tags\n- Archive it\n- Create new notes\n- Delete notes\n\nThank you for choosing Quikmemo!",
     tags: ["welcome", "getting-started"],
     userId: "",
-    lastEdited: new Date().toISOString(),
+    createdAt: new Date().toISOString(),
+    updateAt: new Date().toISOString(),
+    isArchived: false,
+    isFavorite: false,
+    isDeleted: false,
   }
 ]

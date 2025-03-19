@@ -115,8 +115,10 @@ const NoteEditor: React.FC = () => {
               </span>
 
               <span className="text-sm text-gray-900 dark:text-white">
-                {selectedNote?.lastEdited ? (
-                  new Date(selectedNote.lastEdited).toLocaleString()
+                {selectedNote?.createdAt || selectedNote?.updatedAt ? (
+                  new Date(
+                    selectedNote?.createdAt || selectedNote?.updatedAt
+                  ).toLocaleString()
                 ) : (
                   <span className="text-xs italic text-gray-600 dark:text-gray-400">
                     DD/MM/YYYY, 00:00:00 AM

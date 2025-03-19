@@ -43,7 +43,8 @@ export async function PATCH(request: Request, props: {
                 ...(tags !== undefined && { tags }),
                 ...(isArchived !== undefined && { isArchived }),
                 ...(isFavorite !== undefined && { isFavorite }),
-                lastEdited: new Date(),
+                createdAt: new Date(),
+                updatedAt: new Date(),
             },
         })
         return NextResponse.json(updatedNote, { status: 200 })

@@ -58,8 +58,11 @@ export async function GET() {
                                 content: note.content,
                                 tags: note.tags,
                                 userId: user.id,
-                                lastEdited: new Date(),
+                                createdAt: new Date(),
+                                updatedAt: new Date(),
                                 isArchived: false,
+                                isFavorite: false,
+                                isDeleted: false,
                             },
                         }),
                     ),
@@ -114,12 +117,15 @@ export async function POST(request: Request) {
 
         const note = await db.note.create({
             data: {
-                userId: user.id,
                 title,
                 content,
                 tags,
+                userId: user.id,
+                createdAt: new Date(),
+                updatedAt: new Date(),
                 isArchived: false,
-                lastEdited: new Date(),
+                isFavorite: false,
+                isDeleted: false,
             },
         })
         return NextResponse.json(note, { status: 200 })

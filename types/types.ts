@@ -43,10 +43,9 @@ export interface INote {
     title: string;
     content: string;
     tags?: string[];
-    lastEdited: string | Date;
     isArchived: boolean;
-    isFavorite?: boolean
-    isDeleted?: boolean
+    isFavorite: boolean
+    isDeleted: boolean
     createdAt: string | Date;
     updatedAt: string | Date;
     userId: string

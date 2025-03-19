@@ -13,7 +13,6 @@ model Note {
   title      String
   content    String
   tags       String[]
-  lastEdited DateTime @default(now())
   isArchived Boolean  @default(false)
   isFavorite Boolean  @default(false)
   isDeleted  Boolean  @default(false)
@@ -39,7 +38,7 @@ model User {
   accounts      Account[]
   sessions      Session[]
   notes         Note[]
-  role          UserRole?       @default(ADMIN)
+  role          UserRole        @default(USER)
   Authenticator Authenticator[]
   createdAt     DateTime        @default(now())
   updatedAt     DateTime        @updatedAt
