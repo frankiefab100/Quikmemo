@@ -32,7 +32,7 @@ export async function PATCH(request: Request, props: {
             return NextResponse.json({ error: "Unauthorized: Note doesn't belong to user" }, { status: 403 })
         }
 
-        const { title, content, tags, isArchived } = await request.json()
+        const { title, content, tags, isArchived, isFavorite } = await request.json()
         const updatedNote = await db.note.update({
             where: {
                 id: params.id,
@@ -42,6 +42,7 @@ export async function PATCH(request: Request, props: {
                 ...(content !== undefined && { content }),
                 ...(tags !== undefined && { tags }),
                 ...(isArchived !== undefined && { isArchived }),
+                ...(isFavorite !== undefined && { isFavorite }),
                 lastEdited: new Date(),
             },
         })

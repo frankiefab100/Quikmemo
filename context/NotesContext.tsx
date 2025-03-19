@@ -254,6 +254,56 @@ export const NotesProvider: React.FC<{ children: React.ReactNode }> = ({
     }
   };
 
+  const handleFavoriteNote = async (id: string) => {
+    try {
+      setLoading(true);
+      setError(null);
+      const noteToFavorite = notes.find((note) => note.id === id);
+      if (!noteToFavorite) return;
+
+      const response = await fetch(`/api/notes/${id}`, {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          isFavorite: !noteToFavorite.isFavorite,
+        }),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(
+          errorData.error ||
+            `Failed to add note to favorites: ${response.statusText}`
+        );
+      }
+
+      const updatedNote = await response.json();
+
+      setNotes((prevNotes) =>
+        prevNotes.map((note) =>
+          note.id === updatedNote.id ? updatedNote : note
+        )
+      );
+      if (selectedNote?.id === id) {
+        setSelectedNote(null);
+        setTitle("");
+        setContent("");
+        setTags([]);
+      }
+    } catch (error) {
+      console.error("Error bookmarking note as favorite:", error);
+      setError(
+        error instanceof Error
+          ? error.message
+          : "An error occurred while bookmarking note as favorite."
+      );
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <NotesContext.Provider
       value={{
@@ -275,6 +325,7 @@ export const NotesProvider: React.FC<{ children: React.ReactNode }> = ({
         handleUpdateNote,
         handleDeleteNote,
         handleArchiveNote,
+        handleFavoriteNote,
         setShowToast,
         showToast,
         setLoading,

@@ -1,8 +1,6 @@
 import { LucideIcon } from "lucide-react";
 import { StaticImageData } from "next/image";
-import {
-    type FormEvent
-} from "react";
+import { type FormEvent } from "react";
 
 export interface IUser {
     userImage?: string | null;
@@ -80,6 +78,7 @@ export interface NoteContextProps {
     handleUpdateNote: (id: string, event?: FormEvent) => Promise<void>
     handleDeleteNote: (id: string) => Promise<void>
     handleArchiveNote: (id: string) => Promise<void>
+    handleFavoriteNote: (id: string) => Promise<void>
     showToast: boolean
     setShowToast: (show: boolean) => void
     loading: boolean
