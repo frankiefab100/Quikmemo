@@ -1,18 +1,21 @@
-import { getSession } from "@/lib/getSession";
+import { SessionProvider, useSession } from "next-auth/react";
 import UserDropdown from "./UserDropdown";
 
-const UserAccount = async () => {
-  const session = await getSession();
+const UserAccount = () => {
+  const { data: session } = useSession();
+
   return (
-    <div className="flex justify-between items-center mx-4">
-      {session?.user && (
-        <UserDropdown
-          userImage={session.user.image ?? null}
-          userName={session.user.name ?? ""}
-          userEmail={session.user.email ?? ""}
-        />
-      )}
-    </div>
+    <SessionProvider>
+      <div className="flex justify-between items-center mx-4">
+        {session?.user && (
+          <UserDropdown
+            userImage={session.user.image ?? null}
+            userName={session.user.name ?? ""}
+            userEmail={session.user.email ?? ""}
+          />
+        )}
+      </div>
+    </SessionProvider>
   );
 };
 

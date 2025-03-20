@@ -2,6 +2,7 @@ import Image from "next/image";
 import SearchInput from "./ui/SearchInput";
 import Link from "next/link";
 import { Menu, X } from "lucide-react";
+import UserAccount from "./ui/UserAccount";
 
 interface NavbarProps {
   showMobileSidebar: boolean;
@@ -44,7 +45,8 @@ const Navbar: React.FC<NavbarProps> = ({
           </span>
         </div>
         <SearchInput />
-        {/* <UserAccount /> */}
+
+        <UserAccount />
       </nav>
     </header>
   );
