@@ -8,7 +8,7 @@ import Navbar from "@/components/dashboard/Navbar";
 
 const DashboardClient = () => {
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
-  const [showMobileSidebar, setShowMobileSidebar] = useState(true);
+  const [showMobileSidebar, setShowMobileSidebar] = useState(false);
 
   const toggleSidebar = () => {
     setIsSidebarCollapsed(!isSidebarCollapsed);
