@@ -1,6 +1,7 @@
 "use client";
 import type React from "react";
 import type { LucideIcon } from "lucide-react";
+import Tooltip from "../../ui/Tooltip";
 interface SidebarItemProps {
   Icon: LucideIcon;
   name: string;
@@ -18,7 +19,7 @@ const SidebarItem: React.FC<SidebarItemProps> = ({
   badgeCount,
   isCollapsed = false,
 }) => {
-  return (
+  const buttonContent = (
     <button
       onClick={onClick}
       className={`flex items-center w-full text-left py-2 ${
@@ -45,6 +46,14 @@ const SidebarItem: React.FC<SidebarItemProps> = ({
         </span>
       )}
     </button>
+  );
+
+  return isCollapsed ? (
+    <Tooltip content={name} side="right">
+      {buttonContent}
+    </Tooltip>
+  ) : (
+    buttonContent
   );
 };
 
