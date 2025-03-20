@@ -1,10 +1,44 @@
 "use client";
-
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import Image from "next/image";
 import type { IUser } from "@/types/types";
-import { CircleUser } from "lucide-react";
+import {
+  CircleUser,
+  ChevronDown,
+  UserRoundPen,
+  Settings,
+  Languages,
+  Moon,
+  LucideIcon,
+  LogOut,
+} from "lucide-react";
 import { signOutUser } from "@/actions/user";
+import Link from "next/link";
+
+interface UserDropdownItemProps {
+  Icon: LucideIcon;
+  name: string;
+  href?: string;
+  onClick: () => void;
+}
+
+const UserDropdownItems: React.FC<UserDropdownItemProps> = ({
+  Icon,
+  name,
+  href,
+  onClick,
+}) => {
+  return (
+    <Link
+      href={href || ""}
+      className="flex px-4 py-2 text-sm text-gray-700 dark:text-gray-300 rounded-md mx-2 hover:bg-gray-100 dark:hover:bg-gray-600"
+      onClick={onClick}
+    >
+      <Icon className="w-5 h-5 mr-3 text-gray-500 dark:text-gray-400" />
+      <span>{name}</span>
+    </Link>
+  );
+};
 
 const UserDropdown: React.FC<IUser> = ({
   userImage,
@@ -12,10 +46,7 @@ const UserDropdown: React.FC<IUser> = ({
   userEmail,
 }: IUser) => {
   const [isOpen, setIsOpen] = useState(false);
-
-  const toggleDropdown = () => {
-    setIsOpen((prev) => !prev);
-  };
+  const dropdownRef = useRef<HTMLDivElement>(null);
 
   const prefersDarkScheme = window.matchMedia(
     "(prefers-color-scheme: dark)"
@@ -49,102 +80,281 @@ const UserDropdown: React.FC<IUser> = ({
     };
   }, []);
 
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        dropdownRef.current &&
+        !dropdownRef.current.contains(event.target as Node)
+      ) {
+        setIsOpen(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
+
   return (
-    <div className="flex items-center ms-3">
-      <button
-        type="button"
-        className="flex text-sm bg-gray-800 rounded-full focus:ring-4 focus:ring-gray-300 dark:focus:ring-gray-600"
-        aria-expanded={isOpen}
-        aria-haspopup="true"
-        onClick={toggleDropdown}
-      >
-        <span className="sr-only">user profile</span>
-        {userImage ? (
-          <Image
-            className="rounded-full md:w-8 md:h-8"
-            src={userImage}
-            alt={`${userName} photo`}
-            width={50}
-            height={50}
+    <>
+      <div className="flex items-center z-10">
+        <button
+          type="button"
+          className="flex items-center space-x-2 focus:outline-none"
+          aria-expanded={isOpen}
+          aria-haspopup="true"
+          onClick={() => setIsOpen(!isOpen)}
+        >
+          <span className="sr-only">user profile</span>
+          {userImage ? (
+            <Image
+              className="rounded-full w-6 h-6 md:w-8 md:h-8"
+              src={userImage}
+              alt={`${userName} photo`}
+              width={50}
+              height={50}
+            />
+          ) : (
+            <CircleUser className="w-6 h-6 md:w-8 md:h-8 text-gray-500 dark:text-gray-400" />
+          )}
+          <ChevronDown
+            className={`w-4 h-4 text-gray-500 dark:text-gray-400 transition-transform duration-200 ${
+              isOpen ? "rotate-180" : ""
+            }`}
           />
-        ) : (
-          <CircleUser className="w-8 h-8 text-gray-400" />
-        )}
-      </button>
-
-      {isOpen && (
-        <div className="absolute right-0 mt-2 top-12 z-50 text-base list-none bg-white divide-y divide-gray-100 rounded shadow dark:bg-gray-700 dark:divide-gray-600">
-          <div className="px-4 py-3">
-            {userImage ? (
-              <Image
-                className="w-8 h-8 rounded-full"
-                src={userImage}
-                alt={`${userName} photo`}
-                width={50}
-                height={50}
+        </button>
+        <div className="md:block hidden">
+          {isOpen && (
+            <div className="absolute right-4 top-12 z-20 text-base list-none bg-white divide-y divide-gray-100 rounded shadow dark:bg-gray-700 dark:divide-gray-600">
+              <div className="px-4 py-3">
+                {userImage ? (
+                  <Image
+                    className="w-8 h-8 rounded-full"
+                    src={userImage}
+                    alt={`${userName} photo`}
+                    width={50}
+                    height={50}
+                  />
+                ) : (
+                  <CircleUser className="w-8 h-8 text-gray-400" />
+                )}
+                <p className="text-sm text-gray-900 dark:text-white">
+                  {userName}
+                </p>
+                <p className="text-sm font-medium text-gray-900 truncate dark:text-gray-300">
+                  {userEmail}
+                </p>
+              </div>
+              <UserDropdownItems
+                Icon={UserRoundPen}
+                name="Profile"
+                href="/profile"
+                onClick={() => setIsOpen(false)}
               />
-            ) : (
-              <CircleUser className="w-8 h-8 text-gray-400" />
-            )}
-            <p className="text-sm text-gray-900 dark:text-white">{userName}</p>
-            <p className="text-sm font-medium text-gray-900 truncate dark:text-gray-300">
-              {userEmail}
-            </p>
-          </div>
-          <ul className="py-1">
-            <li>
-              <a
-                href="#"
-                className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-600 dark:hover:text-white"
-                role="menuitem"
-              >
-                Edit Profile
-              </a>
-            </li>
-            <li>
-              <a
-                href="#"
-                className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-600 dark:hover:text-white"
-                role="menuitem"
-              >
-                All Notes
-              </a>
-            </li>
-            <li>
-              <a
-                href="#"
-                className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-600 dark:hover:text-white"
-                role="menuitem"
-              >
-                Settings
-              </a>
-            </li>
-
-            <label className="ml-3 inline-flex items-center mb-5 cursor-pointer">
-              <input
-                onChange={toggleTheme}
-                type="checkbox"
-                id="checkbox"
-                value=""
-                className="sr-only peer"
+              <UserDropdownItems
+                Icon={Languages}
+                name="Language & Region"
+                href="/language"
+                onClick={() => setIsOpen(false)}
               />
-              <div className="relative w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-blue-600 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600"></div>
-              <span className="ms-3 text-sm font-medium text-gray-900 dark:text-gray-300"></span>
-            </label>
-          </ul>
-          <div className="p-4">
-            <button
-              type="button"
-              onClick={signOutUser}
-              className="w-full px-5 py-2.5 text-sm font-medium text-center text-white bg-blue-700 rounded-lg active:bg-blue-600 focus:ring-blue-200 hover:bg-blue-800"
-            >
-              Sign Out
-            </button>
-          </div>
+              <UserDropdownItems
+                Icon={Settings}
+                name="Settings"
+                href="/settings"
+                onClick={() => setIsOpen(false)}
+              />
+              <div className="flex justify-between px-4 py-2 rounded-md mx-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-600 dark:hover:text-white">
+                <div className="flex justify-center align-center">
+                  <Moon className="w-5 h-5 mr-3 text-gray-500 dark:text-gray-400" />
+                  <span>Dark Mode</span>
+                </div>
+
+                <label className="inline-flex items-center cursor-pointer">
+                  <input
+                    onChange={toggleTheme}
+                    type="checkbox"
+                    id="checkbox"
+                    value=""
+                    className="peer sr-only"
+                  />
+                  <div className="relative w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-blue-600 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600"></div>
+                </label>
+              </div>
+              <div className="p-2">
+                <button
+                  type="button"
+                  onClick={signOutUser}
+                  className="w-full px-5 py-2.5 text-sm font-medium text-center text-white bg-blue-700 rounded-lg active:bg-blue-600 focus:ring-blue-200 hover:bg-blue-800"
+                >
+                  Log Out
+                </button>
+              </div>
+            </div>
+          )}
         </div>
-      )}
-    </div>
+      </div>
+
+      {/* Mobile userdropdown */}
+      <div className="md:hidden">
+        {isOpen && (
+          <div className="fixed inset-0 z-10 bg-gray-900 bg-opacity-50">
+            <div className="fixed bottom-0 left-0 right-0 bg-white dark:bg-gray-800 rounded-t-xl shadow-xl p-4 h-64 overflow-y-auto">
+              <div className="flex flex-col space-y-2">
+                <UserDropdownItems
+                  Icon={UserRoundPen}
+                  name="Profile"
+                  href="/profile"
+                  onClick={() => setIsOpen(false)}
+                />
+                <UserDropdownItems
+                  Icon={Languages}
+                  name="Language & Region"
+                  href="/language"
+                  onClick={() => setIsOpen(false)}
+                />
+                <UserDropdownItems
+                  Icon={Settings}
+                  name="Settings"
+                  href="/settings"
+                  onClick={() => setIsOpen(false)}
+                />
+                <div className="flex justify-between px-4 py-2 rounded-md mx-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-600 dark:hover:text-white">
+                  <div className="flex">
+                    <Moon className="w-5 h-5 mr-3 text-gray-500 dark:text-gray-400" />
+                    <span>Dark Mode</span>
+                  </div>
+
+                  <label className="inline-flex items-center cursor-pointer">
+                    <input
+                      onChange={toggleTheme}
+                      type="checkbox"
+                      id="checkbox"
+                      value=""
+                      className="peer sr-only"
+                    />
+                    <div className="relative w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-blue-600 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600"></div>
+                  </label>
+                </div>
+                <UserDropdownItems
+                  Icon={LogOut}
+                  name="Log out"
+                  onClick={signOutUser}
+                />
+              </div>
+            </div>
+          </div>
+        )}
+      </div>
+    </>
   );
 };
 
 export default UserDropdown;
+
+// ("use client");
+// import { useState, useRef, useEffect } from "react";
+// import type React from "react";
+
+// import Image from "next/image";
+// import Link from "next/link";
+// import { signOut } from "next-auth/react";
+// import { ChevronDown, Settings, LogOut, User } from "lucide-react";
+
+// interface UserDropdownProps {
+//   userImage: string | null;
+//   userName: string;
+//   userEmail: string;
+// }
+
+// const UserDropdown: React.FC<UserDropdownProps> = ({
+//   userImage,
+//   userName,
+//   userEmail,
+// }) => {
+//   const [isOpen, setIsOpen] = useState(false);
+//   const dropdownRef = useRef<HTMLDivElement>(null);
+
+//   useEffect(() => {
+//     const handleClickOutside = (event: MouseEvent) => {
+//       if (
+//         dropdownRef.current &&
+//         !dropdownRef.current.contains(event.target as Node)
+//       ) {
+//         setIsOpen(false);
+//       }
+//     };
+
+//     document.addEventListener("mousedown", handleClickOutside);
+//     return () => {
+//       document.removeEventListener("mousedown", handleClickOutside);
+//     };
+//   }, []);
+
+//   const handleSignOut = async () => {
+//     await signOut({ callbackUrl: "/" });
+//   };
+
+//   return (
+//     <div className="relative" ref={dropdownRef}>
+//       <button
+//         onClick={() => setIsOpen(!isOpen)}
+//         className="flex items-center space-x-2 focus:outline-none"
+//         aria-expanded={isOpen}
+//         aria-haspopup="true"
+//       >
+//         <div className="flex items-center justify-center w-8 h-8 rounded-full overflow-hidden bg-gray-200 dark:bg-gray-700">
+//           {userImage ? (
+//             <Image
+//               src={userImage || "/placeholder.svg"}
+//               alt={userName || "User"}
+//               width={32}
+//               height={32}
+//               className="w-full h-full object-cover"
+//             />
+//           ) : (
+//             <User className="w-5 h-5 text-gray-500 dark:text-gray-400" />
+//           )}
+//         </div>
+//         <span className="hidden md:inline text-sm font-medium text-gray-700 dark:text-gray-300">
+//           {userName || userEmail}
+//         </span>
+//         <ChevronDown
+//           className={`w-4 h-4 text-gray-500 dark:text-gray-400 transition-transform duration-200 ${
+//             isOpen ? "rotate-180" : ""
+//           }`}
+//         />
+//       </button>
+
+//       {isOpen && (
+//         <div className="absolute right-0 mt-2 w-48 bg-white dark:bg-gray-800 rounded-md shadow-lg py-1 z-10 border border-gray-200 dark:border-gray-700">
+//           <div className="px-4 py-2 border-b border-gray-200 dark:border-gray-700">
+//             <p className="text-sm font-medium text-gray-900 dark:text-white">
+//               {userName}
+//             </p>
+//             <p className="text-xs text-gray-500 dark:text-gray-400 truncate">
+//               {userEmail}
+//             </p>
+//           </div>
+//           <Link
+//             href="/settings"
+//             className="flex items-center px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700"
+//             onClick={() => setIsOpen(false)}
+//           >
+//             <Settings className="w-4 h-4 mr-2" />
+//             Settings
+//           </Link>
+//           <button
+//             onClick={handleSignOut}
+//             className="flex items-center w-full text-left px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700"
+//           >
+//             <LogOut className="w-4 h-4 mr-2" />
+//             Log Out
+//           </button>
+//         </div>
+//       )}
+//     </div>
+//   );
+// };
+
+// export default UserDropdown;
