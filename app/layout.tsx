@@ -1,10 +1,10 @@
 import "../style/globals.css";
 import type { Metadata } from "next";
-import { Raleway } from "next/font/google";
+import { Montserrat } from "next/font/google";
 import { SessionProvider } from "next-auth/react";
 import Script from "next/script";
 
-const raleway = Raleway({
+const montserrat = Montserrat({
   subsets: ["latin"],
   weight: ["100", "200", "300", "400", "500", "600", "700", "800", "900"],
   display: "swap",
@@ -92,7 +92,7 @@ export default async function RootLayout({
           data-website-id={process.env.UMAMI_WEBSITE_ID}
         />
       </head>
-      <body className={`${raleway.className} bg-white`}>
+      <body className={`${montserrat.className} bg-white`}>
         <SessionProvider>{children}</SessionProvider>
       </body>
     </html>
