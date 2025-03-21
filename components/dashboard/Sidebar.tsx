@@ -15,17 +15,20 @@ import { useNotes } from "@/context/NotesContext";
 import { useEffect, useState } from "react";
 import type { NoteFilter } from "@/types/types";
 import truncateText from "@/utils/truncateText";
+import { useClickOutside } from "@/hook/useClickOutside";
 
 interface SidebarProps {
   isCollapsed: boolean;
   toggleSidebar: () => void;
   showMobileSidebar: boolean;
+  setShowMobileSidebar: (show: boolean) => void;
 }
 
 const Sidebar: React.FC<SidebarProps> = ({
   isCollapsed,
   toggleSidebar,
   showMobileSidebar,
+  setShowMobileSidebar,
 }) => {
   const {
     notes,
@@ -38,6 +41,9 @@ const Sidebar: React.FC<SidebarProps> = ({
   } = useNotes();
 
   const [showAllTags, setShowAllTags] = useState(false);
+  const sidebarRef = useClickOutside(() => {
+    setShowMobileSidebar(false);
+  });
 
   const archivedCount = notes.filter((note) => note.isArchived).length;
   const favoritesCount = notes.filter((note) => note.isFavorite).length;
@@ -77,6 +83,7 @@ const Sidebar: React.FC<SidebarProps> = ({
 
   return (
     <aside
+      ref={sidebarRef}
       id="sidebar"
       className={`fixed top-16 left-0 h-[calc(100vh-4rem)] z-20 transition-all duration-300 ease-in-out 
           ${isCollapsed ? "md:w-16" : "md:w-64"}

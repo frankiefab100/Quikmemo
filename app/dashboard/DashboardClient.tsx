@@ -23,6 +23,7 @@ const DashboardClient = () => {
       <NotesProvider>
         <Sidebar
           showMobileSidebar={showMobileSidebar}
+          setShowMobileSidebar={setShowMobileSidebar}
           isCollapsed={isSidebarCollapsed}
           toggleSidebar={toggleSidebar}
         />
