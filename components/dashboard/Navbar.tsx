@@ -25,9 +25,9 @@ const Navbar: React.FC<NavbarProps> = ({
             className="flex md:hidden text-gray-800 dark:text-gray-200 cursor-pointer"
           >
             {showMobileSidebar ? (
-              <Menu className="h-7 w-7" />
-            ) : (
               <X className="h-7 w-7" />
+            ) : (
+              <Menu className="h-7 w-7" />
             )}
           </button>
 
