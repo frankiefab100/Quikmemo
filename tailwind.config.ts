@@ -9,10 +9,6 @@ export default {
   darkMode: "selector",
   theme: {
     extend: {
-      // fontFamily: {
-      //   Bitform: ["Bitform"],
-      //   inter: ["Inter", "sans-serif"],
-      // },
       boxShadow: {
         custom: "-14px 10px 44px -21px rgba(0, 0, 0, 0.24)",
       },

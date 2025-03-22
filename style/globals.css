@@ -53,3 +53,62 @@ h3 {
     background: var(--color-primary);
   }
 }
+
+/* TipTap editor styles */
+.tiptap-editor {
+  @apply w-full;
+  @apply overflow-y-auto;
+}
+
+.tiptap-editor .ProseMirror {
+  @apply min-h-[60vh] outline-none p-4;
+}
+
+.tiptap-editor .ProseMirror p {
+  @apply mb-2;
+}
+
+.tiptap-editor .ProseMirror h1 {
+  @apply text-3xl font-bold mb-4;
+}
+
+.tiptap-editor .ProseMirror h2 {
+  @apply text-2xl font-bold mb-3;
+}
+
+.tiptap-editor .ProseMirror h3 {
+  @apply text-xl font-bold mb-2;
+}
+
+.tiptap-editor .ProseMirror ul {
+  @apply list-disc pl-6 mb-4;
+}
+
+.tiptap-editor .ProseMirror ol {
+  @apply list-decimal pl-6 mb-4;
+}
+
+.tiptap-editor .ProseMirror blockquote {
+  @apply border-l-4 border-gray-300 dark:border-gray-600 pl-4 italic my-4;
+}
+
+.tiptap-editor .ProseMirror pre {
+  @apply bg-gray-100 dark:bg-gray-800 p-4 rounded my-4 font-mono text-sm overflow-x-auto;
+}
+
+.tiptap-editor .ProseMirror code {
+  @apply bg-gray-100 dark:bg-gray-800 px-1 py-0.5 rounded font-mono text-sm;
+}
+
+.tiptap-editor .ProseMirror a {
+  @apply text-blue-600 dark:text-blue-400 underline;
+}
+
+.tiptap-editor .ProseMirror img {
+  @apply max-w-full h-auto;
+}
+
+.tiptap-editor .ProseMirror p.is-editor-empty:first-child::before {
+  @apply text-gray-400 dark:text-gray-500 float-left h-0 pointer-events-none;
+  content: attr(data-placeholder);
+}

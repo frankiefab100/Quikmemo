@@ -2,12 +2,12 @@
 import { ChevronLeft, CircleEllipsis, Clock, Tag } from "lucide-react";
 import type React from "react";
 import Button from "../ui/Button";
-import EditorFeature, { featureItems } from "./ui/editorFeature";
 import { useNotes } from "@/context/NotesContext";
 import { type FormEvent, useCallback, useState, useEffect } from "react";
 import Toast from "../ui/Toast";
 import DeleteArchive from "./ui/DeleteArchive";
 import { useClickOutside } from "@/hook/useClickOutside";
+import TipTapEditor from "./TipTapEditor";
 
 const NoteEditor: React.FC = () => {
   const {
@@ -169,41 +169,12 @@ const NoteEditor: React.FC = () => {
         onSubmit={handleSubmit}
         className="flex-1 flex flex-col overflow-hidden"
       >
-        <div className="flex items-center justify-between p-4 border-b border-gray-200 dark:border-gray-700 overflow-x-auto">
-          <div className="flex flex-wrap items-center">
-            {featureItems.map((feature) => (
-              <EditorFeature
-                key={feature.label}
-                label={feature.label}
-                Icon={feature.Icon}
-              />
-            ))}
-          </div>
-          <div className="md:flex justify-between hidden">
-            <Button type="submit" variant="secondary" disabled={loading}>
-              {selectedNote ? "Update" : "Save"}
-            </Button>
-            <Button
-              style={{ marginLeft: "5px" }}
-              variant="outline"
-              onClick={handleCancel}
-              disabled={loading}
-            >
-              Cancel
-            </Button>
-          </div>
-        </div>
-        <div className="flex-1 overflow-y-auto">
-          <textarea
-            id="editor"
-            className="w-full h-full min-h-[300px] py-4 px-4 text-base text-gray-800 dark:text-white bg-white dark:bg-gray-800 focus:outline-none focus:ring-0 placeholder-gray-400 dark:placeholder-gray-400 resize-none"
-            placeholder="Write a note..."
-            value={content}
-            onChange={(event) => setContent(event.target.value)}
-            disabled={loading}
-          ></textarea>
-        </div>
-
+        <TipTapEditor
+          content={content}
+          onChange={setContent}
+          placeholder="Write a note..."
+          editable={!loading}
+        />
         {/* Mobile action buttons */}
         <div className="md:hidden flex justify-between p-4 border-t border-gray-200 dark:border-gray-700">
           <Button
