@@ -78,7 +78,7 @@ export const metadata: Metadata = {
   },
 };
 
-export default async function RootLayout({
+export default function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
@@ -86,6 +86,13 @@ export default async function RootLayout({
   return (
     <html lang="en">
       <head>
+        <link
+          rel="apple-touch-icon"
+          href="/favicon/android-chrome-192x192.png"
+        />
+        <meta name="apple-mobile-web-app-capable" content="yes" />
+        <meta name="application-name" content="Quikmemo PWA App" />
+
         <Script
           defer
           src="https://cloud.umami.is/script.js"
