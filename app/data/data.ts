@@ -9,7 +9,7 @@ export const NOTES = [
     updatedAt: new Date().toISOString(),
     isArchived: false,
     isFavorite: false,
-    isDeleted: false,
+    isTrashed: false,
   },
   {
     id: "2",
@@ -21,6 +21,6 @@ export const NOTES = [
     updateAt: new Date().toISOString(),
     isArchived: false,
     isFavorite: false,
-    isDeleted: false,
+    isTrashed: false,
   }
 ]

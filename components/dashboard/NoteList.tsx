@@ -1,9 +1,10 @@
 "use client";
-import type React from "react";
 import Button from "../ui/Button";
-import { Plus } from "lucide-react";
+import { Archive, Plus, Trash2 } from "lucide-react";
 import type { INote } from "@/types/types";
 import { useNotes } from "@/context/NotesContext";
+import { useState } from "react";
+import Modal from "../ui/Modal";
 
 const NoteList: React.FC = () => {
   const {
@@ -13,10 +14,19 @@ const NoteList: React.FC = () => {
     setTitle,
     setContent,
     setTags,
-    loading,
     currentFilterType,
     selectedTag,
+    // loading,
+    handleRestoreNote,
+    handleDeleteNote,
+    selectedTrashNotes,
+    setSelectedTrashNotes,
+    handleEmptyTrash,
   } = useNotes();
+
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [noteToDelete, setNoteToDelete] = useState<string | null>(null);
+  const [isEmptyingTrash, setIsEmptyingTrash] = useState(false);
 
   const handleCreateNote = () => {
     setSelectedNote(null);
@@ -26,10 +36,65 @@ const NoteList: React.FC = () => {
   };
 
   const onNoteSelect = (note: INote) => {
-    setSelectedNote(note);
-    setTitle(note.title);
-    setContent(note.content);
-    setTags(note.tags || []);
+    if (currentFilterType === "trash") {
+      // Selecting notes in trash view for deletion
+      if (selectedTrashNotes.includes(note.id)) {
+        setSelectedTrashNotes(
+          selectedTrashNotes.filter((id) => id !== note.id)
+        );
+      } else {
+        setSelectedTrashNotes([...selectedTrashNotes, note.id]);
+      }
+    } else {
+      setSelectedNote(note);
+      setTitle(note.title);
+      setContent(note.content);
+      setTags(note.tags || []);
+    }
+  };
+
+  const confirmDelete = (noteId: string) => {
+    setNoteToDelete(noteId);
+    setShowDeleteModal(true);
+  };
+
+  const confirmEmptyTrash = () => {
+    setIsEmptyingTrash(true);
+    setShowDeleteModal(true);
+  };
+
+  const handleConfirmDelete = () => {
+    if (isEmptyingTrash) {
+      handleEmptyTrash();
+    } else if (noteToDelete) {
+      handleDeleteNote(noteToDelete);
+    }
+    setShowDeleteModal(false);
+    setNoteToDelete(null);
+    setIsEmptyingTrash(false);
+  };
+
+  const handleCancelDelete = () => {
+    setShowDeleteModal(false);
+    setNoteToDelete(null);
+    setIsEmptyingTrash(false);
+  };
+
+  const handleRestore = (noteId: string, event: React.MouseEvent) => {
+    event.stopPropagation();
+    handleRestoreNote(noteId);
+  };
+
+  const trashedNotes = notes.filter((note) => note.isTrashed);
+
+  const toggleSelectAll = () => {
+    if (trashedNotes.length === selectedTrashNotes.length) {
+      // If all are selected, deselect all
+      setSelectedTrashNotes([]);
+    } else {
+      // Otherwise, select all
+      setSelectedTrashNotes(trashedNotes.map((note) => note.id));
+    }
   };
 
   const filteredNotes = notes.filter((note) => {
@@ -39,14 +104,14 @@ const NoteList: React.FC = () => {
 
     switch (currentFilterType) {
       case "archived":
-        return note.isArchived;
-      case "favorites":
-        return note.isFavorite;
+        return note.isArchived && !note.isTrashed;
       case "trash":
-        return note.isDeleted;
+        return note.isTrashed;
+      case "favorites":
+        return note.isFavorite && !note.isTrashed && !note.isArchived;
       case "all":
       default:
-        return !note.isArchived && !note.isDeleted;
+        return !note.isArchived && !note.isTrashed;
     }
   });
 
@@ -92,54 +157,77 @@ const NoteList: React.FC = () => {
     }
   };
 
-  if (loading) {
-    return (
-      <div
-        className={`w-full md:w-1/3 border-r border-gray-200 dark:border-gray-700 flex flex-col h-full ${
-          selectedNote ? "hidden md:flex" : "flex"
-        }`}
-      >
-        <div className="flex items-center justify-center h-full">
-          <p className="text-center text-gray-500 dark:text-gray-400">
-            Loading notes...
-          </p>
-        </div>
-      </div>
-    );
-  }
+  // if (loading) {
+  //   return (
+  //     <div
+  //       className={`w-full md:w-1/3 border-r border-gray-200 dark:border-gray-700 flex flex-col h-full ${
+  //         selectedNote ? "hidden md:flex" : "flex"
+  //       }`}
+  //     >
+  //       <div className="flex items-center justify-center h-full">
+  //         <p className="text-center text-gray-500 dark:text-gray-400">
+  //           Please be patient...
+  //         </p>
+  //       </div>
+  //     </div>
+  //   );
+  // }
 
   return (
     <div
       id="#notes"
-      className={`w-full md:w-1/3 text-gray-900 dark:text-white bg-white dark:bg-gray-800 border-r border-gray-200 dark:border-gray-700 flex flex-col h-full ${
-        selectedNote ? "hidden md:flex" : "flex"
-      }`}
+      className="text-gray-900 dark:text-white bg-white dark:bg-gray-800 border-r border-gray-200 dark:border-gray-700 md:flex flex-col h-full hidden"
     >
-      <div className="flex flex-col sticky top-0 bg-white dark:bg-gray-800">
-        <div className="flex items-center justify-between p-4 border-b border-gray-200 dark:border-gray-700">
-          <h1 className="text-xl font-semibold text-gray-900 dark:text-white">
-            {selectedTag ? (
-              <span>
-                Tag:{" "}
-                <span className="text-blue-500 dark:text-blue-400">
-                  {selectedTag}
-                </span>
+      <div className="flex items-center justify-between p-4 border-b border-gray-200 dark:border-gray-700">
+        <h1 className="text-xl font-semibold">
+          {selectedTag ? (
+            <span>
+              Tag:{" "}
+              <span className="text-blue-500 dark:text-blue-400">
+                {selectedTag}
               </span>
-            ) : (
-              <>{getCurrentFilterHeading()}</>
-            )}
-          </h1>
-        </div>
-
-        {currentFilterType === "all" && (
-          <div className="p-4 w-full">
-            <Button variant="primary" onClick={handleCreateNote}>
-              <Plus className="w-6 h-6 pr-2" />
-              Create New Note
-            </Button>
-          </div>
-        )}
+            </span>
+          ) : (
+            <>{getCurrentFilterHeading()}</>
+          )}
+        </h1>
       </div>
+
+      {currentFilterType === "trash" ? (
+        <div className="p-4 w-full flex justify-between items-center">
+          <div className="flex items-center">
+            <input
+              type="checkbox"
+              checked={
+                trashedNotes.length > 0 &&
+                trashedNotes.length === selectedTrashNotes.length
+              }
+              onChange={toggleSelectAll}
+              className="mr-2 h-4 w-4"
+            />
+            <span className="text-sm">
+              {selectedTrashNotes.length} of {trashedNotes.length} selected
+            </span>
+          </div>
+          <Button
+            variant="secondary"
+            onClick={confirmEmptyTrash}
+            disabled={selectedTrashNotes.length === 0}
+          >
+            <Trash2 className="w-4 h-4 mr-2" />
+            Delete All
+          </Button>
+        </div>
+      ) : (
+        <div className="p-4 w-full">
+          <Button variant="primary" onClick={handleCreateNote}>
+            <span className="pr-2">
+              <Plus className="w-4 h-4" />
+            </span>
+            Create New Note
+          </Button>
+        </div>
+      )}
 
       <div className="flex-1 overflow-y-auto">
         <div className="space-y-4 p-4">
@@ -157,20 +245,60 @@ const NoteList: React.FC = () => {
               <div
                 key={note.id}
                 className={`w-full rounded-lg p-4 text-left transition-colors border hover:border-gray-300 dark:hover:border-gray-500 cursor-pointer ${
-                  selectedNote?.id === note.id
+                  currentFilterType === "trash"
+                    ? selectedTrashNotes.includes(note.id)
+                      ? "border-red-300 dark:border-red-700 bg-red-50 dark:bg-red-900/20"
+                      : "border-gray-200 dark:border-gray-700"
+                    : selectedNote?.id === note.id
                     ? "border-blue-300 dark:border-blue-400"
                     : "border-gray-200 dark:border-gray-700"
                 }`}
                 onClick={() => onNoteSelect(note)}
               >
                 <div className="flex items-center justify-between">
+                  {currentFilterType === "trash" && (
+                    <div className="float-left mr-2">
+                      <input
+                        type="checkbox"
+                        checked={selectedTrashNotes.includes(note.id)}
+                        onChange={() => onNoteSelect(note)}
+                        onClick={(e) => e.stopPropagation()}
+                        className="h-4 w-4"
+                      />
+                    </div>
+                  )}
                   <h2 className="text-gray-900 dark:text-white font-semibold text-[1.2rem] leading-6 mb-1">
                     {note.title}
                   </h2>
                   {note.isFavorite && (
                     <span className="text-yellow-500">★</span>
                   )}
+                  {note.isArchived && (
+                    <span className="text-yellow-500">
+                      <Archive className="w-3 h-3" />
+                    </span>
+                  )}
+
+                  {currentFilterType === "trash" && (
+                    <div className="flex space-x-2">
+                      <button
+                        onClick={(e) => handleRestore(note.id, e)}
+                        className="text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300"
+                        title="Restore note"
+                      >
+                        Restore
+                      </button>
+                      <button
+                        onClick={() => confirmDelete(note.id)}
+                        className="text-red-600 dark:text-red-400 hover:text-red-800 dark:hover:text-red-300"
+                        title="Delete permanently"
+                      >
+                        Delete
+                      </button>
+                    </div>
+                  )}
                 </div>
+
                 <div className="flex flex-wrap gap-2 mt-2">
                   {note.tags?.map((tag, index) => (
                     <span
@@ -193,6 +321,20 @@ const NoteList: React.FC = () => {
           )}
         </div>
       </div>
+
+      {showDeleteModal && (
+        <Modal
+          isOpen={showDeleteModal}
+          onCancel={handleCancelDelete}
+          onConfirm={handleConfirmDelete}
+          title={isEmptyingTrash ? "Empty Trash" : "Delete Note"}
+          message={
+            isEmptyingTrash
+              ? `Are you sure you want to permanently delete ${selectedTrashNotes.length} selected note(s)? This action cannot be undone.`
+              : "Are you sure you want to permanently delete this note? This action cannot be undone."
+          }
+        />
+      )}
     </div>
   );
 };

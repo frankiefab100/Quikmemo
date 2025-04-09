@@ -45,15 +45,17 @@ export interface INote {
     tags?: string[];
     isArchived: boolean;
     isFavorite: boolean
-    isDeleted: boolean
+    isTrashed: boolean
     createdAt: string | Date;
     updatedAt: string | Date;
     userId: string
 }
 export interface ModalProps {
     isOpen: boolean;
-    onClose: () => void;
+    onCancel: () => void;
     onConfirm: () => void;
+    title: string;
+    message?: string;
 }
 
 export type NoteFilter = "all" | "tag" | "archived" | "favorites" | "trash";
@@ -78,6 +80,11 @@ export interface NoteContextProps {
     handleDeleteNote: (id: string) => Promise<void>
     handleArchiveNote: (id: string) => Promise<void>
     handleFavoriteNote: (id: string) => Promise<void>
+    handleTrashNote: (id: string) => Promise<void>
+    handleRestoreNote: (id: string) => Promise<void>
+    handleEmptyTrash: () => Promise<void>
+    selectedTrashNotes: string[]
+    setSelectedTrashNotes: (ids: string[]) => void
     showToast: boolean
     setShowToast: (show: boolean) => void
     loading: boolean

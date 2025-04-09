@@ -62,7 +62,7 @@ export async function GET() {
                                 updatedAt: new Date(),
                                 isArchived: false,
                                 isFavorite: false,
-                                isDeleted: false,
+                                isTrashed: false,
                             },
                         }),
                     ),
@@ -125,7 +125,7 @@ export async function POST(request: Request) {
                 updatedAt: new Date(),
                 isArchived: false,
                 isFavorite: false,
-                isDeleted: false,
+                isTrashed: false,
             },
         })
         return NextResponse.json(note, { status: 200 })

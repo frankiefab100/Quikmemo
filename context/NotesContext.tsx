@@ -28,6 +28,7 @@ export const NotesProvider: React.FC<{ children: React.ReactNode }> = ({
   const [error, setError] = useState<string | null>(null);
   const [currentFilterType, setCurrentFilterType] = useState<NoteFilter>("all");
   const [selectedTag, setSelectedTag] = useState<string | null>(null);
+  const [selectedTrashNotes, setSelectedTrashNotes] = useState<string[]>([]);
 
   const { data: session, status } = useSession();
 
@@ -171,11 +172,107 @@ export const NotesProvider: React.FC<{ children: React.ReactNode }> = ({
     }
   };
 
+  // Move note to trash instead of deleting
+  const handleTrashNote = async (id: string) => {
+    try {
+      setLoading(true);
+      setError(null);
+
+      const response = await fetch(`/api/notes/${id}`, {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          isTrashed: true,
+        }),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(
+          errorData.error || `Failed to trash note: ${response.statusText}`
+        );
+      }
+
+      const updatedNote = await response.json();
+
+      setNotes((prevNotes) =>
+        prevNotes.map((note) =>
+          note.id === updatedNote.id ? updatedNote : note
+        )
+      );
+      if (selectedNote?.id === id) {
+        setSelectedNote(null);
+        setTitle("");
+        setContent("");
+        setTags([]);
+      }
+
+      setShowToast(true);
+    } catch (error) {
+      console.error("Error trashing note:", error);
+      setError(
+        error instanceof Error
+          ? error.message
+          : "An error occurred while trashing the note."
+      );
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Restore note from trash
+  const handleRestoreNote = async (id: string) => {
+    try {
+      setLoading(true);
+      setError(null);
+
+      const response = await fetch(`/api/notes/${id}`, {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          isTrashed: false,
+        }),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(
+          errorData.error || `Failed to restore note: ${response.statusText}`
+        );
+      }
+
+      const updatedNote = await response.json();
+
+      setNotes((prevNotes) =>
+        prevNotes.map((note) =>
+          note.id === updatedNote.id ? updatedNote : note
+        )
+      );
+      setSelectedTrashNotes((prev) => prev.filter((noteId) => noteId !== id));
+
+      setShowToast(true);
+    } catch (error) {
+      console.error("Error restoring note:", error);
+      setError(
+        error instanceof Error
+          ? error.message
+          : "An error occurred while restoring the note."
+      );
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const handleDeleteNote = async (id: string) => {
     try {
       setLoading(true);
       setError(null);
-      const response = await fetch(`/api/notes/${id}`, {
+
+      const response = await fetch(`/api/notes/${id}/delete`, {
         method: "DELETE",
       });
 
@@ -187,18 +284,56 @@ export const NotesProvider: React.FC<{ children: React.ReactNode }> = ({
       }
 
       setNotes((prevNotes) => prevNotes.filter((note) => note.id !== id));
-      if (selectedNote?.id === id) {
-        setSelectedNote(null);
-        setTitle("");
-        setContent("");
-        setTags([]);
-      }
+      setSelectedTrashNotes((prev) => prev.filter((noteId) => noteId !== id));
+
+      setShowToast(true);
     } catch (error) {
       console.error("Error deleting note:", error);
       setError(
         error instanceof Error
           ? error.message
           : "An error occurred while deleting the note."
+      );
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Empty trash (delete all selected notes)
+  const handleEmptyTrash = async () => {
+    if (selectedTrashNotes.length === 0) return;
+
+    try {
+      setLoading(true);
+      setError(null);
+
+      const promises = selectedTrashNotes.map((id) =>
+        fetch(`/api/notes/${id}/delete`, {
+          method: "DELETE",
+        })
+      );
+
+      const results = await Promise.allSettled(promises);
+      const failedResults = results.filter(
+        (result) => result.status === "rejected"
+      );
+
+      if (failedResults.length > 0) {
+        throw new Error(`Failed to delete ${failedResults.length} notes`);
+      }
+
+      setNotes((prevNotes) =>
+        prevNotes.filter((note) => !selectedTrashNotes.includes(note.id))
+      );
+      setSelectedTrashNotes([]);
+
+      setShowToast(true);
+    } catch (error) {
+      console.error("Error emptying trash:", error);
+      setError(
+        error instanceof Error
+          ? error.message
+          : "An error occurred while emptying the trash."
       );
     } finally {
       setLoading(false);
@@ -326,6 +461,11 @@ export const NotesProvider: React.FC<{ children: React.ReactNode }> = ({
         handleDeleteNote,
         handleArchiveNote,
         handleFavoriteNote,
+        handleTrashNote,
+        handleRestoreNote,
+        handleEmptyTrash,
+        selectedTrashNotes,
+        setSelectedTrashNotes,
         setShowToast,
         showToast,
         setLoading,

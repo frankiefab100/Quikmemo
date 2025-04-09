@@ -47,7 +47,7 @@ const Sidebar: React.FC<SidebarProps> = ({
 
   const archivedCount = notes.filter((note) => note.isArchived).length;
   const favoritesCount = notes.filter((note) => note.isFavorite).length;
-  const trashCount = notes.filter((note) => note.isDeleted).length;
+  const trashCount = notes.filter((note) => note.isTrashed).length;
 
   const allTags = Array.from(
     new Set(notes.flatMap((note) => note.tags || []))
@@ -56,6 +56,7 @@ const Sidebar: React.FC<SidebarProps> = ({
   const displayedTags = showAllTags ? allTags : allTags.slice(0, 5);
 
   const recentNotes = [...notes]
+    .filter((note) => !note.isTrashed && !note.isArchived)
     .sort(
       (a, b) =>
         new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime()

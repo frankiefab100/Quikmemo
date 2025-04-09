@@ -32,7 +32,7 @@ export async function PATCH(request: Request, props: {
             return NextResponse.json({ error: "Unauthorized: Note doesn't belong to user" }, { status: 403 })
         }
 
-        const { title, content, tags, isArchived, isFavorite } = await request.json()
+        const { title, content, tags, isArchived, isFavorite, isTrashed } = await request.json()
         const updatedNote = await db.note.update({
             where: {
                 id: params.id,
@@ -43,6 +43,7 @@ export async function PATCH(request: Request, props: {
                 ...(tags !== undefined && { tags }),
                 ...(isArchived !== undefined && { isArchived }),
                 ...(isFavorite !== undefined && { isFavorite }),
+                ...(isTrashed !== undefined && { isTrashed }),
                 createdAt: new Date(),
                 updatedAt: new Date(),
             },
@@ -85,15 +86,21 @@ export async function DELETE(request: Request, props: {
             return NextResponse.json({ error: "Unauthorized: Note doesn't belong to user" }, { status: 403 })
         }
 
-        await db.note.delete({
+        // Mark the note as trashed instead of deleting it
+        const trashedNote = await db.note.update({
             where: {
                 id: params.id,
             },
+            data: {
+                isTrashed: true,
+                updatedAt: new Date(),
+                createdAt: new Date(),
+            },
         })
-        return NextResponse.json({ message: "Note deleted successfully" }, { status: 200 })
+
+        return NextResponse.json(trashedNote, { status: 200 })
     } catch (error) {
         console.error("Failed to delete note:", error)
         return NextResponse.json({ error: "Failed to delete note" }, { status: 500 })
     }
 }
-
