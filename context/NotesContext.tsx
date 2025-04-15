@@ -29,6 +29,8 @@ export const NotesProvider: React.FC<{ children: React.ReactNode }> = ({
   const [currentFilterType, setCurrentFilterType] = useState<NoteFilter>("all");
   const [selectedTag, setSelectedTag] = useState<string | null>(null);
   const [selectedTrashNotes, setSelectedTrashNotes] = useState<string[]>([]);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [filteredNotes, setFilteredNotes] = useState<INote[]>([]);
 
   const { data: session, status } = useSession();
 
@@ -38,6 +40,40 @@ export const NotesProvider: React.FC<{ children: React.ReactNode }> = ({
       fetchNotes();
     }
   }, [session, status]);
+
+  useEffect(() => {
+    const filtered = notes.filter((note) => {
+      const lowerCaseSearchTerm = searchQuery.toLowerCase();
+      const matchesSearch =
+        note.title?.toLowerCase().includes(lowerCaseSearchTerm) ||
+        note.content?.toLowerCase().includes(lowerCaseSearchTerm) ||
+        note.tags?.some((tag) =>
+          tag.toLowerCase().includes(lowerCaseSearchTerm)
+        );
+
+      if (selectedTag && !note.tags?.includes(selectedTag)) {
+        return false;
+      }
+
+      switch (currentFilterType) {
+        case "archived":
+          return note.isArchived && !note.isTrashed && matchesSearch;
+        case "trash":
+          return note.isTrashed && matchesSearch;
+        case "favorites":
+          return (
+            note.isFavorite &&
+            !note.isTrashed &&
+            !note.isArchived &&
+            matchesSearch
+          );
+        case "all":
+        default:
+          return !note.isArchived && !note.isTrashed && matchesSearch;
+      }
+    });
+    setFilteredNotes(filtered);
+  }, [notes, currentFilterType, selectedTag, searchQuery]);
 
   const fetchNotes = async () => {
     if (status !== "authenticated" || !session?.user) return;
@@ -472,6 +508,10 @@ export const NotesProvider: React.FC<{ children: React.ReactNode }> = ({
         loading,
         setError,
         error,
+        searchQuery,
+        setSearchQuery,
+        filteredNotes,
+        setFilteredNotes,
       }}
     >
       {children}

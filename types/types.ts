@@ -91,6 +91,10 @@ export interface NoteContextProps {
     setLoading: (loading: boolean) => void
     error: string | null
     setError: (error: string | null) => void
+    searchQuery: string
+    setSearchQuery: (title: string) => void
+    filteredNotes: INote[]
+    setFilteredNotes: (notes: INote[]) => void
 }
 
 

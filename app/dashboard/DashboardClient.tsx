@@ -16,11 +16,11 @@ const DashboardClient = () => {
 
   return (
     <div className="flex h-screen pt-16">
-      <Navbar
-        showMobileSidebar={showMobileSidebar}
-        setShowMobileSidebar={setShowMobileSidebar}
-      />
       <NotesProvider>
+        <Navbar
+          showMobileSidebar={showMobileSidebar}
+          setShowMobileSidebar={setShowMobileSidebar}
+        />
         <Sidebar
           showMobileSidebar={showMobileSidebar}
           setShowMobileSidebar={setShowMobileSidebar}

@@ -16,12 +16,13 @@ const NoteList: React.FC = () => {
     setTags,
     currentFilterType,
     selectedTag,
-    // loading,
     handleRestoreNote,
     handleDeleteNote,
     selectedTrashNotes,
     setSelectedTrashNotes,
     handleEmptyTrash,
+    filteredNotes,
+    // loading,
   } = useNotes();
 
   const [showDeleteModal, setShowDeleteModal] = useState(false);
@@ -96,24 +97,6 @@ const NoteList: React.FC = () => {
       setSelectedTrashNotes(trashedNotes.map((note) => note.id));
     }
   };
-
-  const filteredNotes = notes.filter((note) => {
-    if (selectedTag && !note.tags?.includes(selectedTag)) {
-      return false;
-    }
-
-    switch (currentFilterType) {
-      case "archived":
-        return note.isArchived && !note.isTrashed;
-      case "trash":
-        return note.isTrashed;
-      case "favorites":
-        return note.isFavorite && !note.isTrashed && !note.isArchived;
-      case "all":
-      default:
-        return !note.isArchived && !note.isTrashed;
-    }
-  });
 
   const getCurrentFilterHeading = () => {
     switch (currentFilterType) {
