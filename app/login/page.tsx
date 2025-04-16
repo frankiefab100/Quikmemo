@@ -8,8 +8,13 @@ import { signInAction } from "@/actions/user";
 import { useForm } from "react-hook-form";
 import { signInSchema, type SignInValues } from "@/lib/formSchema";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { EyeIcon, EyeOffIcon } from "lucide-react";
+import { useState } from "react";
+import Link from "next/link";
 
 const LoginPage = () => {
+  const [isVisible, setIsVisible] = useState(false);
+  const [password, setPassword] = useState("");
   const router = useRouter();
 
   const {
@@ -19,6 +24,21 @@ const LoginPage = () => {
   } = useForm<SignInValues>({
     resolver: zodResolver(signInSchema),
   });
+
+  const togglePasswordVisibility = () => {
+    setIsVisible((prev) => !prev);
+  };
+
+  const handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setPassword(e.target.value);
+  };
+
+  const handleMouseEnter = () => {
+    setIsVisible(true);
+  };
+  const handleMouseLeave = () => {
+    setIsVisible(false);
+  };
 
   const onSubmit = async (data: SignInValues) => {
     const res = await signInAction(data);
@@ -46,34 +66,66 @@ const LoginPage = () => {
             </h3>
             <p className="">
               Don&apos;t have an account?{" "}
-              <a
+              <Link
                 href="/register"
                 className="font-medium text-blue-600 hover:text-blue-500"
               >
                 Sign up
-              </a>
+              </Link>
             </p>
           </div>
         </div>
         <form onSubmit={handleSubmit(onSubmit)} className="mt-8 space-y-5">
-          <div>
-            <Input
-              label="Email"
-              type="email"
-              id="email"
-              {...register("email")}
-              error={errors.email?.message}
-            />
-          </div>
-          <div>
+          <Input
+            label="Email"
+            type="email"
+            id="email"
+            {...register("email")}
+            error={errors.email?.message}
+          />
+          <div className="relative">
             <Input
               label="Password"
-              type="password"
+              type={isVisible ? "text" : "password"}
               id="password"
-              {...register("password")}
+              value={password}
+              onChange={(e) => {
+                handlePasswordChange(e);
+                register("password").onChange(e);
+              }}
+              name="password"
+              autoComplete="current-password"
               error={errors.password?.message}
             />
+            <button
+              onClick={togglePasswordVisibility}
+              onMouseEnter={handleMouseEnter}
+              onMouseLeave={handleMouseLeave}
+              className="absolute right-3 top-10 cursor-pointer"
+            >
+              {isVisible ? <EyeIcon /> : <EyeOffIcon />}
+            </button>
           </div>
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <input
+                type="checkbox"
+                id="remember"
+                className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 focus:ring-2"
+              />
+              <label htmlFor="remember" className="text-sm text-gray-600">
+                Remember me
+              </label>
+            </div>
+            <Link
+              href="/forgotpassword"
+              className="text-sm font-medium text-blue-600 hover:text-blue-500"
+              onClick={() => console.log("Forgot password clicked")}
+            >
+              Forgot password?
+            </Link>
+          </div>
+
           <button
             type="submit"
             disabled={isSubmitting}
