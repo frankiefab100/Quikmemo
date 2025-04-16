@@ -73,7 +73,7 @@ const DesktopNav: React.FC = () => {
   };
 
   return (
-    <div className="hidden md:flex md:items-center md:space-x-8">
+    <div className="hidden lg:flex lg:items-center lg:space-x-8">
       {/* Features*/}
       <div
         ref={featuresRef}

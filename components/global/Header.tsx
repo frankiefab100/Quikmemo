@@ -52,24 +52,32 @@ export default function Navbar() {
 
           <DesktopNav />
 
-          <div className="hidden md:flex md:items-center md:space-x-4">
+          <div className="hidden lg:flex items-center space-x-4">
             <Link
               href="/login"
-              className="text-base font-medium text-gray-700 hover:text-blue-600"
+              className="block text-base font-medium text-gray-700 hover:text-blue-600"
               data-testid="login-link"
             >
               Login
             </Link>
             <Link
               href="/register"
-              className="ml-8 inline-flex items-center justify-center rounded-md bg-blue-600 px-4 py-2 text-base font-medium text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+              className="ml-8 flex items-center justify-center rounded-md bg-blue-600 px-4 py-2 text-base font-medium text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
               data-testid="get-started-link"
             >
               Get Started
             </Link>
           </div>
 
-          <div className="flex md:hidden">
+          <div className="flex lg:hidden">
+            <Link
+              href="/register"
+              className="hidden md:flex mr-6 items-center justify-center rounded-md bg-blue-600 px-4 py-2 text-base font-medium text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+              data-testid="get-started-link"
+            >
+              Get Started
+            </Link>
+
             <button
               type="button"
               className="inline-flex items-center justify-center rounded-md p-2 text-gray-700 hover:bg-gray-100 hover:text-blue-600 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-blue-500"

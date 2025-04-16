@@ -47,7 +47,7 @@ const MobileNav = ({ setMobileMenuOpen }: MobileNavProps) => {
   };
 
   return (
-    <div className="md:hidden" id="mobile-menu" data-testid="mobile-menu">
+    <div className="lg:hidden" id="mobile-menu" data-testid="mobile-menu">
       <div className="space-y-1 px-2 pb-3 pt-2">
         {/* Features Mobile */}
         <div className="relative">
@@ -179,7 +179,7 @@ const MobileNav = ({ setMobileMenuOpen }: MobileNavProps) => {
           </Link>
           <Link
             href="/register"
-            className="block rounded-md bg-blue-600 px-3 py-2 text-center text-base font-medium text-white hover:bg-blue-700"
+            className="md:hidden block rounded-md bg-blue-600 px-3 py-2 text-center text-base font-medium text-white hover:bg-blue-700"
             data-testid="mobile-get-started-link"
             onClick={handleLinkClick}
           >
