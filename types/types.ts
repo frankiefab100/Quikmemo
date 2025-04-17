@@ -58,6 +58,47 @@ export interface ModalProps {
     message?: string;
 }
 
+export interface MegaMenuProps {
+    activeMenu: string | null;
+    setActiveMenu: (menu: string | null) => void;
+    onMouseEnter: (menu: string) => void;
+    onMouseLeave: () => void;
+    onNavLinkClick: (menu: string) => void;
+}
+
+export interface MegaMenuItemProps {
+    title: string;
+    items: {
+        label: string;
+        href: string;
+        icon: React.ReactNode;
+        description: string;
+    }[];
+}
+
+export interface NavLinkProps {
+    label: string;
+    onClick?: () => void;
+    ariaExpanded?: boolean;
+    onMouseEnter?: () => void;
+    onMouseLeave?: () => void;
+}
+
+export interface MobileNavProps {
+    setMobileMenuOpen: (isOpen: boolean) => void;
+}
+
+export interface MobileMenuProps {
+    title: string;
+    links: {
+        label: string;
+        href: string;
+        icon: React.ReactNode;
+    }[];
+    onLinkClick: () => void;
+}
+
+
 export type NoteFilter = "all" | "tag" | "archived" | "favorites" | "trash";
 
 export interface NoteContextProps {

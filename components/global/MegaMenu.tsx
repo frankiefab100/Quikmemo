@@ -14,32 +14,11 @@ import {
   NotepadText,
 } from "lucide-react";
 import Image from "next/image";
-
-interface MegaMenuProps {
-  activeMenu: string | null;
-  setActiveMenu: (menu: string | null) => void;
-  onMouseEnter: (menu: string) => void;
-  onMouseLeave: () => void;
-  onNavLinkClick: (menu: string) => void;
-}
-
-interface MegaMenuItemProps {
-  title: string;
-  items: {
-    label: string;
-    href: string;
-    icon: React.ReactNode;
-    description: string;
-  }[];
-}
-
-interface NavLinkProps {
-  label: string;
-  onClick?: () => void;
-  ariaExpanded?: boolean;
-  onMouseEnter?: () => void;
-  onMouseLeave?: () => void;
-}
+import type {
+  MegaMenuItemProps,
+  MegaMenuProps,
+  NavLinkProps,
+} from "@/types/types";
 
 const NavLink = ({
   label,

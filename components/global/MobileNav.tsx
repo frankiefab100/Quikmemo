@@ -1,7 +1,5 @@
 "use client";
 import { useState } from "react";
-import type React from "react";
-
 import Link from "next/link";
 import {
   BookOpen,
@@ -17,20 +15,7 @@ import {
   Lightbulb,
   NotepadText,
 } from "lucide-react";
-
-interface MobileNavProps {
-  setMobileMenuOpen: (isOpen: boolean) => void;
-}
-
-interface MobileMenuProps {
-  title: string;
-  links: {
-    label: string;
-    href: string;
-    icon: React.ReactNode;
-  }[];
-  onLinkClick: () => void;
-}
+import type { MobileMenuProps, MobileNavProps } from "@/types/types";
 
 const MobileMenu: React.FC<MobileMenuProps> = ({
   title,
