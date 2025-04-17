@@ -23,7 +23,7 @@ const MobileMenu: React.FC<MobileMenuProps> = ({
   onLinkClick,
 }) => {
   return (
-    <div className="py-2">
+    <div className="border-b border-gray-200 pb-4 py-2">
       <h3 className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2 px-3">
         {title}
       </h3>
@@ -55,16 +55,16 @@ const MobileNav: React.FC<MobileNavProps> = ({ setMobileMenuOpen }) => {
 
   return (
     <div
-      className="lg:hidden bg-white border-t border-gray-200"
+      className="lg:hidden max-h-screen overflow-y-scroll bg-white border-t border-gray-200"
       id="mobile-menu"
       data-testid="mobile-menu"
     >
-      <div className="px-2 pt-10 pb-3 space-y-1">
+      <div className="px-2 pb-3 space-y-1">
         {/* Features Submenu */}
         <div>
           <button
             onClick={() => toggleSubmenu("features")}
-            className="w-full flex justify-between items-center px-3 py-2 text-base font-medium text-gray-700 hover:bg-gray-50 hover:text-blue-600 rounded-md"
+            className="border-b border-gray-200 pb-4 w-full flex justify-between items-center px-3 py-6 text-base font-medium text-gray-700 hover:bg-gray-50 hover:text-blue-600 rounded-md"
           >
             <span>Features</span>
             {openSubmenu === "features" ? (
@@ -133,7 +133,7 @@ const MobileNav: React.FC<MobileNavProps> = ({ setMobileMenuOpen }) => {
         <div>
           <button
             onClick={() => toggleSubmenu("resources")}
-            className="w-full flex justify-between items-center px-3 py-2 text-base font-medium text-gray-700 hover:bg-gray-50 hover:text-blue-600 rounded-md"
+            className="border-b border-gray-200 pb-4 w-full flex justify-between items-center px-3 py-6 text-base font-medium text-gray-700 hover:bg-gray-50 hover:text-blue-600 rounded-md"
           >
             <span>Resources</span>
             {openSubmenu === "resources" ? (
@@ -186,33 +186,33 @@ const MobileNav: React.FC<MobileNavProps> = ({ setMobileMenuOpen }) => {
 
         <Link
           href="/solutions"
-          className="block px-3 py-2 text-base font-medium text-gray-700 hover:bg-gray-50 hover:text-blue-600 rounded-md"
+          className="border-b border-gray-200 pb-4 block px-3 py-2 text-base font-medium text-gray-700 hover:bg-gray-50 hover:text-blue-600 rounded-md"
           onClick={handleLinkClick}
         >
           Solutions
         </Link>
         <Link
           href="/company"
-          className="block px-3 py-2 text-base font-medium text-gray-700 hover:bg-gray-50 hover:text-blue-600 rounded-md"
+          className="border-b border-gray-200 pb-4 block px-3 py-2 text-base font-medium text-gray-700 hover:bg-gray-50 hover:text-blue-600 rounded-md"
           onClick={handleLinkClick}
         >
           Company
         </Link>
 
-        <div className="mt-4 space-y-2 border-t border-gray-200 pt-4">
+        <div className="flex justify-center items-center pt-6 space-x-4">
+          <Link
+            href="/register"
+            className="md:hidden flex justify-center items-center px-6 py-3 text-center text-base font-medium text-white bg-blue-600 hover:bg-blue-600 rounded-full md:rounded-md"
+            onClick={handleLinkClick}
+          >
+            Get Started <ChevronRight className="w-5 h-5" />
+          </Link>
           <Link
             href="/login"
-            className="block px-3 py-2 text-base font-medium text-gray-700 hover:bg-gray-50 hover:text-blue-600 rounded-md"
+            className="px-3 py-2 mt-0 text-base font-medium text-gray-700 hover:text-blue-600 md:w-full md:text-white md:bg-blue-600 md:hover:bg-blue-600 md:rounded-md"
             onClick={handleLinkClick}
           >
             Login
-          </Link>
-          <Link
-            href="/register"
-            className="md:hidden block px-3 py-2 text-center text-base font-medium text-white bg-blue-600 hover:bg-blue-700 rounded-md"
-            onClick={handleLinkClick}
-          >
-            Get Started
           </Link>
         </div>
       </div>
