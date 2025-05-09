@@ -5,6 +5,7 @@ import type { INote } from "@/types/types";
 import { useNotes } from "@/context/NotesContext";
 import { useState } from "react";
 import Modal from "../ui/Modal";
+import removeHtmlTags from "@/utils/removeHtmlTags";
 
 const NoteList: React.FC = () => {
   const {
@@ -251,7 +252,9 @@ const NoteList: React.FC = () => {
                     </div>
                   )}
                   <h2 className="text-gray-900 dark:text-white font-semibold text-[1.2rem] leading-6 mb-1">
-                    {note.title}
+                    {note.title.length > 20
+                      ? `${note.title.substring(0, 20)}...`
+                      : note.title}
                   </h2>
                   {note.isFavorite && (
                     <span className="text-yellow-500">★</span>
@@ -282,6 +285,14 @@ const NoteList: React.FC = () => {
                   )}
                 </div>
 
+                <p className="text-gray-600 dark:text-gray-400 text-sm leading-5">
+                  {removeHtmlTags(note.content).length > 35
+                    ? `${removeHtmlTags(note.content)
+                        .substring(0, 35)
+                        .replace(/(<([^>]+)>)/gi, "")}...`
+                    : removeHtmlTags(note.content)}
+                </p>
+
                 <div className="flex flex-wrap gap-2 mt-2">
                   {note.tags?.map((tag, index) => (
                     <span
@@ -296,7 +307,7 @@ const NoteList: React.FC = () => {
                     </span>
                   ))}
                 </div>
-                <p className="mt-2 text-sm dark:text-gray-300 text-gray-600">
+                <p className="mt-2 text-xs dark:text-gray-300 text-gray-600">
                   {new Date(note.updatedAt || note.createdAt).toLocaleString()}
                 </p>
               </div>
