@@ -11,7 +11,7 @@ const FAQ: React.FC = () => {
 
   return (
     <section className="py-16">
-      <div className="px-4 mx-auto sm:px-6 lg:px-8 max-w-7xl">
+      <div className="px-4 mx-auto sm:px-6 md:px-8 lg:px-12 max-w-7xl">
         <div className="max-w-2xl mx-auto text-center space-y-2">
           <h2 className="lg:text-4xl md:text-3xl text-2xl font-semibold tracking-tight text-gray-900">
             Frequently Asked Questions

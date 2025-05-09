@@ -3,7 +3,7 @@ import Image from "next/image";
 
 const Testimonials: React.FC = () => {
   return (
-    <div className="py-14 max-w-screen-xl mx-auto sm:px-6 lg:px-8">
+    <div className="py-14 max-w-screen-xl mx-auto sm:px-6 md:px-8 lg:px-12">
       <div className="sm:text-center md:mx-auto">
         <div className="text-center space-y-2 mb-12">
           <h3 className="lg:text-4xl md:text-3xl text-2xl font-bold">

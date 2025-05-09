@@ -13,7 +13,7 @@ const Features: React.FC = () => {
 
   return (
     <section className="py-16">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 md:px-8 lg:px-12 py-12">
         <div className="text-center space-y-2 mb-12">
           <h2 className="text-sm uppercase tracking-wider text-blue-600 mb-2">
             Powerful Features
@@ -28,7 +28,7 @@ const Features: React.FC = () => {
         </div>
       </div>
 
-      <div className="px-4 mx-auto sm:px-6 lg:px-8 max-w-7xl">
+      <div className="px-4 mx-auto sm:px-6 md:px-8 lg:px-12 max-w-7xl">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-y-12 lg:gap-x-16 xl:gap-x-24">
           <div className="relative overflow-hidden group lg:order-2">
             <Image

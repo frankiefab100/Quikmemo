@@ -52,8 +52,8 @@ export default function Navbar() {
       className={`fixed top-0 left-0 right-0 z-50 text-gray-900 transition-all duration-300 ease-in-out
         ${
           isScrolled
-            ? "top-3 md:rounded-full rounded-3xl shadow-lg bg-white/90 backdrop-blur-sm mx-4 max-w-[calc(100%-32px)] md:mx-auto"
-            : "rounded-none shadow-none"
+            ? "top-2  mx-4 md:mx-8 lg:mx-12 md:rounded-full rounded-3xl shadow-lg bg-white/90 backdrop-blur-sm max-w-[calc(100%-32px)]"
+            : "rounded-none shadow-none md:px-8 lg:px-12"
         }
       `}
     >

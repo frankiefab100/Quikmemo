@@ -5,7 +5,7 @@ import { USECASES } from "@/constants/usecases";
 
 const UseCases: React.FC = () => {
   return (
-    <div className="py-16 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div className="py-16 max-w-7xl mx-auto px-4 sm:px-6 md:px-8 lg:px-12">
       <div className="text-center space-y-2 mb-12">
         <h2 className="text-sm uppercase tracking-wider text-blue-600 mb-2">
           A platform for all note-taking needs
