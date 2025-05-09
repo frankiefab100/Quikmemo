@@ -287,9 +287,7 @@ const NoteList: React.FC = () => {
 
                 <p className="text-gray-600 dark:text-gray-400 text-sm leading-5">
                   {removeHtmlTags(note.content).length > 35
-                    ? `${removeHtmlTags(note.content)
-                        .substring(0, 35)
-                        .replace(/(<([^>]+)>)/gi, "")}...`
+                    ? `${removeHtmlTags(note.content).substring(0, 35)}...`
                     : removeHtmlTags(note.content)}
                 </p>
 
