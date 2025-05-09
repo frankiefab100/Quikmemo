@@ -93,7 +93,7 @@ const MegaMenu: React.FC<MegaMenuProps> = ({
             onMouseLeave={onMouseLeave}
           />
           {activeMenu === "features" && (
-            <div className="mega-menu absolute left-0 w-full bg-white shadow-xl border-t border-gray-200">
+            <div className="mega-menu absolute rounded-3xl mt-1 left-0 w-full bg-white shadow-xl border-t border-gray-200">
               <div className="container mx-auto px-4 py-6">
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
                   <MegaMenuItem
@@ -183,7 +183,7 @@ const MegaMenu: React.FC<MegaMenuProps> = ({
             onMouseLeave={onMouseLeave}
           />
           {activeMenu === "resources" && (
-            <div className="mega-menu absolute left-0 w-full bg-white shadow-xl border-t border-gray-200">
+            <div className="mega-menu absolute rounded-3xl mt-1 left-0 w-full bg-white shadow-xl border-t border-gray-200">
               <div className="container mx-auto px-4 py-6">
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
                   <MegaMenuItem

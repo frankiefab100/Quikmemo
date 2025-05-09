@@ -10,6 +10,15 @@ export default function Navbar() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [activeMenu, setActiveMenu] = useState<string | null>(null);
   const navRef = useClickOutside(() => setActiveMenu(null));
+  const [isScrolled, setIscrolled] = useState(false);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setIscrolled(window.scrollY > 10);
+    };
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
 
   useEffect(() => {
     if (isMobileMenuOpen) {
@@ -40,10 +49,16 @@ export default function Navbar() {
   return (
     <nav
       ref={navRef}
-      className="fixed top-0 left-0 right-0 z-50 bg-white shadow-sm border-b-2 border-gray-300 text-gray-900"
+      className={`fixed top-0 left-0 right-0 z-50 text-gray-900 transition-all duration-300 ease-in-out
+        ${
+          isScrolled
+            ? "top-3 md:rounded-full rounded-3xl shadow-lg bg-white/90 backdrop-blur-sm mx-4 max-w-[calc(100%-32px)] md:mx-auto"
+            : "rounded-none shadow-none"
+        }
+      `}
     >
-      <div className="container mx-auto flex justify-between">
-        <div className="relative block p-4 lg:p-6">
+      <div className="container mx-auto flex justify-between items-center">
+        <div className="relative block p-4">
           <Link href="/" className="flex items-center">
             <picture>
               <source
@@ -78,7 +93,7 @@ export default function Navbar() {
           onNavLinkClick={handleNavLinkClick}
         />
 
-        <div className="hidden lg:flex items-center">
+        <div className="hidden lg:pr-8 lg:flex items-center">
           <Link
             href="/login"
             className="relative block py-6 px-2 lg:p-6 text-sm lg:text-base font-medium hover:underline hover:text-blue-500"

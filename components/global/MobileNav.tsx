@@ -59,7 +59,7 @@ const MobileNav: React.FC<MobileNavProps> = ({ setMobileMenuOpen }) => {
       id="mobile-menu"
       data-testid="mobile-menu"
     >
-      <div className="px-2 pb-3 space-y-1">
+      <div className="rounded-b-3xl px-2 pb-3 space-y-1">
         {/* Features Submenu */}
         <div>
           <button
