@@ -92,15 +92,14 @@ export default function RootLayout({
         />
         <meta name="apple-mobile-web-app-capable" content="yes" />
         <meta name="application-name" content="Quikmemo PWA App" />
-
+      </head>
+      <body className={`${montserrat.className} bg-white`}>
+        <SessionProvider>{children}</SessionProvider>
         <Script
           defer
           src="https://cloud.umami.is/script.js"
           data-website-id={process.env.UMAMI_WEBSITE_ID}
         />
-      </head>
-      <body className={`${montserrat.className} bg-white`}>
-        <SessionProvider>{children}</SessionProvider>
       </body>
     </html>
   );
