@@ -284,7 +284,7 @@ const MegaMenu: React.FC<MegaMenuProps> = ({
         </li>
         <li className="hover:bg-blue-600 hover:text-white">
           <Link
-            href="/company"
+            href="/contact"
             className="relative block py-6 px-2 lg:p-6 text-sm lg:text-base"
           >
             Company

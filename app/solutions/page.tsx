@@ -1,3 +1,4 @@
+import ComingSoonSection from "@/components/shared/comingSoon";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
@@ -7,7 +8,7 @@ export const metadata: Metadata = {
 };
 
 const SolutionsPage: React.FC = () => {
-  return <div>Solutions</div>;
+  return <ComingSoonSection />;
 };
 
 export default SolutionsPage;
