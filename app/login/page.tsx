@@ -11,8 +11,14 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { EyeIcon, EyeOffIcon } from "lucide-react";
 import { useState } from "react";
 import Link from "next/link";
+import { Metadata } from "next";
 
-const LoginPage = () => {
+const metadata: Metadata = {
+  title: "Login to Quikmemo | Access Your Notes Anytime",
+  description: "Sign in to Quikmemo to access your notes and stay productive.",
+};
+
+const LoginPage: React.FC = () => {
   const [isVisible, setIsVisible] = useState(false);
   const [password, setPassword] = useState("");
   const router = useRouter();

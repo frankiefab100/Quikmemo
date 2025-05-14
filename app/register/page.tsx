@@ -8,6 +8,13 @@ import Input from "@/components/ui/Input";
 import { signUpSchema, SignUpValues } from "@/lib/formSchema";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { Metadata } from "next";
+
+const metadata: Metadata = {
+  title: "Register for Quikmemo | Quick and Easy Note-Taking",
+  description:
+    "Join Quikmemo today! Create your account and start organizing your thoughts effortlessly.",
+};
 
 const RegisterPage = () => {
   const {

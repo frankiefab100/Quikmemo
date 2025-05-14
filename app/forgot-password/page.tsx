@@ -1,7 +1,14 @@
 import Input from "@/components/ui/Input";
 import Image from "next/image";
+import { Metadata } from "next";
 
-const page = () => {
+export const metadata: Metadata = {
+  title: "Reset Your Quikmemo Password",
+  description:
+    "Forgot your password? Easily reset it and regain access to your Quikmemo account.",
+};
+
+const ForgotPassword: React.FC = () => {
   return (
     <main className="w-full h-screen flex flex-col items-center justify-center">
       <div className="flex flex-col items-center justify-center px-6 py-8 mx-auto md:h-screen lg:py-0">
@@ -61,4 +68,4 @@ const page = () => {
   );
 };
 
-export default page;
+export default ForgotPassword;
