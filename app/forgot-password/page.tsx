@@ -16,7 +16,7 @@ const page = () => {
           <h1 className="mb-1 text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl">
             Forgot your password?
           </h1>
-          <p className="font-light text-gray-600 0">
+          <p className="font-light text-gray-600 text-sm">
             Enter your email and we will send you a code to reset your password!
           </p>
           <form className="mt-4 space-y-4 lg:mt-5 md:space-y-5">
@@ -26,7 +26,7 @@ const page = () => {
               id="email"
               placeholder="name@example.com"
             />
-            <div className="flex items-start">
+            <div className="flex items-center">
               <div className="flex items-center h-5">
                 <input
                   required
@@ -36,14 +36,14 @@ const page = () => {
                   className="w-4 h-4 border border-gray-300 rounded bg-gray-50 focus:ring-3 focus:ring-blue-300"
                 />
               </div>
-              <div className="ml-3 text-sm">
+              <div className="ml-3 text-xs">
                 <label htmlFor="terms" className="font-light text-gray-600">
                   I accept the{" "}
                   <a
                     className="font-medium text-blue-600 hover:underline"
                     href="#"
                   >
-                    Terms and Conditions
+                    terms and conditions
                   </a>
                 </label>
               </div>

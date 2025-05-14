@@ -118,7 +118,7 @@ const LoginPage = () => {
               </label>
             </div>
             <Link
-              href="/forgotpassword"
+              href="/forgot-password"
               className="text-sm font-medium text-blue-600 hover:text-blue-500"
               onClick={() => console.log("Forgot password clicked")}
             >
