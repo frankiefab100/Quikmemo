@@ -1,10 +1,12 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 
 export default function ComingSoonSection() {
   const launchDate = new Date("Oct 26, 2025 00:00:00").getTime();
 
-  const calculateTimeLeft = () => {
+  // Memoize with useCallback to avoid unnecessary re-runs of effects after specifying
+  // "calculateTimeLeft" in dependency array to prevent exhaustive-deps eslint highlight
+  const calculateTimeLeft = useCallback(() => {
     const now = new Date().getTime();
     let diff = launchDate - now;
 
@@ -28,9 +30,9 @@ export default function ComingSoonSection() {
       minutes: minutes < 10 ? `0${minutes}` : minutes.toString(),
       seconds: seconds < 10 ? `0${seconds}` : seconds.toString(),
     };
-  };
+  }, []);
 
-  const [timeLeft, setTimeLeft] = useState(calculateTimeLeft());
+  const [timeLeft, setTimeLeft] = useState(() => calculateTimeLeft());
 
   useEffect(() => {
     const timer = setInterval(() => {
@@ -38,7 +40,7 @@ export default function ComingSoonSection() {
     }, 1000);
 
     return () => clearInterval(timer);
-  }, []);
+  }, [calculateTimeLeft]);
 
   return (
     <section className="py-24 relative overflow-x-hidden">
