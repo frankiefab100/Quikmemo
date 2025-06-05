@@ -6,11 +6,11 @@ import { useState } from "react";
 import { useNotes } from "@/context/NotesContext";
 import Modal from "@/components/ui/Modal";
 
-interface DeleteArchiveProps {
+interface NoteActionsProps {
   onClose?: () => void;
 }
 
-const DeleteArchive: React.FC<DeleteArchiveProps> = ({ onClose }) => {
+const NoteActionsMenu: React.FC<NoteActionsProps> = ({ onClose }) => {
   const {
     selectedNote,
     handleTrashNote,
@@ -106,4 +106,4 @@ const DeleteArchive: React.FC<DeleteArchiveProps> = ({ onClose }) => {
   );
 };
 
-export default DeleteArchive;
+export default NoteActionsMenu;
