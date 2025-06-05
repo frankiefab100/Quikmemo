@@ -1,238 +1,7 @@
-// "use client";
-// import SidebarItem from "./ui/sidebarItem";
-// import {
-//   ArchiveIcon,
-//   ChevronLeft,
-//   ChevronRight,
-//   FileText,
-//   Home,
-//   MoreHorizontal,
-//   Star,
-//   Tag,
-//   Trash,
-// } from "lucide-react";
-// import { useNotes } from "@/context/NotesContext";
-// import { useEffect, useState } from "react";
-// import type { NoteFilter } from "@/types/types";
-// import truncateText from "@/utils/truncateText";
-// import { useClickOutside } from "@/hook/useClickOutside";
-
-// interface SidebarProps {
-//   isCollapsed: boolean;
-//   toggleSidebar: () => void;
-//   showMobileSidebar: boolean;
-//   setShowMobileSidebar: (show: boolean) => void;
-// }
-
-// const Sidebar: React.FC<SidebarProps> = ({
-//   isCollapsed,
-//   toggleSidebar,
-//   showMobileSidebar,
-//   setShowMobileSidebar,
-// }) => {
-//   const {
-//     notes,
-//     currentFilterType,
-//     setCurrentFilterType,
-//     selectedTag,
-//     setSelectedTag,
-//     selectedNote,
-//     setSelectedNote,
-//   } = useNotes();
-
-//   const [showAllTags, setShowAllTags] = useState(false);
-//   const sidebarRef = useClickOutside(() => {
-//     setShowMobileSidebar(false);
-//   });
-
-//   const archivedCount = notes.filter((note) => note.isArchived).length;
-//   const favoritesCount = notes.filter((note) => note.isFavorite).length;
-//   const trashCount = notes.filter((note) => note.isTrashed).length;
-
-//   const allTags = Array.from(
-//     new Set(notes.flatMap((note) => note.tags || []))
-//   ).sort();
-
-//   const displayedTags = showAllTags ? allTags : allTags.slice(0, 5);
-
-//   const recentNotes = [...notes]
-//     .filter((note) => !note.isTrashed && !note.isArchived)
-//     .sort(
-//       (a, b) =>
-//         new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime()
-//     )
-//     .slice(0, 3);
-
-//   const handleItemClick = (filter: NoteFilter) => {
-//     setCurrentFilterType(filter);
-//     setSelectedTag(null);
-//   };
-
-//   const handleTagClick = (tag: string) => {
-//     setSelectedTag(tag);
-//     setCurrentFilterType("all");
-//   };
-
-//   const handleRecentNoteClick = (noteId: string) => {
-//     setSelectedNote(notes.find((note) => note.id === noteId) || null);
-//     setCurrentFilterType("all");
-//   };
-
-//   useEffect(() => {
-//     setCurrentFilterType("all");
-//   }, [setCurrentFilterType]);
-
-//   return (
-// <aside
-//   ref={sidebarRef}
-//   id="sidebar"
-//   className={`fixed top-16 left-0 h-[calc(100vh-4rem)] z-20 transition-all duration-300 ease-in-out
-//       ${isCollapsed ? "md:w-16" : "md:w-64"}
-//       ${
-//         showMobileSidebar
-//           ? "w-64 translate-x-0"
-//           : "w-64 -translate-x-full md:translate-x-0"
-//       }`}
-// >
-//   <div className="pt-5 bg-[#fbfbfc] dark:bg-[#1e2531] flex flex-col h-full border-r border-gray-200 dark:border-gray-700 relative">
-//     <button
-//       onClick={toggleSidebar}
-//       className="absolute -right-3 top-6 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-full p-1 shadow-sm z-20 hidden md:block"
-//     >
-//       {isCollapsed ? (
-//         <ChevronRight className="h-4 w-4 text-gray-600 dark:text-gray-400" />
-//       ) : (
-//         <ChevronLeft className="h-4 w-4 text-gray-600 dark:text-gray-400" />
-//       )}
-//     </button>
-
-//     <SidebarItem
-//       Icon={Home}
-//       name="All Notes"
-//       isActive={currentFilterType === "all" && !selectedTag}
-//       onClick={() => handleItemClick("all")}
-//       isCollapsed={isCollapsed}
-//     />
-
-//     <div className={`py-2 ${isCollapsed ? "flex justify-center" : ""}`}>
-//       {!isCollapsed && (
-//         <h2 className="text-gray-500 dark:text-gray-400 font-semibold text-sm pl-6 my-2">
-//           Recents
-//         </h2>
-//       )}
-
-//       {!isCollapsed && recentNotes.length > 0
-//         ? recentNotes.map((note) => (
-//             <SidebarItem
-//               key={note.id}
-//               Icon={FileText}
-//               name={truncateText(note.title, 20)}
-//               isActive={selectedNote?.id === note.id}
-//               onClick={() => handleRecentNoteClick(note.id)}
-//               isCollapsed={isCollapsed}
-//             />
-//           ))
-//         : !isCollapsed && (
-//             <div className="text-gray-400 dark:text-gray-500 text-sm pl-6 py-2">
-//               No recent notes
-//             </div>
-//           )}
-//     </div>
-
-//     {isCollapsed && (
-//       <SidebarItem
-//         Icon={Tag}
-//         name="Tags"
-//         isActive={currentFilterType === "tag" && !selectedTag}
-//         onClick={() =>
-//           setSelectedTag(displayedTags.length > 0 ? displayedTags[0] : null)
-//         }
-//         isCollapsed={isCollapsed}
-//       />
-//     )}
-
-//     {!isCollapsed && (
-//       <div className="py-2">
-//         <h2 className="text-gray-500 dark:text-gray-400 font-semibold text-sm pl-6 my-2">
-//           Tags
-//         </h2>
-//         {displayedTags.length > 0 ? (
-//           <>
-//             {displayedTags.map((tag) => (
-//               <SidebarItem
-//                 key={tag}
-//                 Icon={Tag}
-//                 name={tag}
-//                 isActive={selectedTag === tag}
-//                 onClick={() => handleTagClick(tag)}
-//                 isCollapsed={isCollapsed}
-//               />
-//             ))}
-//             {allTags.length > 5 && (
-//               <button
-//                 onClick={() => setShowAllTags(!showAllTags)}
-//                 className="flex items-center text-gray-500 dark:text-gray-400 text-sm py-2 px-6 w-full hover:bg-gray-100 dark:hover:bg-gray-800"
-//               >
-//                 <MoreHorizontal className="w-5 h-5" />
-//                 <span className="ml-2 text-sm">
-//                   {showAllTags ? "Show Less" : "View More"}
-//                 </span>
-//               </button>
-//             )}
-//           </>
-//         ) : (
-//           <div className="text-gray-400 dark:text-gray-500 text-sm pl-6 py-2">
-//             No tags found
-//           </div>
-//         )}
-//       </div>
-//     )}
-
-//     <div
-//       className={`py-2 ${
-//         isCollapsed ? "flex flex-col justify-center" : ""
-//       }`}
-//     >
-//       {!isCollapsed && (
-//         <h2 className="text-gray-500 dark:text-gray-400 font-semibold text-sm pl-6 my-2">
-//           More
-//         </h2>
-//       )}
-//       <SidebarItem
-//         Icon={Star}
-//         name="Favorites"
-//         isActive={currentFilterType === "favorites"}
-//         onClick={() => handleItemClick("favorites")}
-//         badgeCount={favoritesCount}
-//         isCollapsed={isCollapsed}
-//       />
-//       <SidebarItem
-//         Icon={ArchiveIcon}
-//         name="Archived Notes"
-//         isActive={currentFilterType === "archived"}
-//         onClick={() => handleItemClick("archived")}
-//         badgeCount={archivedCount}
-//         isCollapsed={isCollapsed}
-//       />
-//       <SidebarItem
-//         Icon={Trash}
-//         name="Trash"
-//         isActive={currentFilterType === "trash"}
-//         onClick={() => handleItemClick("trash")}
-//         badgeCount={trashCount}
-//         isCollapsed={isCollapsed}
-//       />
-//     </div>
-//   </div>
-// </aside>
-//   );
-// };
-
-// export default Sidebar;
-
 "use client";
 
 import { useNotes } from "@/context/NotesContext";
+import truncateText from "@/utils/truncateText";
 import {
   ArchiveIcon,
   Home,
@@ -240,6 +9,7 @@ import {
   Star,
   Tag,
   MoreHorizontal,
+  FileText,
 } from "lucide-react";
 import { useState } from "react";
 
@@ -255,6 +25,7 @@ export default function Sidebar() {
     notes,
     currentFilterType,
     setCurrentFilterType,
+    setSelectedNote,
     selectedTag,
     setSelectedTag,
   } = useNotes();
@@ -300,6 +71,11 @@ export default function Sidebar() {
     }
   };
 
+  const handleRecentNoteClick = (noteId: string) => {
+    setSelectedNote(notes.find((note) => note.id === noteId) || null);
+    setCurrentFilterType("all");
+  };
+
   return (
     <div className="flex h-full w-64 flex-col border-r border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800">
       <div className="flex-1 overflow-y-auto pt-2">
@@ -338,7 +114,48 @@ export default function Sidebar() {
           })}
         </div>
 
-        <div className="mt-6 border-t border-gray-200 dark:border-gray-700 pt-4">
+        <div className="py-2 block">
+          <h2 className="text-gray-500 dark:text-gray-400 font-semibold text-sm pl-6 my-2">
+            Recents
+          </h2>
+
+          {recentNotes.length > 0 ? (
+            recentNotes.map((note) => {
+              const isActive = currentFilterType === note.id;
+
+              return (
+                <button
+                  key={note.id}
+                  onClick={() => handleRecentNoteClick(note.id)}
+                  className={`mb-1 flex w-full items-center justify-between rounded-lg px-3 py-2 text-left text-sm font-medium transition-colors ${
+                    isActive
+                      ? "bg-blue-100 dark:bg-blue-900 text-blue-700 dark:text-blue-300"
+                      : "text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700"
+                  }`}
+                >
+                  <div className="flex items-center gap-3">
+                    <FileText className="w-5 h-5 text-blue-600 dark:text-blue-400 flex-shrink-0" />
+                    <span
+                      className={`truncate text-xs ${
+                        isActive
+                          ? "text-blue-600 dark:text-blue-400"
+                          : "text-gray-500 dark:text-gray-400"
+                      }`}
+                    >
+                      {truncateText(note.title, 20)}
+                    </span>
+                  </div>
+                </button>
+              );
+            })
+          ) : (
+            <div className="text-gray-400 dark:text-gray-500 text-sm pl-6 py-2">
+              No recent notes
+            </div>
+          )}
+        </div>
+
+        <div className="my-5 border-t border-gray-200 dark:border-gray-700 pt-4">
           <div className="px-4 pb-2">
             <h3 className="flex items-center gap-2 text-sm font-medium text-gray-700 dark:text-gray-300">
               <span>
