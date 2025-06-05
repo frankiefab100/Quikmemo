@@ -4,7 +4,7 @@ import Link from "next/link";
 import Avatars from "../shared/Avatars";
 import HeroImg from "@/assets/images/hero-image-dark.png";
 
-export const Hero: React.FC = () => {
+const Hero: React.FC = () => {
   return (
     <section className="flex flex-col items-center justify-center text-center pt-60 md:pt-72 px-4 md:px-8 lg:px-12">
       <span className=" px-3 py-1 rounded-[15px] inline-flex border border-blue-300">
@@ -46,3 +46,5 @@ export const Hero: React.FC = () => {
     </section>
   );
 };
+
+export default Hero;

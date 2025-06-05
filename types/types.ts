@@ -128,6 +128,10 @@ export interface NoteContextProps {
     setSelectedTrashNotes: (ids: string[]) => void
     showToast: boolean
     setShowToast: (show: boolean) => void
+    isMobileSidebarOpen: boolean
+    setIsMobileSidebarOpen: (show: boolean) => void
+    isMobileEditorOpen: boolean
+    setIsMobileEditorOpen: (show: boolean) => void
     loading: boolean
     setLoading: (loading: boolean) => void
     error: string | null

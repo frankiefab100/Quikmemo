@@ -18,8 +18,6 @@ const CTA: React.FC = () => {
       >
         Start Writing – It&apos;s free
       </Link>
-      {/* </div> */}
-      {/* </div> */}
     </div>
   );
 };

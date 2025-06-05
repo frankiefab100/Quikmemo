@@ -1,15 +1,13 @@
 "use client";
 import React from "react";
 import { useEffect } from "react";
-import EditorFeature, { featureItems } from "./ui/editorFeature";
+import EditorFeature, { featureItems } from "./EditorFeatures";
 import { useEditor, EditorContent } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
 import Underline from "@tiptap/extension-underline";
 import Link from "@tiptap/extension-link";
 import Image from "@tiptap/extension-image";
 import Placeholder from "@tiptap/extension-placeholder";
-import Button from "../ui/Button";
-import { useNotes } from "@/context/NotesContext";
 
 interface TipTapEditorProps {
   content: string;
@@ -21,25 +19,9 @@ interface TipTapEditorProps {
 const TipTapEditor: React.FC<TipTapEditorProps> = ({
   content,
   onChange,
-  placeholder = "Write a note...",
+  placeholder,
   editable = true,
 }) => {
-  const {
-    selectedNote,
-    loading,
-    setTitle,
-    setContent,
-    setTags,
-    setSelectedNote,
-  } = useNotes();
-
-  const handleCancel = () => {
-    setTitle("");
-    setContent("");
-    setTags([]);
-    setSelectedNote(null);
-  };
-
   const editor = useEditor({
     extensions: [
       StarterKit,
@@ -83,19 +65,6 @@ const TipTapEditor: React.FC<TipTapEditorProps> = ({
               isActive={feature.isActive ? feature.isActive(editor) : false}
             />
           ))}
-        </div>
-        <div className="md:flex justify-center items-center hidden">
-          <Button type="submit" variant="secondary" disabled={loading}>
-            {selectedNote ? "Update" : "Save"}
-          </Button>
-          <Button
-            style={{ marginLeft: "5px" }}
-            variant="outline"
-            onClick={handleCancel}
-            disabled={loading}
-          >
-            Cancel
-          </Button>
         </div>
       </div>
       <div className="tiptap-editor">

@@ -1,15 +1,17 @@
 "use client";
+
+import type React from "react";
 import { useState, useEffect } from "react";
 import Image from "next/image";
 import type { IUser } from "@/types/types";
 import {
   CircleUser,
   ChevronDown,
-  UserRoundPen,
+  UserRoundIcon as UserRoundPen,
   Settings,
   Languages,
   Moon,
-  LucideIcon,
+  type LucideIcon,
   LogOut,
 } from "lucide-react";
 import { signOutUser } from "@/actions/user";
@@ -20,7 +22,7 @@ interface UserDropdownItemProps {
   Icon: LucideIcon;
   name: string;
   href?: string;
-  onClick: () => void;
+  onClick?: () => void;
 }
 
 const UserDropdownItems: React.FC<UserDropdownItemProps> = ({
@@ -41,30 +43,40 @@ const UserDropdownItems: React.FC<UserDropdownItemProps> = ({
   );
 };
 
-const UserDropdown: React.FC<IUser> = ({
+interface UserDropdownProps extends IUser {}
+
+const UserDropdown: React.FC<UserDropdownProps> = ({
   userImage,
   userName,
   userEmail,
-}: IUser) => {
+}) => {
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useClickOutside(() => {
     setIsOpen(false);
   });
 
-  const prefersDarkScheme = window.matchMedia(
-    "(prefers-color-scheme: dark)"
-  ).matches;
-  const [theme, setTheme] = useState(
-    localStorage.getItem("theme") || (prefersDarkScheme ? "dark" : "light")
-  );
+  const [theme, setTheme] = useState("light");
+
+  useEffect(() => {
+    // Check if we're in the browser
+    if (typeof window !== "undefined") {
+      const prefersDarkScheme = window.matchMedia(
+        "(prefers-color-scheme: dark)"
+      ).matches;
+      const savedTheme = localStorage.getItem("theme");
+      setTheme(savedTheme || (prefersDarkScheme ? "dark" : "light"));
+    }
+  }, []);
+
   const colorTheme = theme === "dark" ? "light" : "dark";
 
   useEffect(() => {
-    const root = window.document.documentElement;
-    root.classList.remove(colorTheme);
-    root.classList.add(theme);
-
-    localStorage.setItem("theme", theme);
+    if (typeof window !== "undefined") {
+      const root = window.document.documentElement;
+      root.classList.remove(colorTheme);
+      root.classList.add(theme);
+      localStorage.setItem("theme", theme);
+    }
   }, [theme, colorTheme]);
 
   function toggleTheme() {
@@ -72,15 +84,17 @@ const UserDropdown: React.FC<IUser> = ({
   }
 
   useEffect(() => {
-    const mediaQuery = window.matchMedia("(prefers-color-scheme: dark)");
-    const handleChange = (e: MediaQueryListEvent) => {
-      setTheme(e.matches ? "dark" : "light");
-    };
+    if (typeof window !== "undefined") {
+      const mediaQuery = window.matchMedia("(prefers-color-scheme: dark)");
+      const handleChange = (e: MediaQueryListEvent) => {
+        setTheme(e.matches ? "dark" : "light");
+      };
 
-    mediaQuery.addEventListener("change", handleChange);
-    return () => {
-      mediaQuery.removeEventListener("change", handleChange);
-    };
+      mediaQuery.addEventListener("change", handleChange);
+      return () => {
+        mediaQuery.removeEventListener("change", handleChange);
+      };
+    }
   }, []);
 
   return (
@@ -118,7 +132,7 @@ const UserDropdown: React.FC<IUser> = ({
                 {userImage ? (
                   <Image
                     className="w-8 h-8 rounded-full"
-                    src={userImage}
+                    src={userImage || "/placeholder.svg"}
                     alt={`${userName} photo`}
                     width={50}
                     height={50}
@@ -161,8 +175,7 @@ const UserDropdown: React.FC<IUser> = ({
                   <input
                     onChange={toggleTheme}
                     type="checkbox"
-                    id="checkbox"
-                    value=""
+                    checked={theme === "dark"}
                     className="peer sr-only"
                   />
                   <div className="relative w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-blue-600 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600"></div>
@@ -192,21 +205,18 @@ const UserDropdown: React.FC<IUser> = ({
                   Icon={UserRoundPen}
                   name="Profile"
                   href="/profile"
-                  onClick={() => setIsOpen(false)}
                 />
                 <UserDropdownItems
                   Icon={Languages}
                   name="Language & Region"
                   href="/language"
-                  onClick={() => setIsOpen(false)}
                 />
                 <UserDropdownItems
                   Icon={Settings}
                   name="Settings"
                   href="/settings"
-                  onClick={() => setIsOpen(false)}
                 />
-                <div className="flex justify-between px-4 py-2 rounded-md mx-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-600 dark:hover:text-white">
+                <div className="flex justify-between px-4 py-2 rounded-md mx-2 text-sm text-gray-700 dark:text-gray-300  dark:hover:text-white">
                   <div className="flex">
                     <Moon className="w-5 h-5 mr-3 text-gray-500 dark:text-gray-400" />
                     <span>Dark Mode</span>
@@ -216,8 +226,7 @@ const UserDropdown: React.FC<IUser> = ({
                     <input
                       onChange={toggleTheme}
                       type="checkbox"
-                      id="checkbox"
-                      value=""
+                      checked={theme === "dark"}
                       className="peer sr-only"
                     />
                     <div className="relative w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-blue-600 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600"></div>

@@ -1,12 +1,12 @@
 import React from "react";
 import Navbar from "@/components/global/Header";
 import Footer from "@/components/global/Footer";
-import { Hero } from "@/components/templates/Hero";
-import Features from "@/components/templates/Features";
-import UseCases from "@/components/templates/UseCases";
-import Testimonials from "@/components/templates/Testimonials";
-import FAQ from "@/components/templates/FAQ";
-import CTA from "@/components/templates/CTA";
+import Hero from "@/components/layout/Hero";
+import Features from "@/components/layout/Features";
+import UseCases from "@/components/layout/UseCases";
+import Testimonials from "@/components/layout/Testimonials";
+import FAQ from "@/components/layout/FAQ";
+import CTA from "@/components/layout/CTA";
 
 export default function Home() {
   return (

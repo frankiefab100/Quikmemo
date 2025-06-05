@@ -52,7 +52,11 @@ const LoginPage: React.FC = () => {
       alert(res.error);
       return;
     }
-    router.push("/dashboard");
+    //  Simulate authentication
+    setTimeout(() => {
+      // setIsLoading(false);
+      router.push("/dashboard");
+    }, 1000);
   };
 
   return (

@@ -1,202 +1,428 @@
+// "use client";
+// import { ChevronLeft, CircleEllipsis, Clock, Tag } from "lucide-react";
+// import type React from "react";
+// import Button from "../ui/Button";
+// import { useNotes } from "@/context/NotesContext";
+// import { type FormEvent, useCallback, useState, useEffect } from "react";
+// import Toast from "../ui/Toast";
+// import DeleteArchive from "./ui/DeleteArchive";
+// import { useClickOutside } from "@/hook/useClickOutside";
+// import TipTapEditor from "./TipTapEditor";
+
+// const NoteEditor: React.FC = () => {
+//   const {
+//     title,
+//     setTitle,
+//     content,
+//     setContent,
+//     tags,
+//     setTags,
+//     selectedNote,
+//     setSelectedNote,
+//     handleSaveNote,
+//     handleUpdateNote,
+//     setShowToast,
+//     showToast,
+//     loading,
+//     error,
+//     setError,
+//   } = useNotes();
+
+//   const [showDeleteArchive, setShowDeleteArchive] = useState(false);
+//   const [localError, setLocalError] = useState<string | null>(null);
+
+//   useEffect(() => {
+//     if (error) {
+//       setLocalError(error);
+//       setTimeout(() => setError(null), 100);
+//     }
+//   }, [error, setError]);
+
+//   const handleSubmit = (event: FormEvent) => {
+//     event.preventDefault();
+
+//     setLocalError(null);
+//     if (!title.trim()) {
+//       setLocalError("Title is required");
+//       return;
+//     }
+//     if (!content.trim()) {
+//       setLocalError("Content is required");
+//       return;
+//     }
+
+//     if (selectedNote) {
+//       handleUpdateNote(selectedNote.id, event);
+//     } else {
+//       handleSaveNote(event);
+//     }
+//   };
+
+//   const handleCancel = () => {
+//     setTitle("");
+//     setContent("");
+//     setTags([]);
+//     setSelectedNote(null);
+//     setLocalError(null);
+//   };
+
+//   const handleTagChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+//     setTags(event.target.value.split(",").map((tag) => tag.trim()));
+//   };
+
+//   const closeDeleteArchive = useCallback(() => {
+//     setShowDeleteArchive(false);
+//   }, []);
+//   const deleteArchiveRef = useClickOutside(closeDeleteArchive);
+
+//   if (!selectedNote && window.innerWidth < 768) {
+//     return null;
+//   }
+
+//   return (
+//     <div
+//       className={`flex-1 flex flex-col h-full bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700 ${
+//         selectedNote ? "flex" : "hidden md:flex"
+//       }`}
+//     >
+//       <div className="md:hidden flex justify-between items-center p-4 border-b border-gray-200 dark:border-gray-700">
+//         <button
+//           onClick={() => setSelectedNote(null)}
+//           className="flex items-center text-gray-600 hover:text-gray-400 dark:text-gray-200 dark:hover:text-gray-500"
+//         >
+//           <ChevronLeft className="w-6 h-6 mr-2" />
+//           <span>Back to notes</span>
+//         </button>
+//       </div>
+
+//       <div className="flex items-center justify-between p-4 border-b border-gray-200 dark:border-gray-700 sticky top-0 bg-white dark:bg-gray-800">
+//         <div className="relative flex-1">
+//           <input
+//             className="w-full text-gray-900 dark:text-white bg-transparent text-2xl font-semibold outline-none placeholder:text-muted-foreground"
+//             placeholder="Note title"
+//             value={title}
+//             onChange={(event) => setTitle(event.target.value)}
+//             disabled={loading}
+//           />
+
+//           <div className="relative">
+//             {showDeleteArchive ? (
+//               <div ref={deleteArchiveRef}>
+//                 <DeleteArchive onClose={closeDeleteArchive} />
+//               </div>
+//             ) : (
+//               <CircleEllipsis
+//                 onClick={() => setShowDeleteArchive(true)}
+//                 className="absolute right-0 top-0 text-gray-700 dark:text-gray-200 cursor-pointer"
+//               />
+//             )}
+//           </div>
+
+//           <div className="mt-2 block">
+//             <div className="flex items-center gap-4">
+//               <span className="flex justify-center items-center text-sm text-gray-900 dark:text-white">
+//                 <Tag className="w-3 h-3 mr-2" />
+//                 Tags
+//               </span>
+//               <input
+//                 className="flex-1 bg-transparent text-sm text-gray-900 dark:text-white outline-none placeholder:italic"
+//                 placeholder="Enter tags, separated by commas"
+//                 value={tags.join(", ")}
+//                 onChange={handleTagChange}
+//                 disabled={loading}
+//               />
+//             </div>
+//             <div className="flex items-center gap-4 mt-1">
+//               <span className="flex justify-center items-center text-sm text-gray-900 dark:text-white">
+//                 <Clock className="w-3 h-3 mr-2" />
+//                 Last edited
+//               </span>
+//               <span className="text-sm text-gray-900 dark:text-white">
+//                 {selectedNote?.createdAt || selectedNote?.updatedAt ? (
+//                   new Date(
+//                     selectedNote?.createdAt || selectedNote?.updatedAt
+//                   ).toLocaleString()
+//                 ) : (
+//                   <span className="text-xs italic text-gray-400 dark:text-gray-400">
+//                     DD/MM/YYYY, 00:00:00 AM
+//                   </span>
+//                 )}
+//               </span>
+//             </div>
+//           </div>
+//         </div>
+//       </div>
+
+//       <div>
+//         {showToast && (
+//           <Toast type="success" onClose={() => setShowToast(false)} />
+//         )}
+
+//         {localError && (
+//           <div className="p-2 bg-red-50 text-red-700 text-center">
+//             {localError}
+//           </div>
+//         )}
+//       </div>
+
+//       <form
+//         onSubmit={handleSubmit}
+//         className="flex-1 flex flex-col overflow-hidden"
+//       >
+//         <TipTapEditor
+//           content={content}
+//           onChange={setContent}
+//           placeholder="Write a note..."
+//           editable={!loading}
+//         />
+//         {/* Mobile action buttons */}
+//         <div className="md:hidden flex justify-between p-4 border-t border-gray-200 dark:border-gray-700">
+//           <Button
+//             type="submit"
+//             variant="secondary"
+//             disabled={loading}
+//             className="flex-1 mr-2 text-gray-900 dark:text-white"
+//           >
+//             {selectedNote ? "Update" : "Save"}
+//           </Button>
+//           <Button
+//             variant="outline"
+//             onClick={handleCancel}
+//             disabled={loading}
+//             className="flex-1 ml-2 text-gray-900 dark:text-white"
+//           >
+//             Cancel
+//           </Button>
+//         </div>
+//       </form>
+//     </div>
+//   );
+// };
+
+// export default NoteEditor;
+
 "use client";
-import { ChevronLeft, CircleEllipsis, Clock, Tag } from "lucide-react";
+
 import type React from "react";
-import Button from "../ui/Button";
+import { useState, useEffect } from "react";
 import { useNotes } from "@/context/NotesContext";
-import { type FormEvent, useCallback, useState, useEffect } from "react";
-import Toast from "../ui/Toast";
-import DeleteArchive from "./ui/DeleteArchive";
-import { useClickOutside } from "@/hook/useClickOutside";
+import DeleteArchive from "./DeleteArchive";
+import { ChevronLeft, Ellipsis, Plus, Tag, X } from "lucide-react";
 import TipTapEditor from "./TipTapEditor";
 
-const NoteEditor: React.FC = () => {
+export default function NoteEditor() {
   const {
+    selectedNote,
     title,
     setTitle,
     content,
     setContent,
     tags,
     setTags,
-    selectedNote,
-    setSelectedNote,
-    handleSaveNote,
+    setIsMobileEditorOpen,
     handleUpdateNote,
-    setShowToast,
-    showToast,
-    loading,
-    error,
-    setError,
+    handleSaveNote,
   } = useNotes();
 
-  const [showDeleteArchive, setShowDeleteArchive] = useState(false);
-  const [localError, setLocalError] = useState<string | null>(null);
+  const [newTag, setNewTag] = useState("");
+  const [showMenu, setShowMenu] = useState(false);
+  const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
 
+  // Track if there are unsaved changes
   useEffect(() => {
-    if (error) {
-      setLocalError(error);
-      setTimeout(() => setError(null), 100);
-    }
-  }, [error, setError]);
-
-  const handleSubmit = (event: FormEvent) => {
-    event.preventDefault();
-
-    setLocalError(null);
-    if (!title.trim()) {
-      setLocalError("Title is required");
-      return;
-    }
-    if (!content.trim()) {
-      setLocalError("Content is required");
-      return;
-    }
-
     if (selectedNote) {
-      handleUpdateNote(selectedNote.id, event);
+      const titleChanged = title !== selectedNote.title;
+      const contentChanged = content !== selectedNote.content;
+      const tagsChanged =
+        JSON.stringify(tags.sort()) !==
+        JSON.stringify((selectedNote.tags || []).sort());
+      setHasUnsavedChanges(titleChanged || contentChanged || tagsChanged);
     } else {
-      handleSaveNote(event);
+      // For new notes, consider it unsaved if there's any content
+      setHasUnsavedChanges(
+        title.trim() !== "" || content.trim() !== "" || tags.length > 0
+      );
+    }
+  }, [title, content, tags, selectedNote]);
+
+  const handleSave = async () => {
+    if (selectedNote) {
+      await handleUpdateNote(selectedNote.id);
+    } else {
+      await handleSaveNote();
+    }
+    setHasUnsavedChanges(false);
+  };
+
+  const handleBack = () => {
+    setIsMobileEditorOpen(false);
+  };
+
+  const handleAddTag = () => {
+    if (newTag.trim() && !tags.includes(newTag.trim())) {
+      setTags([...tags, newTag.trim()]);
+      setNewTag("");
     }
   };
 
-  const handleCancel = () => {
-    setTitle("");
-    setContent("");
-    setTags([]);
-    setSelectedNote(null);
-    setLocalError(null);
+  const handleRemoveTag = (tagToRemove: string) => {
+    setTags(tags.filter((tag) => tag !== tagToRemove));
   };
 
-  const handleTagChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setTags(event.target.value.split(",").map((tag) => tag.trim()));
+  const handleKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === "Enter" && newTag.trim()) {
+      e.preventDefault();
+      handleAddTag();
+    }
   };
 
-  const closeDeleteArchive = useCallback(() => {
-    setShowDeleteArchive(false);
-  }, []);
-  const deleteArchiveRef = useClickOutside(closeDeleteArchive);
+  // Show editor interface even when no note is selected (for new notes)
+  // const showEditor = selectedNote || title || content || tags.length > 0;
+  const showEditor = true;
 
-  if (!selectedNote && window.innerWidth < 768) {
-    return null;
+  if (!showEditor) {
+    return (
+      <div className="flex h-full items-center justify-center text-gray-500 dark:text-gray-400">
+        <div className="text-center">
+          <p className="text-lg font-medium">No note selected</p>
+          <p className="text-sm">
+            Select a note from the list or create a new one to start editing
+          </p>
+        </div>
+      </div>
+    );
   }
 
   return (
-    <div
-      className={`flex-1 flex flex-col h-full bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700 ${
-        selectedNote ? "flex" : "hidden md:flex"
-      }`}
-    >
-      <div className="md:hidden flex justify-between items-center p-4 border-b border-gray-200 dark:border-gray-700">
+    <div className="flex h-full flex-col bg-white dark:bg-gray-900">
+      {/* Mobile Header */}
+      <div className="flex items-center justify-between border-b border-gray-200 dark:border-gray-700 p-4 md:hidden">
         <button
-          onClick={() => setSelectedNote(null)}
-          className="flex items-center text-gray-600 hover:text-gray-400 dark:text-gray-200 dark:hover:text-gray-500"
+          onClick={handleBack}
+          className="flex items-center gap-2 text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white"
         >
-          <ChevronLeft className="w-6 h-6 mr-2" />
-          <span>Back to notes</span>
+          <ChevronLeft className="h-5 w-5" />
+          Back
         </button>
-      </div>
-
-      <div className="flex items-center justify-between p-4 border-b border-gray-200 dark:border-gray-700 sticky top-0 bg-white dark:bg-gray-800">
-        <div className="relative flex-1">
-          <input
-            className="w-full text-gray-900 dark:text-white bg-transparent text-2xl font-semibold outline-none placeholder:text-muted-foreground"
-            placeholder="Note title"
-            value={title}
-            onChange={(event) => setTitle(event.target.value)}
-            disabled={loading}
-          />
-
-          <div className="relative">
-            {showDeleteArchive ? (
-              <div ref={deleteArchiveRef}>
-                <DeleteArchive onClose={closeDeleteArchive} />
-              </div>
-            ) : (
-              <CircleEllipsis
-                onClick={() => setShowDeleteArchive(true)}
-                className="absolute right-0 top-0 text-gray-700 dark:text-gray-200 cursor-pointer"
-              />
-            )}
-          </div>
-
-          <div className="mt-2 block">
-            <div className="flex items-center gap-4">
-              <span className="flex justify-center items-center text-sm text-gray-900 dark:text-white">
-                <Tag className="w-3 h-3 mr-2" />
-                Tags
-              </span>
-              <input
-                className="flex-1 bg-transparent text-sm text-gray-900 dark:text-white outline-none placeholder:italic"
-                placeholder="Enter tags, separated by commas"
-                value={tags.join(", ")}
-                onChange={handleTagChange}
-                disabled={loading}
-              />
-            </div>
-            <div className="flex items-center gap-4 mt-1">
-              <span className="flex justify-center items-center text-sm text-gray-900 dark:text-white">
-                <Clock className="w-3 h-3 mr-2" />
-                Last edited
-              </span>
-              <span className="text-sm text-gray-900 dark:text-white">
-                {selectedNote?.createdAt || selectedNote?.updatedAt ? (
-                  new Date(
-                    selectedNote?.createdAt || selectedNote?.updatedAt
-                  ).toLocaleString()
-                ) : (
-                  <span className="text-xs italic text-gray-400 dark:text-gray-400">
-                    DD/MM/YYYY, 00:00:00 AM
-                  </span>
-                )}
-              </span>
-            </div>
-          </div>
+        <div className="flex items-center gap-2">
+          {hasUnsavedChanges && (
+            <span className="text-xs text-orange-500">Unsaved</span>
+          )}
+          <button
+            onClick={handleSave}
+            className="rounded-lg bg-blue-600 px-3 py-1 text-sm text-white hover:bg-blue-700 disabled:bg-gray-300 disabled:cursor-not-allowed"
+            disabled={!title.trim() || !content.trim()}
+          >
+            {selectedNote ? "Update" : "Save"}
+          </button>
         </div>
       </div>
 
-      <div>
-        {showToast && (
-          <Toast type="success" onClose={() => setShowToast(false)} />
-        )}
+      {/* Desktop Header */}
+      <div className="hidden md:flex items-center justify-between border-b border-gray-200 dark:border-gray-700 p-4">
+        <div className="flex items-center gap-2">
+          {selectedNote ? (
+            <span className="text-sm text-gray-500 dark:text-gray-400">
+              Last updated:{" "}
+              {new Date(selectedNote.updatedAt).toLocaleDateString()}
+            </span>
+          ) : (
+            <span className="text-sm text-gray-500 dark:text-gray-400">
+              New Note
+            </span>
+          )}
+          {hasUnsavedChanges && (
+            <span className="text-xs text-orange-500">• Unsaved changes</span>
+          )}
+        </div>
+        <div className="flex items-center gap-2">
+          <button
+            onClick={handleSave}
+            className="rounded-lg bg-blue-600 px-4 py-2 text-sm text-white hover:bg-blue-700 disabled:bg-gray-300 disabled:cursor-not-allowed"
+            disabled={!title.trim() || !content.trim()}
+          >
+            {selectedNote ? "Update" : "Save"}
+          </button>
 
-        {localError && (
-          <div className="p-2 bg-red-50 text-red-700 text-center">
-            {localError}
-          </div>
-        )}
+          {/* Ellipsis Menu - Desktop Only - Only show for existing notes */}
+          {selectedNote && (
+            <div className="relative">
+              <button
+                onClick={() => setShowMenu(!showMenu)}
+                className="rounded-lg p-2 text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 hover:text-gray-600"
+              >
+                <Ellipsis className="h-5 w-5" />
+              </button>
+              {showMenu && <DeleteArchive onClose={() => setShowMenu(false)} />}
+            </div>
+          )}
+        </div>
       </div>
 
-      <form
-        onSubmit={handleSubmit}
-        className="flex-1 flex flex-col overflow-hidden"
-      >
+      {/* Editor Content */}
+      <div className="flex-1 overflow-auto p-4">
+        <input
+          type="text"
+          value={title}
+          onChange={(e) => setTitle(e.target.value)}
+          placeholder="Note title..."
+          className="mb-4 w-full border-none text-2xl font-bold text-gray-900 dark:text-white dark:bg-gray-900 placeholder-gray-400 focus:outline-none"
+          autoFocus={!selectedNote} // Auto-focus for new notes
+        />
+
+        {/* Tags Section */}
+        <div className="mb-4">
+          <div className="flex flex-wrap gap-2 mb-2">
+            {tags.map((tag) => (
+              <span
+                key={tag}
+                className="inline-flex items-center gap-1 rounded-full bg-blue-100 dark:bg-blue-900 px-3 py-1 text-sm text-blue-800 dark:text-blue-200"
+              >
+                #{tag}
+                <button
+                  onClick={() => handleRemoveTag(tag)}
+                  className="ml-1 rounded-full hover:bg-blue-200 dark:hover:bg-blue-800 p-0.5"
+                >
+                  <X className="h-3 w-3" />
+                </button>
+              </span>
+            ))}
+          </div>
+          <div className="relative">
+            <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+              <Tag className="h-4 w-4 text-gray-400 dark:text-gray-500" />
+            </div>
+            <input
+              type="text"
+              value={newTag}
+              onChange={(e) => setNewTag(e.target.value)}
+              onKeyDown={handleKeyDown}
+              placeholder="Add tag..."
+              className="pl-10 pr-16 py-2 w-full rounded-lg border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white text-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
+            />
+            <button
+              onClick={handleAddTag}
+              disabled={!newTag.trim()}
+              className="absolute inset-y-0 right-0 flex items-center px-3 rounded-r-lg bg-blue-600 text-white hover:bg-blue-700 disabled:bg-gray-300 disabled:cursor-not-allowed transition-colors"
+            >
+              <Plus className="h-4 w-4" />
+            </button>
+          </div>
+        </div>
+
+        {/* <textarea
+          value={content}
+          onChange={(e) => setContent(e.target.value)}
+          placeholder="Start writing your note..."
+          className="h-full min-h-[400px] w-full resize-none border-none text-gray-900 dark:text-white dark:bg-gray-900 placeholder-gray-400 focus:outline-none"
+        /> */}
+
         <TipTapEditor
           content={content}
           onChange={setContent}
-          placeholder="Write a note..."
-          editable={!loading}
+          placeholder="Start writing your note..."
         />
-        {/* Mobile action buttons */}
-        <div className="md:hidden flex justify-between p-4 border-t border-gray-200 dark:border-gray-700">
-          <Button
-            type="submit"
-            variant="secondary"
-            disabled={loading}
-            className="flex-1 mr-2 text-gray-900 dark:text-white"
-          >
-            {selectedNote ? "Update" : "Save"}
-          </Button>
-          <Button
-            variant="outline"
-            onClick={handleCancel}
-            disabled={loading}
-            className="flex-1 ml-2 text-gray-900 dark:text-white"
-          >
-            Cancel
-          </Button>
-        </div>
-      </form>
+      </div>
     </div>
   );
-};
-
-export default NoteEditor;
+}
