@@ -2,7 +2,7 @@
 
 import type React from "react";
 import { useNotes } from "@/context/NotesContext";
-import { Plus, Trash2 } from "lucide-react";
+import { Archive, Plus, Trash2, Undo } from "lucide-react";
 import removeHtmlTags from "@/utils/removeHtmlTags";
 import { useState } from "react";
 import Button from "../ui/Button";
@@ -22,10 +22,11 @@ export default function NotesList() {
     selectedTrashNotes,
     setSelectedTrashNotes,
     handleEmptyTrash,
-    handleDeleteNote: handleDeleteNotes,
+    handleDeleteNote,
     handleFavoriteNote,
-    // handleArchiveNote,
+    handleArchiveNote,
     handleTrashNote,
+    handleRestoreNote,
   } = useNotes();
 
   const [showDeleteModal, setShowDeleteModal] = useState(false);
@@ -56,9 +57,30 @@ export default function NotesList() {
     handleFavoriteNote(noteId);
   };
 
-  const handleDeleteNote = (e: React.MouseEvent, noteId: string) => {
+  const handleArchiveNoteAction = (e: React.MouseEvent, noteId: string) => {
+    e.stopPropagation();
+    handleArchiveNote(noteId);
+  };
+
+  const handleDeleteNoteAction = (e: React.MouseEvent, noteId: string) => {
     e.stopPropagation();
     handleTrashNote(noteId);
+  };
+
+  const handleRestoreNoteAction = (e: React.MouseEvent, noteId: string) => {
+    e.stopPropagation();
+    handleRestoreNote(noteId);
+  };
+
+  const handlePermanentDelete = (e: React.MouseEvent, noteId: string) => {
+    e.stopPropagation();
+    if (
+      window.confirm(
+        "Are you sure you want to permanently delete this note? This action cannot be undone."
+      )
+    ) {
+      handleDeleteNote(noteId);
+    }
   };
 
   const confirmDelete = (noteId: string) => {
@@ -75,7 +97,7 @@ export default function NotesList() {
     if (isEmptyingTrash) {
       handleEmptyTrash();
     } else if (noteToDelete) {
-      handleDeleteNotes(noteToDelete);
+      handleDeleteNote(noteToDelete);
     }
     setShowDeleteModal(false);
     setNoteToDelete(null);
@@ -97,20 +119,6 @@ export default function NotesList() {
     } else {
       // Otherwise, select all
       setSelectedTrashNotes(trashedNotes.map((note) => note.id));
-    }
-  };
-
-  const getCurrentFilterHeading = () => {
-    switch (currentFilterType) {
-      case "archived":
-        return "Archived Notes";
-      case "favorites":
-        return "Favorites";
-      case "trash":
-        return "Trash";
-      case "all":
-      default:
-        return "All Notes";
     }
   };
 
@@ -247,11 +255,16 @@ export default function NotesList() {
                           📦 Archived
                         </span>
                       )}
+                      {note.isTrashed && (
+                        <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-red-100 dark:bg-red-900 text-red-800 dark:text-red-200">
+                          🗑️ Deleted
+                        </span>
+                      )}
                     </div>
                   </div>
 
                   <div className="flex flex-col gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
-                    <button
+                    {/* <button
                       onClick={(e) => handleToggleFavorite(e, note.id)}
                       className={`p-1 rounded hover:bg-yellow-100 dark:hover:bg-yellow-800  ${
                         note.isFavorite ? "text-yellow-600" : "text-gray-400"
@@ -273,11 +286,86 @@ export default function NotesList() {
                     </button>
 
                     <button
-                      onClick={(e) => handleDeleteNote(e, note.id)}
+                      onClick={(e) => handleArchiveNoteAction(e, note.id)}
+                      className="p-1 rounded text-gray-400 hover:bg-indigo-100 dark:hover:bg-indigo-800 hover:text-indigo-600"
+                    >
+                      <Archive className="h-4 w-4" />
+                    </button>
+
+                    <button
+                      onClick={(e) => handleDeleteNoteAction(e, note.id)}
                       className="p-1 rounded text-gray-400 hover:bg-red-100 dark:hover:bg-red-900/20 hover:text-red-600"
                     >
                       <Trash2 className="h-4 w-4" />
-                    </button>
+                    </button> */}
+
+                    {note.isTrashed ? (
+                      <>
+                        <button
+                          onClick={(e) => handleRestoreNoteAction(e, note.id)}
+                          className="p-1 rounded text-green-600 hover:bg-green-100 dark:hover:bg-green-900/20 hover:text-green-700"
+                          title="Restore note"
+                        >
+                          <Undo className="h-4 w-4" />
+                        </button>
+                        <button
+                          onClick={(e) => handlePermanentDelete(e, note.id)}
+                          className="p-1 rounded text-red-600 hover:bg-red-100 dark:hover:bg-red-900/20 hover:text-red-700"
+                          title="Delete permanently"
+                        >
+                          <Trash2 className="h-4 w-4" />
+                        </button>
+                      </>
+                    ) : (
+                      // Regular actions: Favorite, Archive, Delete
+                      <>
+                        <button
+                          onClick={(e) => handleToggleFavorite(e, note.id)}
+                          className={`p-1 rounded hover:bg-yellow-100 dark:hover:bg-yellow-800  ${
+                            note.isFavorite
+                              ? "text-yellow-600"
+                              : "text-gray-400"
+                          }`}
+                          title={
+                            note.isFavorite
+                              ? "Remove from favorites"
+                              : "Add to favorites"
+                          }
+                        >
+                          <svg
+                            className="h-4 w-4"
+                            fill={note.isFavorite ? "currentColor" : "none"}
+                            stroke="currentColor"
+                            viewBox="0 0 24 24"
+                          >
+                            <path
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              strokeWidth={2}
+                              d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"
+                            />
+                          </svg>
+                        </button>
+
+                        <button
+                          onClick={(e) => handleArchiveNoteAction(e, note.id)}
+                          className="p-1 rounded text-gray-400 hover:bg-gray-200 dark:hover:bg-gray-600 hover:text-gray-600"
+                          title={
+                            note.isArchived ? "Unarchive note" : "Archive note"
+                          }
+                        >
+                          <Archive className="h-4 w-4" />
+                        </button>
+
+                        <button
+                          onClick={(e) => handleDeleteNoteAction(e, note.id)}
+                          className="p-1 rounded text-gray-400 hover:bg-red-100 dark:hover:bg-red-900/20 hover:text-red-600"
+                          title="Move to trash"
+                        >
+                          <Trash2 className="h-4 w-4" />
+                        </button>
+                      </>
+                    )}
                   </div>
                 </div>
               </div>
