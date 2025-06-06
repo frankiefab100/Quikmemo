@@ -126,8 +126,6 @@ export interface NoteContextProps {
     handleEmptyTrash: () => Promise<void>
     selectedTrashNotes: string[]
     setSelectedTrashNotes: (ids: string[]) => void
-    showToast: boolean
-    setShowToast: (show: boolean) => void
     isMobileSidebarOpen: boolean
     setIsMobileSidebarOpen: (show: boolean) => void
     isMobileEditorOpen: boolean
