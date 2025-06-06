@@ -1,6 +1,7 @@
 import type React from "react";
 import type { Metadata } from "next";
 import { NotesProvider } from "@/context/NotesContext";
+import { ToastProvider } from "@/context/ToastContext";
 
 export const metadata: Metadata = {
   title: "Dashboard - Quikmemo | Your Notes App",
@@ -13,8 +14,10 @@ export default function DashboardLayout({
   children: React.ReactNode;
 }) {
   return (
-    <NotesProvider>
-      <div className="h-screen overflow-hidden">{children}</div>
-    </NotesProvider>
+    <ToastProvider>
+      <NotesProvider>
+        <div className="h-screen overflow-hidden">{children}</div>
+      </NotesProvider>
+    </ToastProvider>
   );
 }

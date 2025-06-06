@@ -10,6 +10,7 @@ import {
   useEffect,
 } from "react";
 import { useSession } from "next-auth/react";
+import { useToast } from "./ToastContext";
 
 export const NotesContext = createContext<NoteContextProps | undefined>(
   undefined
@@ -23,7 +24,6 @@ export const NotesProvider: React.FC<{ children: React.ReactNode }> = ({
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
   const [tags, setTags] = useState<string[]>([]);
-  const [showToast, setShowToast] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
   const [currentFilterType, setCurrentFilterType] = useState<NoteFilter>("all");
@@ -32,6 +32,7 @@ export const NotesProvider: React.FC<{ children: React.ReactNode }> = ({
   const [searchQuery, setSearchQuery] = useState("");
   const [filteredNotes, setFilteredNotes] = useState<INote[]>([]);
 
+  const { showToast } = useToast();
   // Mobile state
   const [isMobileEditorOpen, setIsMobileEditorOpen] = useState<boolean>(false);
   const [isMobileSidebarOpen, setIsMobileSidebarOpen] =
@@ -112,6 +113,11 @@ export const NotesProvider: React.FC<{ children: React.ReactNode }> = ({
 
     if (!title || !content) {
       setError("Title and content are required");
+      showToast({
+        type: "error",
+        message: "Title and content are required",
+        title: "Validation Error",
+      });
       return;
     }
 
@@ -144,9 +150,18 @@ export const NotesProvider: React.FC<{ children: React.ReactNode }> = ({
       setContent("");
       setTags([]);
       setIsMobileEditorOpen(true); // Open editor on mobile when creating new note
-      setShowToast(true);
+      showToast({
+        type: "success",
+        action: "create",
+        message: `"${title}" created successfully`,
+      });
     } catch (error) {
-      console.error("Error saving note:", error);
+      // console.error("Error saving note:", error);
+      showToast({
+        type: "error",
+        message: "Failed to create note",
+        title: "Error",
+      });
       setError(
         error instanceof Error
           ? error.message
@@ -164,6 +179,11 @@ export const NotesProvider: React.FC<{ children: React.ReactNode }> = ({
 
     if (!title || !content) {
       setError("Title and content are required");
+      showToast({
+        type: "error",
+        message: "Title and content are required",
+        title: "Validation Error",
+      });
       return;
     }
 
@@ -201,9 +221,18 @@ export const NotesProvider: React.FC<{ children: React.ReactNode }> = ({
       setTitle("");
       setContent("");
       setTags([]);
-      setShowToast(true);
+      showToast({
+        type: "success",
+        action: "update",
+        message: `"${title}" updated successfully`,
+      });
     } catch (error) {
-      console.error("Error updating note:", error);
+      // console.error("Error updating note:", error);
+      showToast({
+        type: "error",
+        message: "Failed to update note",
+        title: "Error",
+      });
       setError(
         error instanceof Error
           ? error.message
@@ -216,6 +245,9 @@ export const NotesProvider: React.FC<{ children: React.ReactNode }> = ({
 
   // Move note to trash instead of deleting
   const handleTrashNote = async (id: string) => {
+    const noteToTrash = notes.find((note) => note.id === id);
+    if (!noteToTrash) return;
+
     try {
       setLoading(true);
       setError(null);
@@ -236,14 +268,12 @@ export const NotesProvider: React.FC<{ children: React.ReactNode }> = ({
           errorData.error || `Failed to trash note: ${response.statusText}`
         );
       }
-
-      const updatedNote = await response.json();
-
       setNotes((prevNotes) =>
         prevNotes.map((note) =>
-          note.id === updatedNote.id ? updatedNote : note
+          note.id === id ? { ...note, isTrashed: true } : note
         )
       );
+
       if (selectedNote?.id === id) {
         setSelectedNote(null);
         setTitle("");
@@ -252,9 +282,18 @@ export const NotesProvider: React.FC<{ children: React.ReactNode }> = ({
         setIsMobileEditorOpen(false); // Close mobile editor when trashing current note
       }
 
-      setShowToast(true);
+      showToast({
+        type: "warning",
+        action: "delete",
+        message: `"${noteToTrash.title}" moved to trash`,
+      });
     } catch (error) {
-      console.error("Error trashing note:", error);
+      // console.error("Error trashing note:", error);
+      showToast({
+        type: "error",
+        message: "Failed to move note to trash",
+        title: "Error",
+      });
       setError(
         error instanceof Error
           ? error.message
@@ -267,6 +306,9 @@ export const NotesProvider: React.FC<{ children: React.ReactNode }> = ({
 
   // Restore note from trash
   const handleRestoreNote = async (id: string) => {
+    const noteToRestore = notes.find((note) => note.id === id);
+    if (!noteToRestore) return;
+
     try {
       setLoading(true);
       setError(null);
@@ -287,19 +329,25 @@ export const NotesProvider: React.FC<{ children: React.ReactNode }> = ({
           errorData.error || `Failed to restore note: ${response.statusText}`
         );
       }
-
-      const updatedNote = await response.json();
-
       setNotes((prevNotes) =>
         prevNotes.map((note) =>
-          note.id === updatedNote.id ? updatedNote : note
+          note.id === id ? { ...note, isTrashed: false } : note
         )
       );
       setSelectedTrashNotes((prev) => prev.filter((noteId) => noteId !== id));
 
-      setShowToast(true);
+      showToast({
+        type: "success",
+        action: "restore",
+        message: `"${noteToRestore.title}" restored successfully`,
+      });
     } catch (error) {
-      console.error("Error restoring note:", error);
+      // console.error("Error restoring note:", error);
+      showToast({
+        type: "error",
+        message: "Failed to restore note",
+        title: "Error",
+      });
       setError(
         error instanceof Error
           ? error.message
@@ -311,6 +359,9 @@ export const NotesProvider: React.FC<{ children: React.ReactNode }> = ({
   };
 
   const handleDeleteNote = async (id: string) => {
+    const noteToDelete = notes.find((note) => note.id === id);
+    if (!noteToDelete) return;
+
     try {
       setLoading(true);
       setError(null);
@@ -329,9 +380,18 @@ export const NotesProvider: React.FC<{ children: React.ReactNode }> = ({
       setNotes((prevNotes) => prevNotes.filter((note) => note.id !== id));
       setSelectedTrashNotes((prev) => prev.filter((noteId) => noteId !== id));
 
-      setShowToast(true);
+      showToast({
+        type: "error",
+        action: "permanentDelete",
+        message: `"${noteToDelete.title}" permanently deleted`,
+      });
     } catch (error) {
-      console.error("Error deleting note:", error);
+      // console.error("Error deleting note:", error);
+      showToast({
+        type: "error",
+        message: "Failed to delete note",
+        title: "Error",
+      });
       setError(
         error instanceof Error
           ? error.message
@@ -345,6 +405,8 @@ export const NotesProvider: React.FC<{ children: React.ReactNode }> = ({
   // Empty trash (delete all selected notes)
   const handleEmptyTrash = async () => {
     if (selectedTrashNotes.length === 0) return;
+
+    const trashedNotes = notes.filter((note) => note.isTrashed);
 
     try {
       setLoading(true);
@@ -370,9 +432,18 @@ export const NotesProvider: React.FC<{ children: React.ReactNode }> = ({
       );
       setSelectedTrashNotes([]);
 
-      setShowToast(true);
+      showToast({
+        type: "error",
+        action: "emptyTrash",
+        message: `${trashedNotes.length} notes permanently deleted`,
+      });
     } catch (error) {
-      console.error("Error emptying trash:", error);
+      // console.error("Error emptying trash:", error);
+      showToast({
+        type: "error",
+        message: "Failed to empty trash",
+        title: "Error",
+      });
       setError(
         error instanceof Error
           ? error.message
@@ -390,13 +461,15 @@ export const NotesProvider: React.FC<{ children: React.ReactNode }> = ({
       const noteToArchive = notes.find((note) => note.id === id);
       if (!noteToArchive) return;
 
+      const newArchivedState = !noteToArchive.isArchived;
+
       const response = await fetch(`/api/notes/${id}`, {
         method: "PATCH",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          isArchived: !noteToArchive.isArchived,
+          isArchived: newArchivedState,
         }),
       });
 
@@ -407,11 +480,9 @@ export const NotesProvider: React.FC<{ children: React.ReactNode }> = ({
         );
       }
 
-      const updatedNote = await response.json();
-
       setNotes((prevNotes) =>
         prevNotes.map((note) =>
-          note.id === updatedNote.id ? updatedNote : note
+          note.id === id ? { ...note, isArchived: !note.isArchived } : note
         )
       );
       if (selectedNote?.id === id) {
@@ -421,8 +492,22 @@ export const NotesProvider: React.FC<{ children: React.ReactNode }> = ({
         setTags([]);
         setIsMobileEditorOpen(false);
       }
+
+      showToast({
+        type: "success",
+        action: newArchivedState ? "archive" : "unarchive",
+        message: `"${noteToArchive.title}" has been ${
+          newArchivedState ? "archived" : "unarchived"
+        } successfully.`,
+        title: "Success",
+      });
     } catch (error) {
-      console.error("Error archiving note:", error);
+      // console.error("Error archiving note:", error);
+      showToast({
+        type: "error",
+        message: "Failed to update archive status",
+        title: "Error",
+      });
       setError(
         error instanceof Error
           ? error.message
@@ -472,8 +557,21 @@ export const NotesProvider: React.FC<{ children: React.ReactNode }> = ({
         setTags([]);
         setIsMobileEditorOpen(false);
       }
+
+      showToast({
+        type: "success",
+        action: !noteToFavorite.isFavorite ? "favorite" : "unfavorite",
+        message: !noteToFavorite.isFavorite
+          ? `"${noteToFavorite.title}" added to favorites`
+          : `"${noteToFavorite.title}" removed from favorites`,
+      });
     } catch (error) {
-      console.error("Error bookmarking note as favorite:", error);
+      // console.error("Error bookmarking note as favorite:", error);
+      showToast({
+        type: "error",
+        message: "Failed to update favorite status",
+        title: "Error",
+      });
       setError(
         error instanceof Error
           ? error.message
@@ -511,8 +609,6 @@ export const NotesProvider: React.FC<{ children: React.ReactNode }> = ({
         handleEmptyTrash,
         selectedTrashNotes,
         setSelectedTrashNotes,
-        setShowToast,
-        showToast,
         setLoading,
         loading,
         setError,
@@ -539,364 +635,3 @@ export const useNotes = () => {
   }
   return context;
 };
-
-// "use client";
-
-// import type React from "react";
-// import type { INote, NoteFilter, NoteContextProps } from "@/types/types";
-// import {
-//   createContext,
-//   type FormEvent,
-//   useContext,
-//   useState,
-//   useEffect,
-// } from "react";
-
-// export const NotesContext = createContext<NoteContextProps | undefined>(
-//   undefined
-// );
-
-// // Sample data for demo purposes
-// // const notes: INote[] = [
-// const sampleNotes: INote[] = [
-//   // {
-//   //   id: "1",
-//   //   title: "Welcome to Quikmemo",
-//   //   content:
-//   //     "This is your first note! You can edit this content, add new notes, mark favorites, archive, or delete notes. The interface is responsive and works great on both desktop and mobile devices.",
-//   //   createdAt: new Date("2024-01-01"),
-//   //   updatedAt: new Date("2024-01-01"),
-//   //   isFavorite: true,
-//   //   isArchived: false,
-//   //   isTrashed: false,
-//   //   tags: ["welcome", "getting-started"],
-//   //   userId: "user1",
-//   // },
-//   // {
-//   //   id: "2",
-//   //   title: "Meeting Notes - Project Kickoff",
-//   //   content:
-//   //     "Discussed project timeline, deliverables, and team responsibilities. Next meeting scheduled for Friday at 2 PM. Action items: 1. Finalize requirements document 2. Set up development environment 3. Create initial wireframes",
-//   //   createdAt: new Date("2024-01-02"),
-//   //   updatedAt: new Date("2024-01-02"),
-//   //   isFavorite: false,
-//   //   isArchived: false,
-//   //   isTrashed: false,
-//   //   tags: ["meeting", "work", "project"],
-//   //   userId: "user1",
-//   // },
-//   // {
-//   //   id: "3",
-//   //   title: "Shopping List",
-//   //   content:
-//   //     "Groceries needed: Milk, Bread, Eggs, Apples, Chicken breast, Rice, Vegetables (broccoli, carrots), Yogurt, Cheese, Coffee",
-//   //   createdAt: new Date("2024-01-03"),
-//   //   updatedAt: new Date("2024-01-03"),
-//   //   isFavorite: false,
-//   //   isArchived: true,
-//   //   isTrashed: false,
-//   //   tags: ["personal", "shopping"],
-//   //   userId: "user1",
-//   // },
-//   // {
-//   //   id: "4",
-//   //   title: "Book Ideas",
-//   //   content:
-//   //     'Collection of interesting book recommendations: 1. "Atomic Habits" by James Clear 2. "The Psychology of Money" by Morgan Housel 3. "Thinking, Fast and Slow" by Daniel Kahneman',
-//   //   createdAt: new Date("2024-01-04"),
-//   //   updatedAt: new Date("2024-01-04"),
-//   //   isFavorite: true,
-//   //   isArchived: false,
-//   //   isTrashed: false,
-//   //   tags: ["books", "reading", "personal"],
-//   //   userId: "user1",
-//   // },
-//   // {
-//   //   id: "5",
-//   //   title: "Workout Plan",
-//   //   content:
-//   //     "Monday: Chest and Triceps\nTuesday: Back and Biceps\nWednesday: Legs\nThursday: Shoulders\nFriday: Cardio\nWeekend: Rest",
-//   //   createdAt: new Date("2024-01-05"),
-//   //   updatedAt: new Date("2024-01-05"),
-//   //   isFavorite: false,
-//   //   isArchived: false,
-//   //   isTrashed: false,
-//   //   tags: ["fitness", "health", "personal"],
-//   //   userId: "user1",
-//   // },
-//   {
-//     id: "1",
-//     title: "Quick Tips",
-//     content:
-//       "1. Create new notes with the `Create New Note` button\n2. Add tags to organize your notes\n3. Archive notes you don't need right now\n4. Use the editor toolbar for formatting\n5. Save notes",
-//     tags: ["tips", "help"],
-//     userId: "",
-//     createdAt: new Date().toISOString(),
-//     updatedAt: new Date().toISOString(),
-//     isArchived: false,
-//     isFavorite: false,
-//     isTrashed: false,
-//   },
-//   {
-//     id: "2",
-//     title: "Welcome to Quikmemo!",
-//     content:
-//       "This is your first note. Feel free to edit or delete it.\n\nSome features you can try:\n- Edit this note\n- Add tags\n- Archive it\n- Create new notes\n- Delete notes\n\nThank you for choosing Quikmemo!",
-//     tags: ["welcome", "getting-started"],
-//     userId: "",
-//     createdAt: new Date().toISOString(),
-//     updatedAt: new Date().toISOString(),
-//     isArchived: false,
-//     isFavorite: false,
-//     isTrashed: false,
-//   },
-// ];
-
-// export const NotesProvider: React.FC<{ children: React.ReactNode }> = ({
-//   children,
-// }) => {
-//   const [notes, setNotes] = useState<INote[]>(sampleNotes);
-//   const [selectedNote, setSelectedNote] = useState<INote | null>(null);
-//   const [title, setTitle] = useState("");
-//   const [content, setContent] = useState("");
-//   const [tags, setTags] = useState<string[]>([]);
-//   const [showToast, setShowToast] = useState<boolean>(false);
-//   const [loading, setLoading] = useState<boolean>(false);
-//   const [error, setError] = useState<string | null>(null);
-//   const [currentFilterType, setCurrentFilterType] = useState<NoteFilter>("all");
-//   const [selectedTag, setSelectedTag] = useState<string | null>(null);
-//   const [selectedTrashNotes, setSelectedTrashNotes] = useState<string[]>([]);
-//   const [searchQuery, setSearchQuery] = useState("");
-//   const [filteredNotes, setFilteredNotes] = useState<INote[]>([]);
-
-//   // Mobile state
-//   const [isMobileEditorOpen, setIsMobileEditorOpen] = useState<boolean>(false);
-//   const [isMobileSidebarOpen, setIsMobileSidebarOpen] =
-//     useState<boolean>(false);
-
-//   useEffect(() => {
-//     const filtered = notes.filter((note) => {
-//       const lowerCaseSearchTerm = searchQuery.toLowerCase();
-//       const matchesSearch =
-//         note.title?.toLowerCase().includes(lowerCaseSearchTerm) ||
-//         note.content?.toLowerCase().includes(lowerCaseSearchTerm) ||
-//         note.tags?.some((tag) =>
-//           tag.toLowerCase().includes(lowerCaseSearchTerm)
-//         );
-
-//       if (selectedTag && !note.tags?.includes(selectedTag)) {
-//         return false;
-//       }
-
-//       switch (currentFilterType) {
-//         case "archived":
-//           return note.isArchived && !note.isTrashed && matchesSearch;
-//         case "trash":
-//           return note.isTrashed && matchesSearch;
-//         case "favorites":
-//           return (
-//             note.isFavorite &&
-//             !note.isTrashed &&
-//             !note.isArchived &&
-//             matchesSearch
-//           );
-//         case "all":
-//         default:
-//           return !note.isArchived && !note.isTrashed && matchesSearch;
-//       }
-//     });
-//     setFilteredNotes(filtered);
-//   }, [notes, currentFilterType, selectedTag, searchQuery]);
-
-//   const generateId = () => Math.random().toString(36).substr(2, 9);
-
-//   const handleSaveNote = async (event?: FormEvent) => {
-//     if (event) {
-//       event.preventDefault();
-//     }
-
-//     if (!title || !content) {
-//       setError("Title and content are required");
-//       return;
-//     }
-
-//     const newNote: INote = {
-//       id: generateId(),
-//       title,
-//       content,
-//       tags: tags || [],
-//       createdAt: new Date(),
-//       updatedAt: new Date(),
-//       isFavorite: false,
-//       isArchived: false,
-//       isTrashed: false,
-//       userId: "", // Mock user ID
-//     };
-
-//     setNotes((prevNotes) => [newNote, ...prevNotes]);
-//     setSelectedNote(newNote);
-//     setIsMobileEditorOpen(true); // Open editor on mobile when creating new note
-//     setShowToast(true);
-//   };
-
-//   const handleUpdateNote = async (id: string, event?: FormEvent) => {
-//     if (event) {
-//       event.preventDefault();
-//     }
-
-//     if (!title || !content) {
-//       setError("Title and content are required");
-//       return;
-//     }
-
-//     setNotes((prevNotes) =>
-//       prevNotes.map((note) =>
-//         note.id === id
-//           ? {
-//               ...note,
-//               title,
-//               content,
-//               tags,
-//               updatedAt: new Date(),
-//             }
-//           : note
-//       )
-//     );
-//     setShowToast(true);
-//   };
-
-//   const handleTrashNote = async (id: string) => {
-//     setNotes((prevNotes) =>
-//       prevNotes.map((note) =>
-//         note.id === id ? { ...note, isTrashed: true } : note
-//       )
-//     );
-
-//     if (selectedNote?.id === id) {
-//       setSelectedNote(null);
-//       setTitle("");
-//       setContent("");
-//       setTags([]);
-//       setIsMobileEditorOpen(false); // Close mobile editor when trashing current note
-//     }
-//     setShowToast(true);
-//   };
-
-//   const handleRestoreNote = async (id: string) => {
-//     setNotes((prevNotes) =>
-//       prevNotes.map((note) =>
-//         note.id === id ? { ...note, isTrashed: false } : note
-//       )
-//     );
-//     setSelectedTrashNotes((prev) => prev.filter((noteId) => noteId !== id));
-//     setShowToast(true);
-//   };
-
-//   const handleDeleteNote = async (id: string) => {
-//     setNotes((prevNotes) => prevNotes.filter((note) => note.id !== id));
-//     setSelectedTrashNotes((prev) => prev.filter((noteId) => noteId !== id));
-
-//     if (selectedNote?.id === id) {
-//       setSelectedNote(null);
-//       setTitle("");
-//       setContent("");
-//       setTags([]);
-//       setIsMobileEditorOpen(false);
-//     }
-//     setShowToast(true);
-//   };
-
-//   const handleEmptyTrash = async () => {
-//     if (selectedTrashNotes.length === 0) return;
-//     setNotes((prevNotes) =>
-//       prevNotes.filter((note) => !selectedTrashNotes.includes(note.id))
-//     );
-//     setSelectedTrashNotes([]);
-//     setShowToast(true);
-//   };
-
-//   const handleArchiveNote = async (id: string) => {
-//     const noteToArchive = notes.find((note) => note.id === id);
-//     if (!noteToArchive) return;
-
-//     setNotes((prevNotes) =>
-//       prevNotes.map((note) =>
-//         note.id === id ? { ...note, isArchived: !note.isArchived } : note
-//       )
-//     );
-
-//     if (selectedNote?.id === id) {
-//       setSelectedNote(null);
-//       setTitle("");
-//       setContent("");
-//       setTags([]);
-//       setIsMobileEditorOpen(false);
-//     }
-//   };
-
-//   const handleFavoriteNote = async (id: string) => {
-//     const noteToFavorite = notes.find((note) => note.id === id);
-//     if (!noteToFavorite) return;
-
-//     setNotes((prevNotes) =>
-//       prevNotes.map((note) =>
-//         note.id === id ? { ...note, isFavorite: !note.isFavorite } : note
-//       )
-//     );
-//   };
-
-//   return (
-//     <NotesContext.Provider
-//       value={{
-//         notes,
-//         setNotes,
-//         selectedNote,
-//         setSelectedNote,
-//         currentFilterType,
-//         setCurrentFilterType,
-//         title,
-//         setTitle,
-//         content,
-//         setContent,
-//         tags,
-//         setTags,
-//         selectedTag,
-//         setSelectedTag,
-//         isMobileEditorOpen,
-//         setIsMobileEditorOpen,
-//         isMobileSidebarOpen,
-//         setIsMobileSidebarOpen,
-//         handleSaveNote,
-//         handleUpdateNote,
-//         handleDeleteNote,
-//         handleArchiveNote,
-//         handleFavoriteNote,
-//         handleTrashNote,
-//         handleRestoreNote,
-//         handleEmptyTrash,
-//         selectedTrashNotes,
-//         setSelectedTrashNotes,
-//         setShowToast,
-//         showToast,
-//         setLoading,
-//         loading,
-//         setError,
-//         error,
-//         searchQuery,
-//         setSearchQuery,
-//         filteredNotes,
-//         setFilteredNotes,
-//       }}
-//     >
-//       {children}
-//     </NotesContext.Provider>
-//   );
-// };
-
-// export const useNotes = () => {
-//   const context = useContext(NotesContext);
-//   if (!context) {
-//     throw new Error("useNotes must be used within a NotesProvider");
-//   }
-//   return context;
-// };
