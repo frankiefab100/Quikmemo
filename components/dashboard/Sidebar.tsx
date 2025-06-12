@@ -16,7 +16,7 @@ import {
 import { useState } from "react";
 import Tooltip from "@/components/ui/Tooltip";
 
-const navigationItems = [
+export const navigationItems = [
   { id: "all", label: "All Notes", icon: Home },
   { id: "favorites", label: "Favorites", icon: Star },
   { id: "archived", label: "Archived", icon: ArchiveIcon },
