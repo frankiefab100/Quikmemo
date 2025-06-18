@@ -7,7 +7,10 @@ export default auth((req) => {
   const isLoggedIn = !!req.auth;
 
   const isApiAuthRoute = nextUrl.pathname.startsWith(apiAuthPrefix);
-  const isPublicRoute = publicRoutes.includes(nextUrl.pathname);
+  const isPublicRoute =
+    publicRoutes.some((route) =>
+      nextUrl.pathname === route || nextUrl.pathname.startsWith(route + "/")
+    );
   const isAuthRoute = authRoutes.includes(nextUrl.pathname);
 
   // if it is an API Next Auth route, we don't want to redirect
