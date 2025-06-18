@@ -21,13 +21,15 @@ export default function ResetPassword() {
   useEffect(() => {
     if (!token) return;
 
+    setLoading(true);
     fetch(`/api/auth/verify-reset-token?token=${token}`)
       .then((res) => res.json())
       .then((data) => {
         if (data.valid) setIsValidToken(true);
         else setMessage("Invalid or expired token");
       })
-      .catch(() => setMessage("Failed to verify token"));
+      .catch(() => setMessage("Failed to verify token"))
+      .finally(() => setLoading(false));
   }, [token]);
 
   const handleSubmit = async (e: FormEvent) => {
@@ -39,7 +41,6 @@ export default function ResetPassword() {
       return;
     }
     setIsSubmitting(true);
-    setLoading(true);
 
     try {
       const res = await fetch("/api/auth/reset-password", {
@@ -60,7 +61,6 @@ export default function ResetPassword() {
       setMessage("Network error, please try again");
     } finally {
       setIsSubmitting(false);
-      setLoading(false);
     }
   };
 
