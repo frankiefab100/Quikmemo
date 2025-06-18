@@ -3,7 +3,6 @@
 import { useState, useEffect, FormEvent } from "react";
 import { useRouter, useParams } from "next/navigation";
 import { EyeIcon, EyeOffIcon } from "lucide-react";
-import LoadingSpinner from "@/components/shared/Loading";
 
 export default function ResetPassword() {
   const router = useRouter();
@@ -65,7 +64,14 @@ export default function ResetPassword() {
     }
   };
 
-  if (loading) return <LoadingSpinner />;
+  if (loading) {
+    return (
+      <main className="w-full min-h-screen flex items-center justify-center px-4 bg-white">
+        <p className="text-center text-gray-600">
+         loading...
+        </p>
+      </main>
+    );
 
   if (!isValidToken) {
     return (
