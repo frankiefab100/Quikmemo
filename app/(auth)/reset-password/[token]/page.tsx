@@ -68,10 +68,11 @@ export default function ResetPassword() {
     return (
       <main className="w-full min-h-screen flex items-center justify-center px-4 bg-white">
         <p className="text-center text-gray-600">
-         loading...
+          {message || "Invalid or expired token"}
         </p>
       </main>
     );
+  }
 
   if (!isValidToken) {
     return (
