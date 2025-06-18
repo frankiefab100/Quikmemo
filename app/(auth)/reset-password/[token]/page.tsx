@@ -85,8 +85,6 @@ export default function ResetPassword() {
   return (
     <main className="w-full min-h-screen flex items-center justify-center px-4 bg-white">
       <div className="max-w-sm w-full text-gray-600 flex flex-col justify-center min-h-screen">
-        <h1 className="text-2xl font-bold">Reset Your Password</h1>
-
         {message && (
           <p
             className={`mb-4 text-center ${
@@ -96,6 +94,8 @@ export default function ResetPassword() {
             {message}
           </p>
         )}
+
+        <h1 className="text-2xl font-bold">Reset Your Password</h1>
 
         <form onSubmit={handleSubmit} className="space-y-5">
           {/* New Password */}
@@ -119,7 +119,7 @@ export default function ResetPassword() {
             <button
               type="button"
               onClick={() => setShowPassword((prev) => !prev)}
-              className="absolute right-3 top-3 text-gray-500 hover:text-gray-700"
+              className="absolute right-3 top-11 text-gray-500 hover:text-gray-700"
               aria-label={showPassword ? "Hide password" : "Show password"}
             >
               {showPassword ? (
