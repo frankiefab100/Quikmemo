@@ -17,6 +17,7 @@ export default function ResetPassword() {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     if (!token) return;
@@ -38,8 +39,8 @@ export default function ResetPassword() {
       setMessage("Passwords do not match");
       return;
     }
-
     setIsSubmitting(true);
+    setLoading(true);
 
     try {
       const res = await fetch("/api/auth/reset-password", {
@@ -60,19 +61,30 @@ export default function ResetPassword() {
       setMessage("Network error, please try again");
     } finally {
       setIsSubmitting(false);
+      setLoading(false);
     }
   };
 
+  if (loading) {
+    return (
+      <main className="w-full min-h-screen flex items-center justify-center px-4 bg-white">
+        <LoadingSpinner />
+      </main>
+    );
+  }
+
   if (!isValidToken) {
     return (
-      <main className="w-full h-screen flex items-center justify-center px-4">
-        {message || <LoadingSpinner />}
+      <main className="w-full min-h-screen flex items-center justify-center px-4 bg-white">
+        <p className="text-center text-gray-600">
+          {message || "Invalid or expired token"}
+        </p>
       </main>
     );
   }
 
   return (
-    <main className="w-full h-screen flex flex-col items-center justify-center px-4 bg-white">
+    <main className="w-full min-h-screen flex items-center justify-center px-4 bg-white">
       <div className="max-w-sm w-full text-gray-600">
         <h1 className="text-2xl font-bold">Reset Your Password</h1>
 
@@ -107,8 +119,8 @@ export default function ResetPassword() {
             />
             <button
               type="button"
-              onClick={() => setShowPassword((v) => !v)}
-              className="absolute right-3 top-11 text-gray-500 hover:text-gray-700"
+              onClick={() => setShowPassword((prev) => !prev)}
+              className="absolute right-3 top-3 text-gray-500 hover:text-gray-700"
               aria-label={showPassword ? "Hide password" : "Show password"}
             >
               {showPassword ? (
