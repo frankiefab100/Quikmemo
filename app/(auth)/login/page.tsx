@@ -20,7 +20,6 @@ const metadata: Metadata = {
 
 const LoginPage: React.FC = () => {
   const [isVisible, setIsVisible] = useState(false);
-  const [password, setPassword] = useState("");
   const router = useRouter();
 
   const {
@@ -33,17 +32,6 @@ const LoginPage: React.FC = () => {
 
   const togglePasswordVisibility = () => {
     setIsVisible((prev) => !prev);
-  };
-
-  const handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setPassword(e.target.value);
-  };
-
-  const handleMouseEnter = () => {
-    setIsVisible(true);
-  };
-  const handleMouseLeave = () => {
-    setIsVisible(false);
   };
 
   const onSubmit = async (data: SignInValues) => {
@@ -98,19 +86,13 @@ const LoginPage: React.FC = () => {
               label="Password"
               type={isVisible ? "text" : "password"}
               id="password"
-              value={password}
-              onChange={(e) => {
-                handlePasswordChange(e);
-                register("password").onChange(e);
-              }}
+              {...register("password")}
               name="password"
               autoComplete="current-password"
               error={errors.password?.message}
             />
             <button
               onClick={togglePasswordVisibility}
-              onMouseEnter={handleMouseEnter}
-              onMouseLeave={handleMouseLeave}
               className="absolute right-3 top-10 cursor-pointer"
             >
               {isVisible ? <EyeIcon /> : <EyeOffIcon />}
@@ -130,7 +112,6 @@ const LoginPage: React.FC = () => {
             <Link
               href="/forgot-password"
               className="text-sm font-medium text-blue-600 hover:text-blue-500"
-              onClick={() => console.log("Forgot password clicked")}
             >
               Forgot password?
             </Link>
