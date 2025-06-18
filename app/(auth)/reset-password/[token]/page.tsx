@@ -85,7 +85,7 @@ export default function ResetPassword() {
 
   return (
     <main className="w-full min-h-screen flex items-center justify-center px-4 bg-white">
-      <div className="max-w-sm w-full text-gray-600">
+      <div className="max-w-sm w-full text-gray-600 flex flex-col justify-center min-h-screen">
         <h1 className="text-2xl font-bold">Reset Your Password</h1>
 
         {message && (
