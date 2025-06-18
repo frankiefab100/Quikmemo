@@ -3,7 +3,7 @@
 import { useState, useEffect, FormEvent } from "react";
 import { useRouter, useParams } from "next/navigation";
 import { EyeIcon, EyeOffIcon } from "lucide-react";
-import LoadingSpinner from "@/components/shared/Loading";
+import LoadingSpinner from "../../../../components/shared/Loading";
 
 export default function ResetPassword() {
   const router = useRouter();
