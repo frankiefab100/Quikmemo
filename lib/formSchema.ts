@@ -23,3 +23,11 @@ export const signUpSchema = object({
         .max(32, "Last Name must be less than 32 characters"),
 });
 export type SignUpValues = z.infer<typeof signUpSchema>;
+
+
+export const forgotPasswordSchema = z.object({
+    email: z.string({ required_error: "Email is required" }).email("Invalid email"),
+});
+export type ForgotPasswordValues = z.infer<typeof forgotPasswordSchema>;
+
+
