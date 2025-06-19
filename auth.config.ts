@@ -6,9 +6,18 @@ import { signInSchema } from "./lib/formSchema"
 import { compare } from "bcryptjs"
 import Credentials from "next-auth/providers/credentials"
 import { db } from "./lib/prisma"
+import Resend from "next-auth/providers/resend"
+import { sendVerificationRequest } from "./lib/authSendRequest";
+import { PrismaAdapter } from "@auth/prisma-adapter";
 
 export const authConfig = {
+    adapter: PrismaAdapter(db),
     providers: [
+        Resend({
+            apiKey: process.env.RESEND_API_KEY,
+            from: process.env.EMAIL_FROM,
+            sendVerificationRequest,
+        }),
         Github({
             clientId: process.env.AUTH_GITHUB_CLIENT_ID,
             clientSecret: process.env.AUTH_GITHUB_CLIENT_SECRET,
@@ -29,14 +38,36 @@ export const authConfig = {
             clientSecret: process.env.AUTH_TWITTER_SECRET,
         }),
 
+        // Credentials({
+        //     async authorize(credentials) {
+        //         const validatedFields = signInSchema.safeParse(credentials);
+        //         if (!validatedFields.success) {
+        //             return null;
+        //         }
+
+        //         // Validate that the user exists
+        //         const { email, password } = validatedFields.data;
+        //         const user = await db.user.findUnique({
+        //             where: { email },
+        //         });
+        //         if (!user) {
+        //             return null;
+        //         }
+
+        //         const isPasswordMatch = await compare(password, user.password);
+        //         if (!isPasswordMatch) {
+        //             return null;
+        //         }
+        //         return user;
+        //     },
+        // }),
+
         Credentials({
             async authorize(credentials) {
                 const validatedFields = signInSchema.safeParse(credentials);
                 if (!validatedFields.success) {
                     return null;
                 }
-
-                // Validate that the user exists
                 const { email, password } = validatedFields.data;
                 const user = await db.user.findUnique({
                     where: { email },
@@ -44,7 +75,10 @@ export const authConfig = {
                 if (!user) {
                     return null;
                 }
-
+                if (!user.emailVerified) {
+                    // Optionally: trigger resend logic here, or rely on signInAction
+                    return null;
+                }
                 const isPasswordMatch = await compare(password, user.password);
                 if (!isPasswordMatch) {
                     return null;

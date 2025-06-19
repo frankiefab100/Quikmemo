@@ -28,22 +28,24 @@ enum UserRole {
 }
 
 model User {
-  id                   String          @id @default(auto()) @map("_id") @db.ObjectId
-  firstName            String
-  lastName             String
-  email                String          @unique
-  emailVerified        DateTime?
-  password             String
-  resetPasswordToken   String?         @db.String
-  resetPasswordExpires DateTime?
-  image                String?
-  accounts             Account[]
-  sessions             Session[]
-  notes                Note[]
-  role                 UserRole        @default(USER)
-  Authenticator        Authenticator[]
-  createdAt            DateTime        @default(now())
-  updatedAt            DateTime        @updatedAt
+  id                       String          @id @default(auto()) @map("_id") @db.ObjectId
+  firstName                String
+  lastName                 String
+  email                    String          @unique
+  emailVerified            DateTime?
+  verificationToken        String?
+  verificationTokenExpires DateTime?
+  password                 String
+  resetPasswordToken       String?         @db.String
+  resetPasswordExpires     DateTime?
+  image                    String?
+  accounts                 Account[]
+  sessions                 Session[]
+  notes                    Note[]
+  role                     UserRole        @default(USER)
+  Authenticator            Authenticator[]
+  createdAt                DateTime        @default(now())
+  updatedAt                DateTime        @updatedAt
 }
 
 model Account {
@@ -82,7 +84,7 @@ model Session {
 model VerificationToken {
   id         String   @id @default(auto()) @map("_id") @db.ObjectId
   identifier String
-  token      String
+  token      String   @unique
   expires    DateTime
 
   @@unique([identifier, token])
