@@ -16,7 +16,7 @@ import {
 } from "lucide-react";
 import { signOutUser } from "@/actions/user";
 import Link from "next/link";
-import { useClickOutside } from "@/hook/useClickOutside";
+import { useClickOutside } from "@/hooks/useClickOutside";
 
 interface UserDropdownItemProps {
   Icon: LucideIcon;

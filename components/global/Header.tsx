@@ -4,7 +4,7 @@ import Link from "next/link";
 import { Menu, X } from "lucide-react";
 import MobileNav from "./MobileNav";
 import MegaMenu from "./MegaMenu";
-import { useClickOutside } from "@/hook/useClickOutside";
+import { useClickOutside } from "@/hooks/useClickOutside";
 
 export default function Navbar() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
