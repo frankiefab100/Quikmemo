@@ -1,5 +1,5 @@
 "use client";
-import { signInUser } from "@/actions/user";
+import { signInUser } from "@/actions/authActions";
 
 interface ButtonProps {
   provider: "google" | "github" | "twitter";
@@ -17,8 +17,8 @@ const Button: React.FC<ButtonProps> = ({ provider, text, Icon }) => {
             provider === "google"
               ? "text-black bg-gray-100 hover:bg-gray-50 active:bg-white"
               : provider === "github"
-              ? "text-white bg-gray-800 hover:bg-gray-700 active:bg-gray-900"
-              : "text-white bg-blue-500 hover:bg-blue-400 active:bg-blue-600"
+                ? "text-white bg-gray-800 hover:bg-gray-700 active:bg-gray-900"
+                : "text-white bg-blue-500 hover:bg-blue-400 active:bg-blue-600"
           }`}
     >
       <Icon />

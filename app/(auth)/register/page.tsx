@@ -1,5 +1,5 @@
 "use client";
-import { signUpAction } from "@/actions/user";
+import { signUpAction } from "@/actions/authActions";
 import Image from "next/image";
 import Avatars from "@/components/shared/Avatars";
 import Button from "./button";

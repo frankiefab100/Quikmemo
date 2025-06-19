@@ -4,7 +4,7 @@ import { useRouter } from "next/navigation";
 import Button from "./button";
 import { Github, Google, Twitter } from "@/assets/SocialIcons";
 import Input from "@/components/ui/Input";
-import { signInAction } from "@/actions/user";
+import { signInAction } from "@/actions/authActions";
 import { useForm } from "react-hook-form";
 import { signInSchema, type SignInValues } from "@/lib/formSchema";
 import { zodResolver } from "@hookform/resolvers/zod";

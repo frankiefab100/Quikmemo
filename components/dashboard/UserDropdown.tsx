@@ -14,7 +14,7 @@ import {
   type LucideIcon,
   LogOut,
 } from "lucide-react";
-import { signOutUser } from "@/actions/user";
+import { signOutUser } from "@/actions/authActions";
 import Link from "next/link";
 import { useClickOutside } from "@/hooks/useClickOutside";
 

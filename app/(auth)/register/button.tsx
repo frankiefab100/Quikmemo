@@ -1,4 +1,4 @@
-import { signInUser } from "@/actions/user";
+import { signInUser } from "@/actions/authActions";
 
 interface ButtonProps {
   provider: "google" | "github" | "twitter";
