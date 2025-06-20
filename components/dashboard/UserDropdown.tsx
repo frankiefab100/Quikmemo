@@ -51,6 +51,7 @@ const UserDropdown: React.FC<UserDropdownProps> = ({
   userEmail,
 }) => {
   const [isOpen, setIsOpen] = useState(false);
+  const [imgError, setImgError] = useState(false);
   const dropdownRef = useClickOutside(() => {
     setIsOpen(false);
   });
@@ -108,13 +109,14 @@ const UserDropdown: React.FC<UserDropdownProps> = ({
           onClick={() => setIsOpen(!isOpen)}
         >
           <span className="sr-only">user profile</span>
-          {userImage ? (
+          {userImage && !imgError ? (
             <Image
               className="rounded-full w-6 h-6 md:w-8 md:h-8"
               src={userImage}
               alt={`${userName} photo`}
               width={50}
               height={50}
+              onError={() => setImgError(true)}
             />
           ) : (
             <CircleUser className="w-6 h-6 md:w-8 md:h-8 text-gray-500 dark:text-gray-400" />
@@ -129,13 +131,14 @@ const UserDropdown: React.FC<UserDropdownProps> = ({
           {isOpen && (
             <div className="absolute right-4 top-12 z-20 text-base list-none bg-white divide-y divide-gray-100 rounded shadow dark:bg-gray-700 dark:divide-gray-600">
               <div className="px-4 py-3">
-                {userImage ? (
+                {userImage && !imgError ? (
                   <Image
                     className="w-8 h-8 rounded-full"
                     src={userImage || "/placeholder.svg"}
                     alt={`${userName} photo`}
                     width={50}
                     height={50}
+                    onError={() => setImgError(true)}
                   />
                 ) : (
                   <CircleUser className="w-8 h-8 text-gray-400" />
