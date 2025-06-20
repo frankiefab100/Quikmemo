@@ -1,26 +1,21 @@
-import { db } from "@/lib/prisma";
-import { NextRequest, NextResponse } from "next/server";
+import { type NextRequest, NextResponse } from "next/server"
+import { verifyEmailToken } from "@/lib/verification"
 
-export async function GET(req: NextRequest) {
-    const token = req.nextUrl.searchParams.get("token");
-    if (!token) {
-        return NextResponse.json({ success: false, message: "No token provided." }, { status: 400 });
+export async function POST(request: NextRequest) {
+    try {
+        const { token } = await request.json()
+        if (!token) {
+            return NextResponse.json({ error: "Token is required" }, { status: 400 })
+        }
+
+        const result = await verifyEmailToken(token)
+        if (result.error) {
+            return NextResponse.json({ error: result.error }, { status: 400 })
+        }
+
+        return NextResponse.json({ success: true })
+    } catch (error) {
+        console.error("Email verification error:", error)
+        return NextResponse.json({ error: "Internal server error" }, { status: 500 })
     }
-    const user = await db.user.findFirst({ where: { verificationToken: token } });
-    if (
-        !user ||
-        !user.verificationTokenExpires ||
-        user.verificationTokenExpires < new Date()
-    ) {
-        return NextResponse.json({ success: false, message: "Invalid or expired token." }, { status: 400 });
-    }
-    await db.user.update({
-        where: { id: user.id },
-        data: {
-            emailVerified: new Date(),
-            verificationToken: null,
-            verificationTokenExpires: null,
-        },
-    });
-    return NextResponse.json({ success: true, message: "Email verified!" });
 }

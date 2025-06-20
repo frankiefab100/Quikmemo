@@ -17,19 +17,21 @@ export default function VerifyEmailClient() {
       setMessage("No verification token provided.");
       return;
     }
-    fetch(`/api/auth/verify-email?token=${token}`)
+    fetch(`/api/auth/verify-email`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ token }),
+    })
       .then((res) => res.json())
       .then((data) => {
         if (data.success) {
           setStatus("success");
-          setMessage(
-            data.message || "Your email has been verified! You can now log in."
-          );
+          setMessage("Your email has been verified! You can now log in.");
           setTimeout(() => router.push("/login"), 3000);
         } else {
           setStatus("error");
           setMessage(
-            data.message ||
+            data.error ||
               "Verification failed. The token may be invalid or expired."
           );
         }

@@ -1,38 +1,17 @@
-import type { NextAuthConfig } from "next-auth";
-import Github from "next-auth/providers/github";
-import Google from "next-auth/providers/google";
-import Twitter from "next-auth/providers/twitter";
-import Credentials from "next-auth/providers/credentials";
-import Resend from "next-auth/providers/resend";
-import { PrismaAdapter } from "@auth/prisma-adapter";
-import { db } from "./lib/prisma";
-import { signInSchema } from "./lib/formSchema";
-import { compare } from "bcryptjs";
-import { sendVerificationRequest } from "./lib/authSendRequest";
-
-declare module "next-auth" {
-    interface Session {
-        user: {
-            id: string;
-            email: string;
-            name?: string;
-            image?: string;
-        };
-        accessToken?: string;
-    }
-}
+import { CredentialsSignin, type NextAuthConfig } from "next-auth"
+import Github from "next-auth/providers/github"
+import Google from "next-auth/providers/google"
+import Twitter from "next-auth/providers/twitter"
+import { signInSchema } from "./lib/formSchema"
+import { compare } from "bcryptjs"
+import Credentials from "next-auth/providers/credentials"
+import { db } from "./lib/prisma"
 
 export const authConfig = {
-    adapter: PrismaAdapter(db),
     providers: [
-        Resend({
-            apiKey: process.env.RESEND_API_KEY,
-            from: process.env.EMAIL_FROM ?? "no-reply@quikmemo.frankiefab.com",
-            sendVerificationRequest,
-        }),
         Github({
-            clientId: process.env.AUTH_GITHUB_CLIENT_ID!,
-            clientSecret: process.env.AUTH_GITHUB_CLIENT_SECRET!,
+            clientId: process.env.AUTH_GITHUB_CLIENT_ID,
+            clientSecret: process.env.AUTH_GITHUB_CLIENT_SECRET,
             authorization: {
                 params: {
                     prompt: "consent",
@@ -42,13 +21,14 @@ export const authConfig = {
             },
         }),
         Google({
-            clientId: process.env.AUTH_GOOGLE_CLIENT_ID!,
-            clientSecret: process.env.AUTH_GOOGLE_CLIENT_SECRET!,
+            clientId: process.env.AUTH_GOOGLE_CLIENT_ID,
+            clientSecret: process.env.AUTH_GOOGLE_CLIENT_SECRET,
         }),
         Twitter({
-            clientId: process.env.AUTH_TWITTER_ID!,
-            clientSecret: process.env.AUTH_TWITTER_SECRET!,
+            clientId: process.env.AUTH_TWITTER_ID,
+            clientSecret: process.env.AUTH_TWITTER_SECRET,
         }),
+
         Credentials({
             name: "Credentials",
             credentials: {
@@ -56,24 +36,31 @@ export const authConfig = {
                 password: { label: "Password", type: "password" },
             },
             async authorize(credentials) {
+                // Validate input
                 const validatedFields = signInSchema.safeParse(credentials);
                 if (!validatedFields.success) {
-                    return null;
+                    throw new CredentialsSignin("Invalid credentials");
                 }
                 const { email, password } = validatedFields.data;
+
+                // Find user
                 const user = await db.user.findUnique({ where: { email } });
                 if (!user) {
-                    return null;
+                    throw new CredentialsSignin("Invalid credentials");
                 }
-                if (!user.emailVerified) {
 
-                    return null;
+                // Check if email is verified
+                if (!user.emailVerified) {
+                    throw new CredentialsSignin("Please verify your email before logging in.");
                 }
+
+                // Check password
                 const isPasswordMatch = await compare(password, user.password);
                 if (!isPasswordMatch) {
-                    return null;
+                    throw new CredentialsSignin("Invalid credentials");
                 }
-                // Return user object 
+
+                // Return user object (only required fields)
                 return {
                     id: user.id,
                     email: user.email,
@@ -82,86 +69,114 @@ export const authConfig = {
                 };
             },
         }),
+        // Credentials({
+        //     async authorize(credentials) {
+        //         const validatedFields = signInSchema.safeParse(credentials)
+        //         if (!validatedFields.success) {
+        //             return null
+        //         }
+
+        //         const { email, password } = validatedFields.data
+        //         const user = await db.user.findUnique({
+        //             where: { email },
+        //         })
+        //         if (!user) {
+        //             return null
+        //         }
+
+        //         // Check if email is verified for credentials login
+        //         if (!user.emailVerified) {
+        //             throw new Error("Please verify your email before signing in")
+        //         }
+
+        //         const isPasswordMatch = await compare(password, user.password)
+        //         if (!isPasswordMatch) {
+        //             return null
+        //         }
+        //         return user
+        //     },
+        // }),
     ],
-
     callbacks: {
-        async signIn({ user, account }) {
+        async signIn({ user, account, profile }) {
+            // Allow credentials login only if email is verified
+            if (account?.provider === "credentials") {
+                const existingUser = await db.user.findUnique({
+                    where: { email: user.email! },
+                })
+                return !!existingUser?.emailVerified
+            }
 
-            if (account?.type === "oauth" && user?.email) {
+            // Handle OAuth providers
+            if (account?.provider && user.email) {
                 const existingUser = await db.user.findUnique({
                     where: { email: user.email },
-                });
+                })
 
                 if (existingUser) {
-                    // Check if account is already linked
-                    const linkedAccount = await db.account.findFirst({
+                    // Check if this OAuth account is already linked
+                    const existingAccount = await db.account.findUnique({
                         where: {
-                            userId: existingUser.id,
-                            provider: account.provider,
-                            providerAccountId: account.providerAccountId,
+                            provider_providerAccountId: {
+                                provider: account.provider,
+                                providerAccountId: account.providerAccountId,
+                            },
                         },
-                    });
+                    })
 
-                    if (!linkedAccount) {
-                        // Link the new OAuth account to the existing user
+                    if (!existingAccount) {
+                        // Link the OAuth account to the existing user
                         await db.account.create({
                             data: {
                                 userId: existingUser.id,
                                 type: account.type,
                                 provider: account.provider,
                                 providerAccountId: account.providerAccountId,
-                                access_token: account.access_token,
-                                token_type: account.token_type,
-                                id_token: account.id_token,
                                 refresh_token: account.refresh_token,
+                                access_token: account.access_token,
                                 expires_at: account.expires_at,
+                                token_type: account.token_type,
                                 scope: account.scope,
+                                id_token: account.id_token,
                                 session_state: account.session_state
                                     ? String(account.session_state)
                                     : null,
-
                             },
-                        });
+                        })
                     }
-                    user.id = existingUser.id;
-                }
-            }
-            // Optionally, handle unverified email for credentials
-            if (account?.provider === "credentials" && user && user.email) {
-                const dbUser = await db.user.findUnique({ where: { email: user.email } });
-                if (dbUser && !dbUser.emailVerified) {
-                    // Optionally redirect or show an error
-                    return false;
-                }
-            }
-            return true;
-        },
 
-        async session({ session, user, token }) {
-            // Optionally attach user id or accessToken to session
-            if (token && session.user) {
-                session.user.id = token.sub as string;
-                if (token.accessToken) session.accessToken = token.accessToken as string;
-            }
-            return session;
-        },
+                    // Mark email as verified for OAuth users
+                    if (!existingUser.emailVerified) {
+                        await db.user.update({
+                            where: { id: existingUser.id },
+                            data: { emailVerified: new Date() },
+                        })
+                    }
 
+                    return true
+                }
+
+                // Create new user for OAuth if no existing user
+                return true
+            }
+
+            return true
+        },
         async jwt({ token, user, account }) {
-            // Optionally persist accessToken to the token
-            if (account && user) {
-                token.accessToken = account.access_token;
-                token.sub = user.id;
+            if (user) {
+                token.id = user.id
             }
-            return token;
+            return token
         },
-    },
-
-    session: {
-        strategy: "jwt",
+        async session({ session, token }) {
+            if (token.id) {
+                session.user.id = token.id as string
+            }
+            return session
+        },
     },
     pages: {
         signIn: "/login",
-        verifyRequest: "/verify-email",
-        // error: "/error",
+        error: "/error",
     },
-} satisfies NextAuthConfig;
+} satisfies NextAuthConfig
