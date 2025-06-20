@@ -192,11 +192,11 @@ const MobileNav: React.FC<MobileNavProps> = ({ setMobileMenuOpen }) => {
           Solutions
         </Link>
         <Link
-          href="/company"
+          href="/contact"
           className="border-b border-gray-200 pb-4 block px-3 py-2 text-base font-medium text-gray-700 hover:bg-gray-50 hover:text-blue-600 rounded-md"
           onClick={handleLinkClick}
         >
-          Company
+          Contact
         </Link>
 
         <div className="flex justify-center items-center pt-6 space-x-4">

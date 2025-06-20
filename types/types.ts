@@ -21,7 +21,7 @@ export interface IUseCases {
 }
 
 export interface ITestimonials {
-    avatar: string;
+    avatar: string | StaticImageData;
     name: string;
     title: string;
     quote: string

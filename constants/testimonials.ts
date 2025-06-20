@@ -1,4 +1,5 @@
 import { ITestimonials } from "@/types/types";
+import User3 from "../assets/images/user1.jpg"
 
 export const TESTIMONIALS: ITestimonials[] = [
     {
@@ -16,7 +17,7 @@ export const TESTIMONIALS: ITestimonials[] = [
             "Perfect for keeping track of lecture notes and research. The organization system is intuitive yet powerful.",
     },
     {
-        avatar: "https://randomuser.me/api/portraits/men/43.jpg",
+        avatar: User3,
         name: "Chris",
         title: "Startup Founder",
         quote:

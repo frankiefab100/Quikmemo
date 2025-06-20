@@ -1,9 +1,11 @@
 import Image from "next/image";
+import User1 from "../../assets/images/user1.jpg";
+import User4 from "../../assets/images/User4.jpg";
 
 const avatarData = [
   {
     id: 1,
-    imgUrl: "https://randomuser.me/api/portraits/men/43.jpg",
+    imgUrl: User1,
   },
   {
     id: 2,
@@ -15,7 +17,7 @@ const avatarData = [
   },
   {
     id: 4,
-    imgUrl: "https://randomuser.me/api/portraits/women/79.jpg",
+    imgUrl: User4,
   },
 ];
 
