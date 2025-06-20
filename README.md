@@ -24,12 +24,14 @@ Quikmemo is an easy-to-use note-taking app that helps you capture your thoughts,
 - **Animation:** [Motion (Framer Motion)](https://motion.dev/)
 - **Analytics:** [Umami Analytics](https://umami.is/)
 - **Deployment:** [Vercel](https://vercel.com/)
-- **Email Service:** [Resend](https://resend.com/) transactional email delivery for sending notifications and password resets.
+- **Email Service:** 
+  - [Resend](https://resend.com/) for sending notifications and password resets
+  - [React Email](https://react.email/) for creating email templates
 - **Progressive Web App:** [next-pwa](https://github.com/shadowwalker/next-pwa)
 - **Text Editor:** [Tiptap](https://tiptap.dev/)
 - **Testing:**
   - [Vitest](https://vitest.dev/) unit test framework
-  - [React Testing Library](https://testing-library.com/docs/react-testing-library/intro/) integration and React DOM testing library.
+  - [React Testing Library](https://testing-library.com/docs/react-testing-library/intro/) for integration and React DOM testing 
 - **Icons:** [Lucide Icons](https://lucide.dev/)
 
 
@@ -82,30 +84,23 @@ Quikmemo is an easy-to-use note-taking app that helps you capture your thoughts,
    ```
 
 3. **Configure environment variables:**
-- Create a `.env.local` file in the project root and fill in your credentials:
+Create a `.env.local` file in the project root and fill in your credentials:
 
-  ```env
-  BASE_URL=http://localhost:3000       # Base URL of the application (change for production)
-  DATABASE_URL=                        # Connection string for your database (e.g. MongoDB URI)
+   ```env
+   BASE_URL=http://localhost:3000       # Base URL of the application (change for production)
+   DATABASE_URL=                        # Connection string for your database (e.g. MongoDB URI)
 
-  AUTH_SECRET=                         # Secret key used to encrypt authentication tokens
+   AUTH_SECRET=                         # Secret key used to encrypt authentication tokens
+   AUTH_GOOGLE_ID=                      # Google OAuth Client ID for social login
+   AUTH_GOOGLE_SECRET=                  # Google OAuth Client Secret
+   AUTH_GITHUB_ID=                      # GitHub OAuth Client ID for social login
+   AUTH_GITHUB_SECRET=                  # GitHub OAuth Client Secret
+   AUTH_TWITTER_ID=                     # Twitter OAuth Client ID for social login
+   AUTH_TWITTER_SECRET=                 # Twitter OAuth Client Secret
 
-  AUTH_GOOGLE_ID=                      # Google OAuth Client ID for social login
-
-  AUTH_GOOGLE_SECRET=                  # Google OAuth Client Secret
-
-  AUTH_GITHUB_ID=                      # GitHub OAuth Client ID for social login
-
-  AUTH_GITHUB_SECRET=                  # GitHub OAuth Client Secret
-
-  AUTH_TWITTER_ID=                     # Twitter OAuth Client ID for social login
-
-  AUTH_TWITTER_SECRET=                 # Twitter OAuth Client Secret
-
-  RESEND_API_KEY=                      # API key for Resend email service
-
-  UMAMI_WEBSITE_ID=                    # Website ID for Umami analytics tracking
-  ```
+   RESEND_API_KEY=                      # API key for Resend email service
+   UMAMI_WEBSITE_ID=                    # Website ID for Umami analytics tracking
+   ```
 
 4. **Run database migrations (if using Prisma):**
 
@@ -136,6 +131,7 @@ quikmemo/
 ├── components/           # Reusable React components
 ├── constants/            # Constants
 ├── context/              # Context APIs
+├── emails/               # Email templates
 ├── hooks/                # Custom hooks
 ├── lib/                  # Library functions
 ├── prisma/               # Prisma schema and migrations
