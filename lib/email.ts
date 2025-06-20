@@ -13,7 +13,7 @@ export async function sendEmail({ to, subject, text, html, react }: SendEmailOpt
 
     try {
         const data = await resend.emails.send({
-            from: `Quikmemo <${process.env.FROM_EMAIL}>`,
+            from: "Quikmemo <no-reply@quikmemo.frankiefab.com>",
             to,
             subject,
             text,

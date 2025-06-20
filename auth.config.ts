@@ -27,7 +27,7 @@ export const authConfig = {
     providers: [
         Resend({
             apiKey: process.env.RESEND_API_KEY,
-            from: process.env.EMAIL_FROM,
+            from: process.env.EMAIL_FROM ?? "no-reply@quikmemo.frankiefab.com",
             sendVerificationRequest,
         }),
         Github({
