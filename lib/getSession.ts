@@ -2,11 +2,12 @@ import { auth } from "@/lib/auth"
 
 export async function getSession() {
   try {
-    const session = await auth()
-    return session
+    const session = await auth();
+    console.log("DEBUG: getSession() result:", session);
+    return session;
   } catch (error) {
-    console.error("Error getting session:", error)
-    return null
+    console.error("DEBUG: getSession() error:", error);
+    return null;
   }
 }
 

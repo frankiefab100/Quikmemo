@@ -5,6 +5,7 @@ import { apiAuthPrefix, authRoutes, publicRoutes } from "@/utils/routes";
 export default auth((req) => {
   const { nextUrl } = req;
   const isLoggedIn = !!req.auth;
+  console.log("DEBUG: middleware req.auth:", req.auth);
 
   const isApiAuthRoute = nextUrl.pathname.startsWith(apiAuthPrefix);
   const isPublicRoute =
