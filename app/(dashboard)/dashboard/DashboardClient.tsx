@@ -1,13 +1,10 @@
 "use client";
-
 import { useNotes } from "@/context/NotesContext";
 import Header from "@/components/dashboard/Header";
 import MobileSidebar from "@/components/dashboard/MobileSidebar";
 import Sidebar from "@/components/dashboard/Sidebar";
 import NotesList from "@/components/dashboard/NotesList";
 import NoteEditor from "@/components/dashboard/NoteEditor";
-("use client");
-import { ErrorBoundary } from "react-error-boundary";
 
 export function ErrorFallback({ error }: { error: Error }) {
   return (
