@@ -1,11 +1,17 @@
 import { getSession } from "@/lib/getSession";
 import { redirect } from "next/navigation";
-import DashboardClient from "./DashboardClient";
+import DashboardClient, { ErrorFallback } from "./DashboardClient";
+import { ErrorBoundary } from "react-error-boundary";
 
 export default async function DashboardPage() {
   const session = await getSession();
   if (!session) {
     redirect("/login");
   }
-  return <DashboardClient />;
+
+  return (
+    <ErrorBoundary FallbackComponent={ErrorFallback}>
+      <DashboardClient />
+    </ErrorBoundary>
+  );
 }

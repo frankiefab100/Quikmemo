@@ -6,6 +6,19 @@ import MobileSidebar from "@/components/dashboard/MobileSidebar";
 import Sidebar from "@/components/dashboard/Sidebar";
 import NotesList from "@/components/dashboard/NotesList";
 import NoteEditor from "@/components/dashboard/NoteEditor";
+("use client");
+import { ErrorBoundary } from "react-error-boundary";
+
+export function ErrorFallback({ error }: { error: Error }) {
+  return (
+    <div className="p-4 text-center">
+      <h2 className="text-xl font-bold text-red-600 mb-2">Dashboard Error</h2>
+      <pre className="text-sm text-gray-600 bg-gray-100 p-2 rounded">
+        {error.message}
+      </pre>
+    </div>
+  );
+}
 
 export default function DashboardClient() {
   const {
