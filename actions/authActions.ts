@@ -3,7 +3,7 @@ import { type SignInValues, type SignUpValues, signInSchema, signUpSchema } from
 import { PrismaClientKnownRequestError } from "@prisma/client/runtime/library"
 import { AuthError } from "next-auth"
 import { hashSync } from "bcryptjs"
-import { redirect } from "next/navigation"
+// import { redirect } from "next/navigation"
 import { signIn, signOut } from "@/lib/auth"
 import { db } from "@/lib/prisma"
 import { createVerificationToken } from "@/lib/verification"

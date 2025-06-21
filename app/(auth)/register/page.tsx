@@ -2,14 +2,16 @@
 import { signUpAction } from "@/actions/authActions";
 import Image from "next/image";
 import Avatars from "@/components/shared/Avatars";
-import Button from "./button";
-import { Github, Google, Twitter } from "@/assets/SocialIcons";
+// import Button from "./button";
+// import { Github, Google, Twitter } from "@/assets/SocialIcons";
 import Input from "@/components/ui/Input";
 import { signUpSchema, SignUpValues } from "@/lib/formSchema";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Metadata } from "next";
 import { useState } from "react";
+import Link from "next/link";
+import { Socials } from "@/components/auth/Socials";
 
 const metadata: Metadata = {
   title: "Register for Quikmemo | Quick and Easy Note-Taking",
@@ -97,12 +99,12 @@ const RegisterPage = () => {
               </h3>
               <p className="">
                 Already have an account?{" "}
-                <a
+                <Link
                   href="/login"
                   className="font-medium text-blue-600 hover:text-blue-500"
                 >
                   Log in
-                </a>
+                </Link>
               </p>
             </div>
           </div>
@@ -117,17 +119,6 @@ const RegisterPage = () => {
               {successMsg}
             </div>
           )}
-          <div className="grid grid-cols-3 gap-x-3">
-            <Button provider="google" Icon={Google} />
-            <Button provider="github" Icon={Github} />
-            {/* <Button provider="twitter" Icon={Twitter} /> */}
-          </div>
-          <div className="relative">
-            <span className="block w-full h-px bg-gray-300"></span>
-            <p className="inline-block w-fit text-sm bg-white px-2 absolute -top-2 inset-x-0 mx-auto">
-              Or continue with
-            </p>
-          </div>
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
             <div className="flex flex-col md:flex-row space-y-2 md:space-y-0 md:space-x-2 mb-4">
               <Input
@@ -164,11 +155,20 @@ const RegisterPage = () => {
             />
             <button
               type="submit"
-              aria-disabled={isSubmitting}
-              className="w-full px-4 py-3 text-white font-medium bg-blue-600 hover:bg-blue-500 active:bg-blue-600 rounded-lg duration-150"
+              disabled={isSubmitting}
+              className="w-full px-4 py-3 text-white font-medium bg-blue-600 hover:bg-blue-500 active:bg-blue-600 rounded-lg duration-150 disabled:bg-blue-300"
             >
-              {isSubmitting ? "Creating account..." : "Create account"}
+              {isSubmitting ? "Creating account..." : "Create an account"}
             </button>
+            <div className="flex flex-col gap-4 mt-8">
+              <div className="relative">
+                <span className="block w-full h-px bg-gray-300"></span>
+                <p className="inline-block w-fit text-sm bg-white px-2 absolute -top-2 inset-x-0 mx-auto">
+                  Or continue with
+                </p>
+              </div>
+              <Socials />
+            </div>
           </form>
         </div>
       </div>

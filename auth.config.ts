@@ -1,4 +1,4 @@
-import { CredentialsSignin, type NextAuthConfig } from "next-auth"
+import { type NextAuthConfig } from "next-auth"
 import Github from "next-auth/providers/github"
 import Google from "next-auth/providers/google"
 import { signInSchema } from "./lib/formSchema"
@@ -9,19 +9,12 @@ import { db } from "./lib/prisma"
 export const authConfig = {
     providers: [
         Github({
-            clientId: process.env.AUTH_GITHUB_CLIENT_ID,
-            clientSecret: process.env.AUTH_GITHUB_CLIENT_SECRET,
-            authorization: {
-                params: {
-                    prompt: "consent",
-                    access_type: "offline",
-                    response_type: "code",
-                },
-            },
+            clientId: process.env.AUTH_GITHUB_ID,
+            clientSecret: process.env.AUTH_GITHUB_SECRET,
         }),
         Google({
-            clientId: process.env.AUTH_GOOGLE_CLIENT_ID,
-            clientSecret: process.env.AUTH_GOOGLE_CLIENT_SECRET,
+            clientId: process.env.AUTH_GOOGLE_ID,
+            clientSecret: process.env.AUTH_GOOGLE_SECRET,
         }),
         Credentials({
             async authorize(credentials) {
@@ -57,22 +50,29 @@ export const authConfig = {
         },
     },
     callbacks: {
-        async signIn({ user, account }) {
+        async signIn({ user, account, profile }) {
             console.log(`Sign-in callback triggered for user: ${user.email}, provider: ${account?.provider}`);
-            // Allow OAuth without email verification
+
+            if (account?.provider === "google") {
+                if (profile?.email_verified) {
+                    return true; // Allow sign-in if Google email is verified
+                }
+                console.log("Google sign-in blocked: email not verified by Google.");
+                return false; // Block sign-in
+            }
+
+            // Allow other OAuth providers like GitHub without this specific check
             if (account?.provider !== "credentials") {
-                console.log("OAuth sign-in allowed.");
                 return true;
             }
 
+            // For "credentials" provider, check our database
             const existingUser = await db.user.findUnique({ where: { id: user.id } });
-
             if (!existingUser?.emailVerified) {
-                console.log(`Sign-in blocked for ${user.email}: Email not verified.`);
+                console.log(`Sign-in blocked for ${user.email}: Email not verified in DB.`);
                 return false;
             }
 
-            console.log(`Sign-in successful for verified user: ${user.email}`);
             return true;
         },
         async jwt({ token, user, account }) {
