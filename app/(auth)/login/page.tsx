@@ -4,7 +4,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 // import Button from "./button";
 // import { Github, Google, Twitter } from "@/assets/SocialIcons";
 import Input from "@/components/ui/Input";
-import { signInAction } from "@/actions/authActions";
+import { login } from "@/actions/login.action";
 import { useForm } from "react-hook-form";
 import { signInSchema, type SignInValues } from "@/lib/formSchema";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -58,7 +58,7 @@ const LoginPageContent: React.FC = () => {
 
   const onSubmit = async (data: SignInValues) => {
     setErrorMsg(null);
-    const res = await signInAction(data);
+    const res = await login(data);
     if (res && res.error) {
       setErrorMsg(res.error);
     }

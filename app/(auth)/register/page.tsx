@@ -1,17 +1,18 @@
 "use client";
-import { signUpAction } from "@/actions/authActions";
 import Image from "next/image";
 import Avatars from "@/components/shared/Avatars";
 // import Button from "./button";
 // import { Github, Google, Twitter } from "@/assets/SocialIcons";
 import Input from "@/components/ui/Input";
-import { signUpSchema, SignUpValues } from "@/lib/formSchema";
+import { signUpSchema, type SignUpValues } from "@/lib/formSchema";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Metadata } from "next";
+import type { Metadata } from "next";
 import { useState } from "react";
 import Link from "next/link";
 import { Socials } from "@/components/auth/Socials";
+import { register as registerAction } from "@/actions/register.action";
+import { EyeIcon, EyeOffIcon } from "lucide-react";
 
 const metadata: Metadata = {
   title: "Register for Quikmemo | Quick and Easy Note-Taking",
@@ -33,19 +34,12 @@ const RegisterPage = () => {
   const onSubmit = async (data: SignUpValues) => {
     setErrorMsg(null);
     setSuccessMsg(null);
-    const { error } = await signUpSchema.safeParseAsync(data);
-    if (error) {
-      setErrorMsg(error.issues[0].message);
-      return;
-    }
-    const res = await signUpAction(data);
-    if (res?.error) {
-      setErrorMsg(res.error);
-    } else if (res?.success) {
-      setSuccessMsg(
-        res.message ||
-          "Account created! Please check your email to verify your account."
-      );
+
+    const result = await registerAction(data);
+    if (result.error) {
+      setErrorMsg(result.error);
+    } else if (result.success) {
+      setSuccessMsg(result.success);
     }
   };
 

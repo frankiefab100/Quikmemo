@@ -1,10 +1,17 @@
-import { Suspense } from "react";
-import VerifyEmailClient from "./VerifyEmailClient";
+import { verifyEmail } from "@/actions/verification.action";
+import VerifyEmailMessage from "./VerifyEmailMessage";
 
-export default function VerifyEmailPage() {
-  return (
-    <Suspense fallback={<div>Loading...</div>}>
-      <VerifyEmailClient />
-    </Suspense>
-  );
+interface VerifyEmailPageProps {
+  searchParams: {
+    token?: string;
+  };
 }
+
+const VerifyEmailPage = async ({ searchParams }: VerifyEmailPageProps) => {
+  const token = searchParams.token;
+  const result = token ? await verifyEmail(token) : { error: "Invalid token" };
+
+  return <VerifyEmailMessage result={result} />;
+};
+
+export default VerifyEmailPage;

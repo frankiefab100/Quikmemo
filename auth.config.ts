@@ -80,17 +80,24 @@ export const authConfig = {
 
             return true;
         },
-        async jwt({ token, user, account }) {
-            if (user) {
-                token.id = user.id
+        async jwt({ token, user }) {
+            if (user) { // This block is only triggered on sign-in
+                const dbUser = await db.user.findUnique({ where: { id: user.id } });
+                if (dbUser) {
+                    token.id = dbUser.id;
+                    token.name = `${dbUser.firstName} ${dbUser.lastName}`;
+                    token.picture = dbUser.image;
+                }
             }
-            return token
+            return token;
         },
         async session({ session, token }) {
-            if (token.id) {
-                session.user.id = token.id as string
+            if (session.user) {
+                session.user.id = token.id as string;
+                session.user.name = token.name as string;
+                session.user.image = token.picture as string | null;
             }
-            return session
+            return session;
         },
     },
     pages: {
