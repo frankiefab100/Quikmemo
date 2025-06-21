@@ -11,7 +11,7 @@ import { sendVerificationEmail } from "@/lib/email"
 
 export const signInAction = async (signInValues: SignInValues) => {
   try {
-    await signIn("credentials", signInValues)
+    await signIn("credentials", { ...signInValues, redirectTo: "/dashboard" })
   } catch (error) {
     if (error instanceof AuthError) {
       switch (error.type) {
@@ -23,7 +23,6 @@ export const signInAction = async (signInValues: SignInValues) => {
     }
     throw error
   }
-  redirect("/")
 }
 
 export const signUpAction = async (signUpValues: SignUpValues) => {

@@ -36,7 +36,7 @@ const LoginPage: React.FC = () => {
 
   const onSubmit = async (data: SignInValues) => {
     const res = await signInAction(data);
-    if (res.error) {
+    if (res?.error) {
       alert(res.error);
       return;
     }

@@ -4,8 +4,8 @@ import DashboardClient, { ErrorFallback } from "./DashboardClient";
 import { ErrorBoundary } from "react-error-boundary";
 
 export default async function DashboardPage() {
-  const session = await getSession();
-  if (!session) {
+  const user = await getSession();
+  if (!user) {
     redirect("/login");
   }
 
