@@ -24,10 +24,10 @@ export const authConfig = {
             clientId: process.env.AUTH_GOOGLE_CLIENT_ID,
             clientSecret: process.env.AUTH_GOOGLE_CLIENT_SECRET,
         }),
-        Twitter({
-            clientId: process.env.AUTH_TWITTER_ID,
-            clientSecret: process.env.AUTH_TWITTER_SECRET,
-        }),
+        // Twitter({
+        //     clientId: process.env.AUTH_TWITTER_ID,
+        //     clientSecret: process.env.AUTH_TWITTER_SECRET,
+        // }),
 
         Credentials({
             name: "Credentials",

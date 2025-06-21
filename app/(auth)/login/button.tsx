@@ -2,7 +2,7 @@
 import { signInUser } from "@/actions/authActions";
 
 interface ButtonProps {
-  provider: "google" | "github" | "twitter";
+  provider: "google" | "github";
   text: string;
   Icon: React.ComponentType;
 }

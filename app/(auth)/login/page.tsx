@@ -135,11 +135,11 @@ const LoginPage: React.FC = () => {
           </div>
           <Button provider="google" text="Continue with Google" Icon={Google} />
           <Button provider="github" text="Continue with GitHub" Icon={Github} />
-          <Button
+          {/* <Button
             provider="twitter"
             text="Continue with Twitter"
             Icon={Twitter}
-          />
+          /> */}
         </div>
       </div>
     </main>

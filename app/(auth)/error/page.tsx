@@ -75,7 +75,7 @@ export default function AuthErrorPage() {
                 Back to Login
               </Link>
               <Link
-                href="/signup"
+                href="/register"
                 className="block w-full text-center border border-gray-300 hover:border-gray-400 text-gray-700 font-semibold py-2 rounded-md transition"
               >
                 Create New Account

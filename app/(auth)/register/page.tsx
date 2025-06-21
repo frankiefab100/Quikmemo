@@ -99,7 +99,7 @@ const RegisterPage = () => {
           <div className="grid grid-cols-3 gap-x-3">
             <Button provider="google" Icon={Google} />
             <Button provider="github" Icon={Github} />
-            <Button provider="twitter" Icon={Twitter} />
+            {/* <Button provider="twitter" Icon={Twitter} /> */}
           </div>
           <div className="relative">
             <span className="block w-full h-px bg-gray-300"></span>
