@@ -25,16 +25,25 @@ export const authConfig = {
         }),
         Credentials({
             async authorize(credentials) {
+                console.log("Authorize function started...");
                 const validatedFields = signInSchema.safeParse(credentials);
                 if (validatedFields.success) {
                     const { email, password } = validatedFields.data;
+                    console.log(`Attempting to authorize user: ${email}`);
 
                     const user = await db.user.findUnique({ where: { email } });
-                    if (!user || !user.password) return null;
+                    if (!user || !user.password) {
+                        console.log("Authorization failed: User not found or no password set.");
+                        return null;
+                    }
 
                     const passwordsMatch = await compare(password, user.password);
-                    if (passwordsMatch) return user;
+                    if (passwordsMatch) {
+                        console.log(`Authorization successful for user: ${email}`);
+                        return user;
+                    }
                 }
+                console.log("Authorization failed: Invalid credentials or validation error.");
                 return null;
             }
         }),
@@ -49,16 +58,21 @@ export const authConfig = {
     },
     callbacks: {
         async signIn({ user, account }) {
+            console.log(`Sign-in callback triggered for user: ${user.email}, provider: ${account?.provider}`);
             // Allow OAuth without email verification
-            if (account?.provider !== "credentials") return true;
+            if (account?.provider !== "credentials") {
+                console.log("OAuth sign-in allowed.");
+                return true;
+            }
 
-            // It's crucial to find the user from the database again to get the latest state
             const existingUser = await db.user.findUnique({ where: { id: user.id } });
 
-            // Prevent sign-in if email is not verified for credentials provider
             if (!existingUser?.emailVerified) {
+                console.log(`Sign-in blocked for ${user.email}: Email not verified.`);
                 return false;
             }
+
+            console.log(`Sign-in successful for verified user: ${user.email}`);
             return true;
         },
         async jwt({ token, user, account }) {

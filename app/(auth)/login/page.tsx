@@ -25,11 +25,21 @@ const LoginPageContent: React.FC = () => {
   const searchParams = useSearchParams();
 
   useEffect(() => {
-    const oauthError = searchParams.get("error");
-    if (oauthError === "OAuthAccountNotLinked") {
-      setErrorMsg(
-        "This email is already linked with another provider. Please sign in with the original method to link your accounts."
-      );
+    const error = searchParams.get("error");
+    if (error) {
+      switch (error) {
+        case "OAuthAccountNotLinked":
+          setErrorMsg(
+            "This email is already linked with another provider. Sign in with the original method to link your accounts."
+          );
+          break;
+        case "CredentialsSignin":
+          setErrorMsg("Invalid email or password. Please try again.");
+          break;
+        default:
+          setErrorMsg("An unknown authentication error occurred.");
+          break;
+      }
     }
   }, [searchParams]);
 
