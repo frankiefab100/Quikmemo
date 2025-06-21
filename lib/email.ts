@@ -29,7 +29,7 @@ export async function sendEmail({ to, subject, text, html }: SendEmailOptions) {
 }
 
 export async function sendVerificationEmail(email: string, token: string, firstName?: string) {
-    const url = `${process.env.NEXTAUTH_URL}/verify-email?token=${token}`
+    const url = `${process.env.AUTH_URL}/verify-email?token=${token}`
 
     const emailHtml = await render(
         VerificationEmail({
