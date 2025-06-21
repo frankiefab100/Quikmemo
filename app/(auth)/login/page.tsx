@@ -1,6 +1,6 @@
 "use client";
 import Image from "next/image";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import Button from "./button";
 import { Github, Google, Twitter } from "@/assets/SocialIcons";
 import Input from "@/components/ui/Input";
@@ -9,7 +9,7 @@ import { useForm } from "react-hook-form";
 import { signInSchema, type SignInValues } from "@/lib/formSchema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { EyeIcon, EyeOffIcon } from "lucide-react";
-import { useState, Suspense } from "react";
+import { useState, Suspense, useEffect } from "react";
 import Link from "next/link";
 import { Metadata } from "next";
 
@@ -22,6 +22,16 @@ const LoginPageContent: React.FC = () => {
   const [isVisible, setIsVisible] = useState(false);
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
   const router = useRouter();
+  const searchParams = useSearchParams();
+
+  useEffect(() => {
+    const oauthError = searchParams.get("error");
+    if (oauthError === "OAuthAccountNotLinked") {
+      setErrorMsg(
+        "This email is already linked with another provider. Please sign in with the original method to link your accounts."
+      );
+    }
+  }, [searchParams]);
 
   const {
     register,

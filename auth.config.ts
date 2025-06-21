@@ -1,7 +1,6 @@
 import { CredentialsSignin, type NextAuthConfig } from "next-auth"
 import Github from "next-auth/providers/github"
 import Google from "next-auth/providers/google"
-import Twitter from "next-auth/providers/twitter"
 import { signInSchema } from "./lib/formSchema"
 import { compare } from "bcryptjs"
 import Credentials from "next-auth/providers/credentials"
@@ -40,6 +39,14 @@ export const authConfig = {
             }
         }),
     ],
+    events: {
+        async linkAccount({ user }) {
+            await db.user.update({
+                where: { id: user.id },
+                data: { emailVerified: new Date() },
+            });
+        },
+    },
     callbacks: {
         async signIn({ user, account }) {
             // Allow OAuth without email verification
@@ -52,9 +59,6 @@ export const authConfig = {
             if (!existingUser?.emailVerified) {
                 return false;
             }
-
-            // TODO: Add 2FA check if you implement it in the future
-
             return true;
         },
         async jwt({ token, user, account }) {
@@ -72,6 +76,6 @@ export const authConfig = {
     },
     pages: {
         signIn: "/login",
-        error: "/error", // This page will handle errors like AccessDenied
+        error: "/error",
     },
 } satisfies NextAuthConfig
