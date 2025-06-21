@@ -69,11 +69,13 @@ export const authConfig = {
                 return true;
             }
 
-            // For "credentials" provider, check our database
-            const existingUser = await db.user.findUnique({ where: { id: user.id } });
-            if (!existingUser?.emailVerified) {
-                console.log(`Sign-in blocked for ${user.email}: Email not verified in DB.`);
-                return false;
+            // For "credentials" provider, check our database by email instead of id
+            if (user.email) {
+                const existingUser = await db.user.findUnique({ where: { email: user.email } });
+                if (!existingUser?.emailVerified) {
+                    console.log(`Sign-in blocked for ${user.email}: Email not verified in DB.`);
+                    return false;
+                }
             }
 
             return true;

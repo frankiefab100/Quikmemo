@@ -51,11 +51,16 @@ export const signInAction = async (signInValues: SignInValues) => {
         switch (error.type) {
           case "CredentialsSignin":
             return { error: "Invalid credentials." };
+          case "CallbackRouteError":
+            return { error: "Authentication callback error." };
           default:
-            return { error: "An unexpected error occurred." };
+            console.error("AuthError type:", error.type);
+            return { error: `Authentication error: ${error.type}` };
         }
       }
-      throw error;
+      // Log the full error for debugging
+      console.error("Full signIn error:", error);
+      return { error: "Authentication failed. Please try again." };
     }
   } catch (error) {
     console.error("Unexpected error in signInAction:", error);
