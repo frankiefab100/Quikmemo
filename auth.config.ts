@@ -294,6 +294,18 @@ export const authConfig = {
             return session
         },
     },
+    cookies: {
+        sessionToken: {
+            name: `__Secure-next-auth.session-token`,
+            options: {
+                httpOnly: true,
+                sameSite: "lax",
+                path: "/",
+                secure: true,
+                domain: ".quikmemo.frankiefab.com",
+            },
+        },
+    },
     pages: {
         signIn: "/login",
         error: "/error",
