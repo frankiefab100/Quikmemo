@@ -10,49 +10,56 @@ import { createVerificationToken } from "@/lib/verification"
 import { sendVerificationEmail } from "@/lib/email"
 
 export const signInAction = async (signInValues: SignInValues) => {
-  const validatedFields = signInSchema.safeParse(signInValues);
-
-  if (!validatedFields.success) {
-    return { error: "Invalid fields provided." };
-  }
-
-  const { email, password } = validatedFields.data;
-
-  const existingUser = await db.user.findUnique({
-    where: { email },
-  });
-
-  if (!existingUser || !existingUser.email || !existingUser.password) {
-    return { error: "Invalid credentials." };
-  }
-
-  if (!existingUser.emailVerified) {
-    const token = await createVerificationToken(email);
-    await sendVerificationEmail(
-      email,
-      token,
-      existingUser.firstName
-    );
-    return { error: "Please verify your email. Another confirmation link has been sent to your inbox." };
-  }
-
   try {
-    await signIn("credentials", {
-      email,
-      password,
-      redirectTo: "/dashboard",
-    });
-  } catch (error) {
-    if (error instanceof AuthError) {
-      switch (error.type) {
-        case "CredentialsSignin":
-          return { error: "Invalid credentials." };
-        default:
-          return { error: "An unexpected error occurred." };
-      }
+    const validatedFields = signInSchema.safeParse(signInValues);
+
+    if (!validatedFields.success) {
+      console.error("Validation error:", validatedFields.error);
+      return { error: "Invalid fields provided." };
     }
-    // For other errors, re-throw them so Next.js can handle it.
-    throw error;
+
+    const { email, password } = validatedFields.data;
+
+    const existingUser = await db.user.findUnique({
+      where: { email },
+    });
+
+    if (!existingUser || !existingUser.email || !existingUser.password) {
+      console.error("User not found or no password:", email);
+      return { error: "Invalid credentials." };
+    }
+
+    if (!existingUser.emailVerified) {
+      const token = await createVerificationToken(email);
+      await sendVerificationEmail(
+        email,
+        token,
+        existingUser.firstName
+      );
+      return { error: "Please verify your email. Another confirmation link has been sent to your inbox." };
+    }
+
+    try {
+      await signIn("credentials", {
+        email,
+        password,
+        redirectTo: "/dashboard",
+      });
+    } catch (error) {
+      console.error("SignIn error:", error);
+      if (error instanceof AuthError) {
+        switch (error.type) {
+          case "CredentialsSignin":
+            return { error: "Invalid credentials." };
+          default:
+            return { error: "An unexpected error occurred." };
+        }
+      }
+      throw error;
+    }
+  } catch (error) {
+    console.error("Unexpected error in signInAction:", error);
+    return { error: "An unexpected error occurred." };
   }
 }
 

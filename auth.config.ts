@@ -5,8 +5,11 @@ import { signInSchema } from "./lib/formSchema"
 import { compare } from "bcryptjs"
 import Credentials from "next-auth/providers/credentials"
 import { db } from "./lib/prisma"
+import { PrismaAdapter } from "@auth/prisma-adapter"
 
 export const authConfig = {
+    secret: process.env.AUTH_SECRET,
+    adapter: PrismaAdapter(db),
     providers: [
         Github({
             clientId: process.env.AUTH_GITHUB_ID,
