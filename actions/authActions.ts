@@ -1,5 +1,5 @@
 "use server"
-import { type SignInValues, type SignUpValues, signUpSchema } from "../lib/formSchema"
+import { type SignInValues, type SignUpValues, signInSchema, signUpSchema } from "../lib/formSchema"
 import { PrismaClientKnownRequestError } from "@prisma/client/runtime/library"
 import { AuthError } from "next-auth"
 import { hashSync } from "bcryptjs"
@@ -10,18 +10,49 @@ import { createVerificationToken } from "@/lib/verification"
 import { sendVerificationEmail } from "@/lib/email"
 
 export const signInAction = async (signInValues: SignInValues) => {
+  const validatedFields = signInSchema.safeParse(signInValues);
+
+  if (!validatedFields.success) {
+    return { error: "Invalid fields provided." };
+  }
+
+  const { email, password } = validatedFields.data;
+
+  const existingUser = await db.user.findUnique({
+    where: { email },
+  });
+
+  if (!existingUser || !existingUser.email || !existingUser.password) {
+    return { error: "Invalid credentials." };
+  }
+
+  if (!existingUser.emailVerified) {
+    const token = await createVerificationToken(email);
+    await sendVerificationEmail(
+      email,
+      token,
+      existingUser.firstName
+    );
+    return { error: "Please verify your email. Another confirmation link has been sent to your inbox." };
+  }
+
   try {
-    await signIn("credentials", { ...signInValues, redirectTo: "/dashboard" })
+    await signIn("credentials", {
+      email,
+      password,
+      redirectTo: "/dashboard",
+    });
   } catch (error) {
     if (error instanceof AuthError) {
       switch (error.type) {
         case "CredentialsSignin":
-          return { error: "Invalid Credentials" }
+          return { error: "Invalid credentials." };
         default:
-          return { error: "An error occurred" }
+          return { error: "An unexpected error occurred." };
       }
     }
-    throw error
+    // For other errors, re-throw them so Next.js can handle it.
+    throw error;
   }
 }
 
@@ -49,7 +80,6 @@ export const signUpAction = async (signUpValues: SignUpValues) => {
     }
   } catch (error) {
     if (error instanceof PrismaClientKnownRequestError) {
-      console.log(error.code)
       switch (error.code) {
         case "P2002":
           return { error: "Email already exists" }
@@ -94,3 +124,4 @@ export const signOutUser = async () => {
   const result = await signOut()
   return result
 }
+

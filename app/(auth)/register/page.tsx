@@ -9,6 +9,7 @@ import { signUpSchema, SignUpValues } from "@/lib/formSchema";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Metadata } from "next";
+import { useState } from "react";
 
 const metadata: Metadata = {
   title: "Register for Quikmemo | Quick and Easy Note-Taking",
@@ -17,6 +18,8 @@ const metadata: Metadata = {
 };
 
 const RegisterPage = () => {
+  const [errorMsg, setErrorMsg] = useState<string | null>(null);
+  const [successMsg, setSuccessMsg] = useState<string | null>(null);
   const {
     register,
     handleSubmit,
@@ -26,14 +29,21 @@ const RegisterPage = () => {
   });
 
   const onSubmit = async (data: SignUpValues) => {
+    setErrorMsg(null);
+    setSuccessMsg(null);
     const { error } = await signUpSchema.safeParseAsync(data);
     if (error) {
-      alert(error.issues[0].message);
+      setErrorMsg(error.issues[0].message);
+      return;
     }
-
     const res = await signUpAction(data);
     if (res?.error) {
-      alert(res.error);
+      setErrorMsg(res.error);
+    } else if (res?.success) {
+      setSuccessMsg(
+        res.message ||
+          "Account created! Please check your email to verify your account."
+      );
     }
   };
 
@@ -96,6 +106,17 @@ const RegisterPage = () => {
               </p>
             </div>
           </div>
+          {/* Error and success message display */}
+          {errorMsg && (
+            <div className="bg-red-100 text-red-700 px-4 py-2 rounded mb-4 text-center">
+              {errorMsg}
+            </div>
+          )}
+          {successMsg && (
+            <div className="bg-green-100 text-green-700 px-4 py-2 rounded mb-4 text-center">
+              {successMsg}
+            </div>
+          )}
           <div className="grid grid-cols-3 gap-x-3">
             <Button provider="google" Icon={Google} />
             <Button provider="github" Icon={Github} />

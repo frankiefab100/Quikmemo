@@ -9,7 +9,7 @@ import { useForm } from "react-hook-form";
 import { signInSchema, type SignInValues } from "@/lib/formSchema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { EyeIcon, EyeOffIcon } from "lucide-react";
-import { useState } from "react";
+import { useState, Suspense } from "react";
 import Link from "next/link";
 import { Metadata } from "next";
 
@@ -18,8 +18,9 @@ const metadata: Metadata = {
   description: "Sign in to Quikmemo to access your notes and stay productive.",
 };
 
-const LoginPage: React.FC = () => {
+const LoginPageContent: React.FC = () => {
   const [isVisible, setIsVisible] = useState(false);
+  const [errorMsg, setErrorMsg] = useState<string | null>(null);
   const router = useRouter();
 
   const {
@@ -35,16 +36,12 @@ const LoginPage: React.FC = () => {
   };
 
   const onSubmit = async (data: SignInValues) => {
+    setErrorMsg(null);
     const res = await signInAction(data);
-    if (res?.error) {
-      alert(res.error);
-      return;
+    if (res && res.error) {
+      setErrorMsg(res.error);
     }
-    //  Simulate authentication
-    setTimeout(() => {
-      // setIsLoading(false);
-      router.push("/dashboard");
-    }, 1000);
+    // On success, the server action will redirect. No client-side redirect needed.
   };
 
   return (
@@ -73,6 +70,12 @@ const LoginPage: React.FC = () => {
             </p>
           </div>
         </div>
+        {/* Error message display */}
+        {errorMsg && (
+          <div className="bg-red-100 text-red-700 px-4 py-3 rounded my-4 text-center">
+            {errorMsg}
+          </div>
+        )}
         <form onSubmit={handleSubmit(onSubmit)} className="mt-8 space-y-5">
           <Input
             label="Email"
@@ -94,6 +97,7 @@ const LoginPage: React.FC = () => {
             <button
               onClick={togglePasswordVisibility}
               className="absolute right-3 top-10 cursor-pointer"
+              type="button"
             >
               {isVisible ? <EyeIcon /> : <EyeOffIcon />}
             </button>
@@ -125,7 +129,6 @@ const LoginPage: React.FC = () => {
             {isSubmitting ? "Logging in..." : "Sign in"}
           </button>
         </form>
-
         <div className="flex flex-col gap-4 mt-8">
           <div className="relative">
             <span className="block w-full h-px bg-gray-300"></span>
@@ -143,6 +146,14 @@ const LoginPage: React.FC = () => {
         </div>
       </div>
     </main>
+  );
+};
+
+const LoginPage: React.FC = () => {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <LoginPageContent />
+    </Suspense>
   );
 };
 
