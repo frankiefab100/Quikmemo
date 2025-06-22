@@ -21,25 +21,25 @@ export const authConfig = {
         }),
         Credentials({
             async authorize(credentials) {
-                console.log("Authorize function started...");
+                // console.log("Authorize function started...");
                 const validatedFields = signInSchema.safeParse(credentials);
                 if (validatedFields.success) {
                     const { email, password } = validatedFields.data;
-                    console.log(`Attempting to authorize user: ${email}`);
+                    // console.log(`Attempting to authorize user: ${email}`);
 
                     const user = await db.user.findUnique({ where: { email } });
                     if (!user || !user.password) {
-                        console.log("Authorization failed: User not found or no password set.");
+                        // console.log("Authorization failed: User not found or no password set.");
                         return null;
                     }
 
                     const passwordsMatch = await compare(password, user.password);
                     if (passwordsMatch) {
-                        console.log(`Authorization successful for user: ${email}`);
+                        // console.log(`Authorization successful for user: ${email}`);
                         return user;
                     }
                 }
-                console.log("Authorization failed: Invalid credentials or validation error.");
+                // console.log("Authorization failed: Invalid credentials or validation error.");
                 return null;
             }
         }),
@@ -54,7 +54,7 @@ export const authConfig = {
     },
     callbacks: {
         async signIn({ user, account, profile }) {
-            console.log(`Sign-in callback triggered for user: ${user.email}, provider: ${account?.provider}`);
+            // console.log(`Sign-in callback triggered for user: ${user.email}, provider: ${account?.provider}`);
 
             if (account?.provider === "google") {
                 if (profile?.email_verified) {
@@ -73,7 +73,7 @@ export const authConfig = {
                     }
                     return true;
                 }
-                console.log("Google sign-in blocked: email not verified by Google.");
+                // console.log("Google sign-in blocked: email not verified by Google.");
                 return false; // Block sign-in
             }
 
@@ -86,7 +86,7 @@ export const authConfig = {
             if (user.email) {
                 const existingUser = await db.user.findUnique({ where: { email: user.email } });
                 if (!existingUser?.emailVerified) {
-                    console.log(`Sign-in blocked for ${user.email}: Email not verified in DB.`);
+                    // console.log(`Sign-in blocked for ${user.email}: Email not verified in DB.`);
                     return false;
                 }
             }

@@ -72,11 +72,4 @@ export default function DashboardClient({ session }: { session: any }) {
       </div>
     </div>
   );
-
-  // return (
-  //   <div style={{ padding: "50px", textAlign: "center", color: "black" }}>
-  //     <h1>Dashboard Test</h1>
-  //     <p>I want to confirm if this shows, then redirect loop is fixed.</p>
-  //   </div>
-  // );
 }
