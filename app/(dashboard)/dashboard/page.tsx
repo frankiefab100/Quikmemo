@@ -7,12 +7,15 @@ export default async function DashboardPage() {
   const session = await getSession();
 
   if (typeof window !== "undefined") {
-    localStorage.setItem("user session", JSON.stringify(session));
+    // localStorage.setItem("user session", JSON.stringify(session));
+    console.log({
+      session,
+    });
   }
 
-  if (!session) {
-    redirect("/login");
-  }
+  // if (!session) {
+  //   redirect("/login");
+  // }
 
   return (
     <ErrorBoundary FallbackComponent={ErrorFallback}>
