@@ -3,7 +3,7 @@ import { db } from "@/lib/prisma";
 import { signUpSchema, type SignUpValues } from "@/lib/formSchema";
 import { hashSync } from "bcryptjs";
 import { Prisma } from "@prisma/client";
-import { createVerificationToken } from "@/lib/verification";
+import { createVerificationToken } from "@/actions/verification.action";
 import { sendVerificationEmail } from "@/lib/email";
 
 export const register = async (values: SignUpValues) => {

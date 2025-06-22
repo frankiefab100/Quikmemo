@@ -3,7 +3,7 @@ import { signIn } from "@/lib/auth";
 import { db } from "@/lib/prisma";
 import { signInSchema, type SignInValues } from "@/lib/formSchema";
 import { AuthError } from "next-auth";
-import { createVerificationToken } from "@/lib/verification";
+import { createVerificationToken } from "@/actions/verification.action";
 import { sendVerificationEmail } from "@/lib/email";
 
 export const login = async (values: SignInValues) => {
@@ -26,8 +26,8 @@ export const login = async (values: SignInValues) => {
         if (!existingUser.emailVerified) {
             const verificationToken = await createVerificationToken(existingUser.email);
             await sendVerificationEmail(
-                existingUser.email,
-                verificationToken,
+                verificationToken.email,
+                verificationToken.token,
                 existingUser.firstName
             );
             return { success: "Confirmation email sent!" };
