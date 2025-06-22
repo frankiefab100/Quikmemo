@@ -1,8 +1,6 @@
 "use client";
 import Image from "next/image";
 import Avatars from "@/components/shared/Avatars";
-// import Button from "./button";
-// import { Github, Google, Twitter } from "@/assets/SocialIcons";
 import Input from "@/components/ui/Input";
 import { signUpSchema, type SignUpValues } from "@/lib/formSchema";
 import { useForm } from "react-hook-form";
@@ -10,9 +8,9 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import type { Metadata } from "next";
 import { useState } from "react";
 import Link from "next/link";
-import { Socials } from "@/components/auth/Socials";
 import { register as registerAction } from "@/actions/register.action";
 import { EyeIcon, EyeOffIcon } from "lucide-react";
+import { SignUpOAuth } from "../../../components/auth/SignUpAuthButtons";
 
 const metadata: Metadata = {
   title: "Register for Quikmemo | Quick and Easy Note-Taking",
@@ -21,6 +19,7 @@ const metadata: Metadata = {
 };
 
 const RegisterPage = () => {
+  const [isVisible, setIsVisible] = useState(false);
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
   const [successMsg, setSuccessMsg] = useState<string | null>(null);
   const {
@@ -41,6 +40,10 @@ const RegisterPage = () => {
     } else if (result.success) {
       setSuccessMsg(result.success);
     }
+  };
+
+  const togglePasswordVisibility = () => {
+    setIsVisible((prev) => !prev);
   };
 
   return (
@@ -113,6 +116,14 @@ const RegisterPage = () => {
               {successMsg}
             </div>
           )}
+
+          <SignUpOAuth />
+          <div className="relative">
+            <span className="block w-full h-px bg-gray-300"></span>
+            <p className="inline-block w-fit text-sm bg-white px-2 absolute -top-2 inset-x-0 mx-auto">
+              Or continue with
+            </p>
+          </div>
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
             <div className="flex flex-col md:flex-row space-y-2 md:space-y-0 md:space-x-2 mb-4">
               <Input
@@ -137,16 +148,26 @@ const RegisterPage = () => {
               {...register("email")}
               error={errors.email?.message}
             />
-            <Input
-              label="Password"
-              type="password"
-              id="password"
-              {...register("password")}
-              error={
-                errors.password?.message &&
-                "Password must be 8-32 characters long and contain at least one letter and one number"
-              }
-            />
+            <div className="relative">
+              <Input
+                label="Password"
+                type={isVisible ? "text" : "password"}
+                id="password"
+                {...register("password")}
+                name="password"
+                error={
+                  errors.password?.message &&
+                  "Password must be 8-32 characters long and contain at least one letter and one number"
+                }
+              />
+              <button
+                onClick={togglePasswordVisibility}
+                className="absolute right-3 top-10 cursor-pointer"
+                type="button"
+              >
+                {isVisible ? <EyeIcon /> : <EyeOffIcon />}
+              </button>
+            </div>
             <button
               type="submit"
               disabled={isSubmitting}
@@ -154,15 +175,6 @@ const RegisterPage = () => {
             >
               {isSubmitting ? "Creating account..." : "Create an account"}
             </button>
-            <div className="flex flex-col gap-4 mt-8">
-              <div className="relative">
-                <span className="block w-full h-px bg-gray-300"></span>
-                <p className="inline-block w-fit text-sm bg-white px-2 absolute -top-2 inset-x-0 mx-auto">
-                  Or continue with
-                </p>
-              </div>
-              <Socials />
-            </div>
           </form>
         </div>
       </div>

@@ -1,8 +1,6 @@
 "use client";
 import Image from "next/image";
-import { useRouter, useSearchParams } from "next/navigation";
-// import Button from "./button";
-// import { Github, Google, Twitter } from "@/assets/SocialIcons";
+import { useSearchParams } from "next/navigation";
 import Input from "@/components/ui/Input";
 import { login } from "@/actions/login.action";
 import { useForm } from "react-hook-form";
@@ -12,17 +10,16 @@ import { EyeIcon, EyeOffIcon } from "lucide-react";
 import { useState, Suspense, useEffect } from "react";
 import Link from "next/link";
 import { Metadata } from "next";
-import { Socials } from "@/components/auth/Socials";
+import { LoginOAuth } from "../../../components/auth/LoginAuthButtons";
 
 const metadata: Metadata = {
   title: "Login to Quikmemo | Access Your Notes Anytime",
   description: "Sign in to Quikmemo to access your notes and stay productive.",
 };
 
-const LoginPageContent: React.FC = () => {
+const LoginPage: React.FC = () => {
   const [isVisible, setIsVisible] = useState(false);
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
-  // const router = useRouter();
   const searchParams = useSearchParams();
 
   useEffect(() => {
@@ -157,18 +154,10 @@ const LoginPageContent: React.FC = () => {
               Or continue with
             </p>
           </div>
-          <Socials />
+          <LoginOAuth />
         </div>
       </div>
     </main>
-  );
-};
-
-const LoginPage: React.FC = () => {
-  return (
-    <Suspense fallback={<div>Loading...</div>}>
-      <LoginPageContent />
-    </Suspense>
   );
 };
 
