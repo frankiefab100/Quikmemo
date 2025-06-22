@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server"
 import { db } from "@/lib/prisma"
 import { getSession } from "@/lib/getSession"
-import { NOTES } from "@/app/(dashboard)/data/data"
+import { NOTES } from "@/app/(protected)/data/data"
 
 export async function GET() {
     try {
