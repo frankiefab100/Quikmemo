@@ -58,7 +58,20 @@ export const authConfig = {
 
             if (account?.provider === "google") {
                 if (profile?.email_verified) {
-                    return true; // Allow sign-in if Google email is verified
+                    // Update image if changed
+                    if (profile?.picture) {
+                        if (user.email) {
+                            const dbUser = await db.user.findUnique({ where: { email: user.email } });
+                            if (dbUser && dbUser.image !== profile.picture) {
+                                await db.user.update({
+                                    where: { email: user.email },
+                                    data: { image: profile.picture },
+                                });
+                            }
+                        }
+
+                    }
+                    return true;
                 }
                 console.log("Google sign-in blocked: email not verified by Google.");
                 return false; // Block sign-in
