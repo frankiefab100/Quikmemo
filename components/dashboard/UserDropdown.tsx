@@ -14,9 +14,9 @@ import {
   type LucideIcon,
   LogOut,
 } from "lucide-react";
-import { logout } from "@/actions/logout.action";
 import Link from "next/link";
 import { useClickOutside } from "@/hooks/useClickOutside";
+import { signOut } from "next-auth/react";
 
 interface UserDropdownItemProps {
   Icon: LucideIcon;
@@ -187,7 +187,7 @@ const UserDropdown: React.FC<UserDropdownProps> = ({
               <div className="p-2">
                 <button
                   type="button"
-                  onClick={() => logout()}
+                  onClick={() => signOut({ callbackUrl: "/login" })}
                   className="w-full px-5 py-2.5 text-sm font-medium text-center text-white bg-blue-700 rounded-lg active:bg-blue-600 focus:ring-blue-200 hover:bg-blue-800"
                 >
                   Log Out
@@ -238,7 +238,7 @@ const UserDropdown: React.FC<UserDropdownProps> = ({
                 <UserDropdownItems
                   Icon={LogOut}
                   name="Log out"
-                  onClick={() => logout()}
+                  onClick={() => signOut({ callbackUrl: "/login" })}
                 />
               </div>
             </div>
