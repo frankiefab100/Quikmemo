@@ -13,13 +13,9 @@ export default async function DashboardPage() {
     });
   }
 
-  // if (!session) {
-  //   redirect("/login");
-  // }
-
   return (
     <ErrorBoundary FallbackComponent={ErrorFallback}>
-      <DashboardClient />
+      <DashboardClient session={session} />
     </ErrorBoundary>
   );
 }

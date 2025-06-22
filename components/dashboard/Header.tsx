@@ -2,7 +2,6 @@
 
 import { useState } from "react";
 import { useNotes } from "@/context/NotesContext";
-import { SessionProvider, useSession } from "next-auth/react";
 import UserDropdown from "./UserDropdown";
 import Link from "next/link";
 import Image from "next/image";
@@ -10,10 +9,10 @@ import { Menu, Search } from "lucide-react";
 
 interface HeaderProps {
   onToggleSidebar: () => void;
+  session: any;
 }
 
-export default function Header({ onToggleSidebar }: HeaderProps) {
-  const { data: session } = useSession();
+export default function Header({ onToggleSidebar, session }: HeaderProps) {
   const { searchQuery, setSearchQuery } = useNotes();
   const [isSearchExpanded, setIsSearchExpanded] = useState(false);
 
@@ -88,15 +87,14 @@ export default function Header({ onToggleSidebar }: HeaderProps) {
         </div>
 
         {/* User Profile */}
-        <SessionProvider>
-          {session?.user && (
-            <UserDropdown
-              userImage={session.user.image ?? null}
-              userName={session.user.name ?? ""}
-              userEmail={session.user.email ?? ""}
-            />
-          )}
-        </SessionProvider>
+
+        {session?.user && (
+          <UserDropdown
+            userImage={session.user.image ?? null}
+            userName={session.user.name ?? ""}
+            userEmail={session.user.email ?? ""}
+          />
+        )}
       </div>
     </header>
   );

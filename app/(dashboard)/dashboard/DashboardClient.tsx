@@ -17,7 +17,7 @@ export function ErrorFallback({ error }: { error: Error }) {
   );
 }
 
-export default function DashboardClient() {
+export default function DashboardClient({ session }: { session: any }) {
   const {
     currentFilterType,
     isMobileEditorOpen,
@@ -28,7 +28,10 @@ export default function DashboardClient() {
   return (
     <div className="flex h-screen flex-col bg-white dark:bg-gray-900">
       {/* Header - Always visible */}
-      <Header onToggleSidebar={() => setIsMobileSidebarOpen(true)} />
+      <Header
+        onToggleSidebar={() => setIsMobileSidebarOpen(true)}
+        session={session}
+      />
 
       {/* Mobile Sidebar */}
       <MobileSidebar
