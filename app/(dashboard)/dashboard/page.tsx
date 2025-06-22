@@ -6,6 +6,8 @@ import { getSession } from "@/lib/getSession";
 export default async function DashboardPage() {
   const session = await getSession();
 
+  localStorage.setItem("user session", JSON.stringify(session));
+
   if (!session) {
     redirect("/login");
   }
