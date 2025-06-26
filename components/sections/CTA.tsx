@@ -1,6 +1,6 @@
 import Link from "next/link";
 
-const CTA: React.FC = () => {
+const CallToAction: React.FC = () => {
   return (
     <div className="bg-[#f7f9ff] max-w-5xl mx-auto overflow-hidden rounded-xl py-16 px-8 text-center">
       <div className="mb-8">
@@ -22,4 +22,4 @@ const CTA: React.FC = () => {
   );
 };
 
-export default CTA;
+export default CallToAction;

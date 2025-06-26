@@ -1,6 +1,6 @@
 import Image from "next/image";
-import User1 from "../../assets/images/user1.jpg";
-import User4 from "../../assets/images/User4.jpg";
+import User1 from "@/assets/images/user1.jpg";
+import User4 from "@/assets/images/User4.jpg";
 
 const avatarData = [
   {

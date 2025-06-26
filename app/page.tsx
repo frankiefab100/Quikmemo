@@ -1,12 +1,13 @@
 import React from "react";
 import Navbar from "@/components/global/Header";
 import Footer from "@/components/global/Footer";
-import Hero from "@/components/templates/Hero";
-import Features from "@/components/templates/Features";
-import UseCases from "@/components/templates/UseCases";
-import Testimonials from "@/components/templates/Testimonials";
-import FAQ from "@/components/templates/FAQ";
-import CTA from "@/components/templates/CTA";
+import Hero from "@/components/sections/Hero";
+import Features from "@/components/sections/Features";
+// import UseCases from "@/components/sections/UseCases";
+import Testimonials from "@/components/sections/Testimonials";
+import FAQ from "@/components/sections/FAQ";
+import CTA from "@/components/sections/CTA";
+import ContentSection from "@/components/sections/Content";
 
 export default function Home() {
   return (
@@ -20,7 +21,8 @@ export default function Home() {
       <main>
         <Hero />
         <Features />
-        <UseCases />
+        <ContentSection />
+        {/* <UseCases /> */}
         <Testimonials />
         <FAQ />
         <CTA />

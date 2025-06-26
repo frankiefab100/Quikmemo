@@ -1,7 +1,7 @@
 "use client";
 import { useState } from "react";
 import { Minus, Plus } from "lucide-react";
-import { FAQS } from "@/constants/faq";
+import { FAQS } from "@/constants/data";
 const FAQ: React.FC = () => {
   const [activeId, setActiveId] = useState<number | null>(1);
 

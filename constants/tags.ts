@@ -1,1 +1,0 @@
-export const TAGS: string[] = ["Cooking", "Fitness", "Goals", "Travel", "Recipes", "Hobby"];

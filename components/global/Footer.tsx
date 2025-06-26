@@ -1,7 +1,7 @@
 import { Twitter, Instagram, Linkedin, Github } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
-import { FOOTER_LINKS } from "@/constants/footer";
+import { FOOTER_LINKS } from "@/constants/data";
 
 export default function Footer() {
   return (
@@ -16,9 +16,6 @@ export default function Footer() {
               width={150}
               height={36}
             />
-            <p className="text-sm font-semibold leading-relaxed text-gray-600 mt-1">
-              Where ideas and inspirations live.
-            </p>
           </div>
           {FOOTER_LINKS.map((section, index) => (
             <div className="lg:col-span-2" key={index}>

@@ -1,4 +1,4 @@
-const LoadingSpinner = () => {
+export default function LoadingSpinner() {
   return (
     <div className="flex items-center justify-center h-screen">
       <svg
@@ -186,6 +186,4 @@ const LoadingSpinner = () => {
       </svg>
     </div>
   );
-};
-
-export default LoadingSpinner;
+}

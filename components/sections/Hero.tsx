@@ -1,16 +1,17 @@
 import Image from "next/image";
-import { ChevronRight } from "lucide-react";
+import { ChevronRight, Sparkle } from "lucide-react";
 import Link from "next/link";
-import Avatars from "../shared/Avatars";
-import HeroImg from "@/assets/images/hero-image-dark.png";
+import HeroImg from "@/assets/images/quikmemo-dashboard-dark.png";
 
 const Hero: React.FC = () => {
   return (
     <section className="flex flex-col items-center justify-center text-center pt-40 md:pt-48 px-4 md:px-8 lg:px-12">
-      <span className=" px-3 py-1 rounded-[15px] inline-flex border border-blue-300">
-        <Avatars />
-        <p className="ml-2 text-sm text-gray-500 font-medium">Join 50+ users</p>
-      </span>
+      <div className="inline-flex items-center rounded-md border px-3.5 py-1.5 text-xs font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 hover:bg-secondary/80 mb-2 bg-blue-100 text-blue-700 border-blue-200">
+        <Sparkle className="size-3 fill-white stroke-white drop-shadow" />
+        <span className="font-medium ml-2">
+          Meet Your New Productivity Partner
+        </span>
+      </div>
 
       <div className="mt-2 space-y-2">
         <h1 className="text-4xl md:text-5xl lg:text-6xl font-extrabold text-gray-900">

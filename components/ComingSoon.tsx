@@ -85,7 +85,8 @@ export default function ComingSoonSection() {
             <div className="flex flex-col sm:flex-row justify-center items-center gap-2.5 w-full max-w-md mx-auto px-2">
               <input
                 type="text"
-                placeholder="Type your mail..."
+                placeholder="Type your email..."
+                aria-label="Email address for launch notification"
                 className="w-full sm:flex-grow focus:outline-none px-3.5 py-2 shadow-[0px_1px_2px_0px_rgba(16,24,40,0.05)] text-gray-700 placeholder-gray-400 text-sm font-normal leading-relaxed h-10 rounded-lg border border-gray-200"
               />
               <button className="sm:w-auto w-full px-3.5 py-2 bg-blue-500 hover:bg-blue-600 transition-all duration-700 ease-in-out rounded-lg shadow-[0px_1px_2px_0px_rgba(16,24,40,0px)] flex justify-center items-center">

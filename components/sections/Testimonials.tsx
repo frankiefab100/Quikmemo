@@ -1,4 +1,4 @@
-import { TESTIMONIALS } from "@/constants/testimonials";
+import { TESTIMONIALS } from "@/constants/data";
 import Image from "next/image";
 
 const Testimonials: React.FC = () => {
@@ -6,10 +6,10 @@ const Testimonials: React.FC = () => {
     <div className="py-14 max-w-screen-xl mx-auto sm:px-6 md:px-8 lg:px-12">
       <div className="sm:text-center md:mx-auto">
         <div className="text-center space-y-2 mb-12">
-          <h3 className="lg:text-4xl md:text-3xl text-2xl font-bold">
+          <h3 className="lg:text-4xl md:text-3xl text-2xl font-semibold tracking-tight text-gray-900">
             See What Our Community is Saying
           </h3>
-          <p className="text-base lg:text-lg text-gray-500">
+          <p className="text-base lg:text-lg font-normal text-gray-600 leading-7 lg:leading-8">
             Don&apos;t just take our word for it
           </p>
         </div>

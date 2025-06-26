@@ -1,4 +1,4 @@
-import ComingSoonSection from "@/components/shared/UnderDevelopment";
+import ComingSoonSection from "@/components/ComingSoon";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {

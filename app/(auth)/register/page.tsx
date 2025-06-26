@@ -1,6 +1,6 @@
 "use client";
 import Image from "next/image";
-import Avatars from "@/components/shared/Avatars";
+import Avatars from "@/components/Avatars";
 import Input from "@/components/ui/Input";
 import { signUpSchema, type SignUpValues } from "@/lib/formSchema";
 import { useForm } from "react-hook-form";

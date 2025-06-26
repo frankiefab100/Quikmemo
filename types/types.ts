@@ -8,7 +8,6 @@ export interface IUser {
     userEmail?: string;
 }
 export interface IFeatures {
-    id: number;
     title: string;
     description: string;
     icon: LucideIcon;

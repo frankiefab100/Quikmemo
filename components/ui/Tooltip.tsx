@@ -96,10 +96,10 @@ const Tooltip: React.FC<TooltipProps> = ({
                 side === "top"
                   ? "translate(-50%, -100%)"
                   : side === "right"
-                  ? "translate(0, -50%)"
-                  : side === "bottom"
-                  ? "translate(-50%, 0)"
-                  : "translate(-100%, -50%)",
+                    ? "translate(0, -50%)"
+                    : side === "bottom"
+                      ? "translate(-50%, 0)"
+                      : "translate(-100%, -50%)",
               zIndex: 9999,
               pointerEvents: "none",
               whiteSpace: "nowrap",

@@ -1,5 +1,5 @@
 import { Metadata } from "next";
-import ComingSoonSection from "@/components/shared/UnderDevelopment";
+import ComingSoonSection from "@/components/ComingSoon";
 
 export const metadata: Metadata = {
   title: "Contact Quikmemo | We're Here to Help",
