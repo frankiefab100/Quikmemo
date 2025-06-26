@@ -1,5 +1,5 @@
 "use client";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import { Menu, X } from "lucide-react";
 import MobileNav from "./MobileNav";
@@ -9,7 +9,12 @@ import { useClickOutside } from "@/hooks/useClickOutside";
 export default function Navbar() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [activeMenu, setActiveMenu] = useState<string | null>(null);
-  const navRef = useClickOutside(() => setActiveMenu(null));
+  const [isHoveringMegaMenu, setIsHoveringMegaMenu] = useState(false);
+  const navRef = useClickOutside(() => {
+    if (!isHoveringMegaMenu) {
+      setActiveMenu(null);
+    }
+  });
   const [isScrolled, setIscrolled] = useState(false);
 
   useEffect(() => {
@@ -37,13 +42,22 @@ export default function Navbar() {
   };
 
   const handleMouseLeave = () => {
-    setTimeout(() => {
+    if (!isHoveringMegaMenu) {
       setActiveMenu(null);
-    }, 4000);
+    }
   };
 
   const handleNavLinkClick = (menu: string) => {
     setActiveMenu(activeMenu === menu ? null : menu);
+  };
+
+  const handleMegaMenuMouseEnter = () => {
+    setIsHoveringMegaMenu(true);
+  };
+
+  const handleMegaMenuMouseLeave = () => {
+    setIsHoveringMegaMenu(false);
+    setActiveMenu(null);
   };
 
   return (
@@ -91,6 +105,8 @@ export default function Navbar() {
           onMouseEnter={handleMouseEnter}
           onMouseLeave={handleMouseLeave}
           onNavLinkClick={handleNavLinkClick}
+          onMegaMenuMouseEnter={handleMegaMenuMouseEnter}
+          onMegaMenuMouseLeave={handleMegaMenuMouseLeave}
         />
 
         <div className="hidden lg:pr-8 lg:flex items-center">

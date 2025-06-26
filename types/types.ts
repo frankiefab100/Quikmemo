@@ -63,6 +63,8 @@ export interface MegaMenuProps {
     onMouseEnter: (menu: string) => void;
     onMouseLeave: () => void;
     onNavLinkClick: (menu: string) => void;
+    onMegaMenuMouseEnter: () => void;
+    onMegaMenuMouseLeave: () => void;
 }
 
 export interface MegaMenuItemProps {
