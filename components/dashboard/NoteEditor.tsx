@@ -6,6 +6,7 @@ import { useNotes } from "@/context/NotesContext";
 import NoteActionsMenu from "./NoteActionsMenu";
 import { ChevronLeft, Ellipsis, Plus, Tag, X } from "lucide-react";
 import TipTapEditor from "./TipTapEditor";
+import LoadingSpinner from "@/app/loading";
 
 export default function NoteEditor() {
   const {
@@ -19,6 +20,7 @@ export default function NoteEditor() {
     setIsMobileEditorOpen,
     handleUpdateNote,
     handleSaveNote,
+    loading,
   } = useNotes();
 
   const [newTag, setNewTag] = useState("");
@@ -106,10 +108,19 @@ export default function NoteEditor() {
           )}
           <button
             onClick={handleSave}
-            className="rounded-lg bg-blue-600 px-3 py-1 text-sm text-white hover:bg-blue-700 disabled:bg-gray-300 disabled:cursor-not-allowed"
-            disabled={!title.trim() || !content.trim()}
+            disabled={!title.trim() || !content.trim() || loading}
+            className="rounded-lg bg-blue-600 px-3 py-1 text-sm text-white hover:bg-blue-700 disabled:bg-gray-300 disabled:cursor-not-allowed flex items-center gap-2"
           >
-            {selectedNote ? "Update" : "Save"}
+            {loading ? (
+              <>
+                <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                {selectedNote ? "Updating..." : "Saving..."}
+              </>
+            ) : selectedNote ? (
+              "Update"
+            ) : (
+              "Save"
+            )}
           </button>
         </div>
       </div>
@@ -134,10 +145,19 @@ export default function NoteEditor() {
         <div className="flex items-center gap-2">
           <button
             onClick={handleSave}
-            className="rounded-lg bg-blue-600 px-4 py-2 text-sm text-white hover:bg-blue-700 disabled:bg-gray-300 disabled:cursor-not-allowed"
-            disabled={!title.trim() || !content.trim()}
+            disabled={!title.trim() || !content.trim() || loading}
+            className="rounded-lg bg-blue-600 px-4 py-2 text-sm text-white hover:bg-blue-700 disabled:bg-gray-300 disabled:cursor-not-allowed flex items-center gap-2"
           >
-            {selectedNote ? "Update" : "Save"}
+            {loading ? (
+              <>
+                <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                {selectedNote ? "Updating..." : "Saving..."}
+              </>
+            ) : selectedNote ? (
+              "Update"
+            ) : (
+              "Save"
+            )}
           </button>
 
           {/* Ellipsis Menu - Desktop Only - Only show for existing notes */}

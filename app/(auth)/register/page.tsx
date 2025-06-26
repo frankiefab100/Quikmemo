@@ -11,6 +11,7 @@ import Link from "next/link";
 import { register as registerAction } from "@/actions/register.action";
 import { EyeIcon, EyeOffIcon } from "lucide-react";
 import { SignUpOAuth } from "../../../components/auth/SignUpAuthButtons";
+import LoadingSpinner from "@/app/loading";
 
 const metadata: Metadata = {
   title: "Register for Quikmemo | Quick and Easy Note-Taking",
@@ -171,9 +172,16 @@ const RegisterPage = () => {
             <button
               type="submit"
               disabled={isSubmitting}
-              className="w-full px-4 py-3 text-white font-medium bg-blue-600 hover:bg-blue-500 active:bg-blue-600 rounded-lg duration-150 disabled:bg-blue-300"
+              className="w-full px-4 py-3 text-white font-medium bg-blue-600 hover:bg-blue-500 active:bg-blue-600 rounded-lg duration-150 disabled:bg-blue-300 flex items-center justify-center gap-2"
             >
-              {isSubmitting ? "Creating account..." : "Create an account"}
+              {isSubmitting ? (
+                <>
+                  <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                  Creating account...
+                </>
+              ) : (
+                "Create an account"
+              )}
             </button>
           </form>
         </div>

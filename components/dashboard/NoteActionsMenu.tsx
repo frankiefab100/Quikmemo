@@ -16,6 +16,7 @@ const NoteActionsMenu: React.FC<NoteActionsProps> = ({ onClose }) => {
     handleTrashNote,
     handleArchiveNote,
     handleFavoriteNote,
+    loading,
   } = useNotes();
   const [showDeleteModal, setShowDeleteModal] = useState(false);
 
@@ -55,43 +56,66 @@ const NoteActionsMenu: React.FC<NoteActionsProps> = ({ onClose }) => {
     <div className="absolute right-0 top-12 p-4 text-sm rounded-lg shadow-lg bg-white dark:bg-gray-700 z-20 min-w-48">
       <button
         className={`flex mb-2 w-full px-2 py-2 text-sm font-medium rounded-lg cursor-pointer text-gray-400 transition-all duration-200 ${
-          selectedNote
+          selectedNote && !loading
             ? "dark:text-gray-300 text-gray-700 hover:dark:bg-gray-600 hover:bg-gray-100"
             : "text-gray-400"
         }`}
         onClick={onAddToFavorites}
-        disabled={!selectedNote}
+        disabled={!selectedNote || loading}
       >
         <Star className="w-4 h-4 mr-2" />
-        {selectedNote?.isFavorite
-          ? "Remove from Favorites"
-          : "Add to Favorites"}
+        {loading ? (
+          <span className="flex items-center gap-2">
+            <div className="w-3 h-3 border border-gray-400 border-t-transparent rounded-full animate-spin" />
+            Processing...
+          </span>
+        ) : selectedNote?.isFavorite ? (
+          "Remove from Favorites"
+        ) : (
+          "Add to Favorites"
+        )}
       </button>
 
       <button
         className={`flex mb-2 w-full px-3 py-2 text-sm font-medium rounded-lg cursor-pointer text-gray-400 transition-all duration-200 ${
-          selectedNote
+          selectedNote && !loading
             ? "dark:text-gray-300 text-gray-700 hover:dark:bg-gray-600 hover:bg-gray-100"
             : "text-gray-400"
         }`}
         onClick={onArchive}
-        disabled={!selectedNote}
+        disabled={!selectedNote || loading}
       >
         <Archive className="w-4 h-4 mr-2" />
-        {selectedNote?.isArchived ? "Unarchive Note" : "Archive Note"}
+        {loading ? (
+          <span className="flex items-center gap-2">
+            <div className="w-3 h-3 border border-gray-400 border-t-transparent rounded-full animate-spin" />
+            Processing...
+          </span>
+        ) : selectedNote?.isArchived ? (
+          "Unarchive Note"
+        ) : (
+          "Archive Note"
+        )}
       </button>
 
       <button
         className={`flex w-full px-3 py-2 text-sm font-medium rounded-lg cursor-pointer transition-all duration-200 ${
-          selectedNote
+          selectedNote && !loading
             ? "text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20"
             : "text-gray-400"
         }`}
         onClick={onTrash}
-        disabled={!selectedNote}
+        disabled={!selectedNote || loading}
       >
         <Trash2 className="w-4 h-4 mr-2" />
-        Delete Note
+        {loading ? (
+          <span className="flex items-center gap-2">
+            <div className="w-3 h-3 border border-gray-400 border-t-transparent rounded-full animate-spin" />
+            Processing...
+          </span>
+        ) : (
+          "Delete Note"
+        )}
       </button>
 
       {showDeleteModal && selectedNote && (

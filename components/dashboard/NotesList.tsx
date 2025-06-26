@@ -7,6 +7,7 @@ import removeHtmlTags from "@/utils/removeHtmlTags";
 import { useState } from "react";
 import Button from "../ui/Button";
 import Modal from "../ui/Modal";
+import LoadingSpinner from "@/app/loading";
 
 export default function NotesList() {
   const {
@@ -27,6 +28,7 @@ export default function NotesList() {
     handleArchiveNote,
     handleTrashNote,
     handleRestoreNote,
+    loading,
   } = useNotes();
 
   const [showDeleteModal, setShowDeleteModal] = useState(false);
@@ -193,7 +195,11 @@ export default function NotesList() {
 
       {/* Notes List */}
       <div className="flex-1 overflow-y-auto">
-        {filteredNotes.length === 0 ? (
+        {loading && notes.length === 0 ? (
+          <div className="flex h-full items-center justify-center">
+            <LoadingSpinner />
+          </div>
+        ) : filteredNotes.length === 0 ? (
           <div className="flex h-full items-center justify-center text-gray-500 dark:text-gray-400">
             <div className="text-center">
               <p className="text-lg font-medium"> {setFilterMessage()}</p>
