@@ -35,7 +35,7 @@ export const FEATURES: IFeatures[] = [
         icon: PenLine,
         title: "Effortless Note-Taking",
         description:
-            "Quickly jot down your thoughts in a clean, distraction-free space designed to keep your creativity flowing. Organize notes with tags, folders, and powerful search.",
+            "Quickly jot down your thoughts in a clean, distraction-free space designed to keep your creativity flowing.",
     },
     {
         icon: Cloud,
@@ -57,9 +57,9 @@ export const FEATURES: IFeatures[] = [
     },
     {
         icon: Users,
-        title: "For Everyone",
+        title: "Tailored for Everyone",
         description:
-            "Writers, students, professionals—Quikmemo adapts to your workflow, not the other way around.",
+            "Adapts to fit your unique workflow, whatever your profession",
     },
     {
         icon: Image,
