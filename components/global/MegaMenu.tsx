@@ -96,7 +96,7 @@ const MegaMenu: React.FC<MegaMenuProps> = ({
           />
           {activeMenu === "features" && (
             <div
-              className="mega-menu absolute rounded-3xl mt-1 left-0 w-full bg-white shadow-xl border-t border-gray-200"
+              className="mega-menu absolute rounded-3xl left-0 w-full bg-white shadow-xl border-t border-gray-200"
               onMouseEnter={onMegaMenuMouseEnter}
               onMouseLeave={onMegaMenuMouseLeave}
             >
@@ -190,7 +190,7 @@ const MegaMenu: React.FC<MegaMenuProps> = ({
           />
           {activeMenu === "resources" && (
             <div
-              className="mega-menu absolute rounded-3xl mt-1 left-0 w-full bg-white shadow-xl border-t border-gray-200"
+              className="mega-menu absolute rounded-3xl left-0 w-full bg-white shadow-xl border-t border-gray-200"
               onMouseEnter={onMegaMenuMouseEnter}
               onMouseLeave={onMegaMenuMouseLeave}
             >
