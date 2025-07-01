@@ -1,5 +1,6 @@
 import { TESTIMONIALS } from "@/constants/data";
 import Image from "next/image";
+import QuotationMark from "../../assets/quotation-right-mark.svg";
 
 const Testimonials: React.FC = () => {
   return (
@@ -19,7 +20,7 @@ const Testimonials: React.FC = () => {
           {TESTIMONIALS.map((item, idx) => (
             <li key={idx} className="bg-gray-50 p-4 rounded-xl">
               <Image
-                src="/icons/quotation-right-mark.svg"
+                src={QuotationMark}
                 className="mb-4"
                 width={25}
                 height={25}

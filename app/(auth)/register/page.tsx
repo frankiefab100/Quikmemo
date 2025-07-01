@@ -11,7 +11,7 @@ import Link from "next/link";
 import { register as registerAction } from "@/actions/register.action";
 import { EyeIcon, EyeOffIcon } from "lucide-react";
 import { SignUpOAuth } from "../../../components/auth/SignUpAuthButtons";
-import LoadingSpinner from "@/app/loading";
+import Logo from "../../../assets/logo/quikmemo-full-lockup-logo-white.svg";
 
 const metadata: Metadata = {
   title: "Register for Quikmemo | Quick and Easy Note-Taking",
@@ -51,12 +51,7 @@ const RegisterPage = () => {
     <main className="w-full flex">
       <div className="relative flex-1 hidden items-center justify-center h-screen bg-gray-900 lg:flex">
         <div className="relative z-10 w-full max-w-md">
-          <Image
-            src="/icons/quikmemo-full-lockup-logo-white.svg"
-            alt="Quikmemo logo"
-            width={220}
-            height={220}
-          />
+          <Image src={Logo} alt="Quikmemo logo" width={150} height={150} />
           <div className=" mt-16 space-y-3">
             <h3 className="text-white text-3xl font-bold">
               Start your documentation journey
@@ -85,12 +80,7 @@ const RegisterPage = () => {
       <div className="flex-1 flex items-center justify-center h-screen">
         <div className="w-full max-w-md space-y-8 px-4 bg-white text-gray-600 sm:px-0">
           <div className="text-left">
-            <Image
-              src="/icons/quikmemo-full-lockup-logo.svg"
-              alt="Quikmemo logo"
-              width={180}
-              height={180}
-            />
+            <Image src={Logo} alt="Quikmemo logo" width={180} height={180} />
             <div className="mt-5 space-y-2">
               <h3 className="text-gray-800 text-2xl font-bold sm:text-3xl">
                 Sign up

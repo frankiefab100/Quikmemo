@@ -2,6 +2,7 @@ import { Twitter, Instagram, Linkedin, Github } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
 import { FOOTER_LINKS } from "@/constants/data";
+import Logo from "../../public/icons/quikmemo-full-lockup-logo.svg";
 
 export default function Footer() {
   return (
@@ -10,11 +11,11 @@ export default function Footer() {
         <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-12 gap-y-12 gap-x-8 xl:gap-x-12">
           <div className="col-span-2 md:col-span-4">
             <Image
-              className="w-auto h-9"
-              src="/icons/quikmemo-full-lockup-logo.svg"
+              className="w-auto h-6"
+              src={Logo}
               alt="Quikmemo logo"
-              width={150}
-              height={36}
+              width="50"
+              height="50"
             />
           </div>
           {FOOTER_LINKS.map((section, index) => (

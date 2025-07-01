@@ -5,6 +5,8 @@ import { Menu, X } from "lucide-react";
 import MobileNav from "./MobileNav";
 import MegaMenu from "./MegaMenu";
 import { useClickOutside } from "@/hooks/useClickOutside";
+import Image from "next/image";
+import Logo from "../../public/icons/quikmemo-mark-logo.svg";
 
 export default function Navbar() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -74,28 +76,17 @@ export default function Navbar() {
       <div className="container mx-auto flex justify-between items-center">
         <div className="relative block p-4">
           <Link href="/" className="flex items-center">
-            <picture>
-              <source
-                media="(min-width: 1024px)"
-                srcSet="/icons/quikmemo-full-lockup-logo.svg"
-                width="150"
-                height="32"
-              />
-              <source
-                media="(min-width: 768px)"
-                srcSet="/icons/quikmemo-full-lockup-logo.svg"
-                width="140"
-                height="32"
-              />
-              <img
-                src="/icons/quikmemo-mark-logo.svg"
-                width="40"
-                height="40"
-                alt="Quikmemo logo"
-                className="h-8 w-auto"
-                data-testid="logo"
-              />
-            </picture>
+            <Image
+              src={Logo}
+              width="40"
+              height="40"
+              alt="Quikmemo logo"
+              className="h-8 w-auto"
+              data-testid="logo"
+            />
+            <span className="hidden md:inline ml-2 text-lg font-bold whitespace-nowrap text-gray-900 dark:text-white">
+              Quikmemo
+            </span>
           </Link>
         </div>
 

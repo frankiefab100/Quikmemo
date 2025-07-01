@@ -11,6 +11,7 @@ import { useState, useEffect, Suspense } from "react";
 import Link from "next/link";
 import { Metadata } from "next";
 import { LoginOAuth } from "../../../components/auth/LoginAuthButtons";
+import Logo from "../../../assets/logo/quikmemo-mark-logo.svg";
 
 const metadata: Metadata = {
   title: "Login to Quikmemo | Access Your Notes Anytime",
@@ -67,7 +68,9 @@ const LoginPageComponent = () => {
       <div className="max-w-sm w-full text-gray-600">
         <div className="text-center">
           <Image
-            src="/icons/quikmemo-mark-logo.svg"
+            src={Logo}
+            // src="/assets/logo/quikmemo-full-lockup-logo.svg"
+            // src="/icons/quikmemo-mark-logo.svg"
             className="mx-auto"
             alt="Quikmemo logo"
             width={50}
