@@ -1,29 +1,70 @@
 "use client";
-import { useState } from "react";
+import React, { useRef, useEffect, useState } from "react";
 import { Minus, Plus } from "lucide-react";
 import { FAQS } from "@/constants/data";
+import { motion } from "motion/react";
+import { useIntersectionObserver } from "@/hooks/useIntersectionObserver";
+
 const FAQ: React.FC = () => {
   const [activeId, setActiveId] = useState<number | null>(1);
-
   const toggleAccordion = (id: number) => {
     setActiveId(activeId === id ? null : id);
   };
+  const refTitle = useRef(null);
+  const [titleAnimated, setTitleAnimated] = useState(false);
+  useEffect(() => {
+    if (!refTitle.current) return;
+    const observer = new window.IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setTitleAnimated(true);
+          observer.disconnect();
+        }
+      },
+      { threshold: 0.1 }
+    );
+    observer.observe(refTitle.current);
+    return () => observer.disconnect();
+  }, []);
+  const faqRefs = React.useMemo(
+    () =>
+      Array.from({ length: FAQS.length }, () =>
+        React.createRef<HTMLDivElement>()
+      ),
+    []
+  );
+  const faqInViews = useIntersectionObserver(faqRefs);
 
   return (
     <section className="py-16">
       <div className="px-4 mx-auto sm:px-6 md:px-8 lg:px-12 max-w-7xl">
-        <div className="max-w-2xl mx-auto text-center space-y-2">
+        <motion.div
+          ref={refTitle}
+          initial={{ opacity: 0, y: 40 }}
+          animate={titleAnimated ? { opacity: 1, y: 0 } : { opacity: 0, y: 40 }}
+          transition={{ duration: 0.7 }}
+          className="max-w-2xl mx-auto text-center space-y-2"
+        >
           <h2 className="lg:text-4xl md:text-3xl text-2xl font-semibold tracking-tight text-gray-900">
             Frequently Asked Questions
           </h2>
           <p className="text-base lg:text-lg font-normal text-gray-600 leading-7 lg:leading-8">
             What you need to know about Quikmemo
           </p>
-        </div>
+        </motion.div>
 
         <div className="max-w-5xl mx-auto mt-12 overflow-hidden border border-gray-200 divide-y divide-gray-200 sm:mt-16 rounded-xl">
-          {FAQS.map((faq) => (
-            <div key={faq.id} role="region">
+          {FAQS.map((faq, idx) => (
+            <motion.div
+              ref={faqRefs[idx]}
+              key={faq.id}
+              initial={{ opacity: 0, y: 40 }}
+              animate={
+                faqInViews[idx] ? { opacity: 1, y: 0 } : { opacity: 0, y: 40 }
+              }
+              transition={{ duration: 0.6, delay: idx * 0.1 }}
+              role="region"
+            >
               <h3>
                 <button
                   onClick={() => toggleAccordion(faq.id)}
@@ -47,7 +88,7 @@ const FAQ: React.FC = () => {
                   </div>
                 </div>
               )}
-            </div>
+            </motion.div>
           ))}
         </div>
       </div>

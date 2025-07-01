@@ -1,12 +1,48 @@
+"use client";
 import { CONTENT_FEATURES } from "@/constants/data";
-import React from "react";
+import React, { useRef, useEffect, useState } from "react";
+import { motion } from "motion/react";
+import { useIntersectionObserver } from "@/hooks/useIntersectionObserver";
 
 const ContentSection: React.FC = () => {
+  const refTitle = useRef(null);
+  const titleInView = useRef(false);
+  const [titleAnimated, setTitleAnimated] = useState(false);
+  useEffect(() => {
+    if (!refTitle.current) return;
+    const observer = new window.IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setTitleAnimated(true);
+          observer.disconnect();
+        }
+      },
+      { threshold: 0.1 }
+    );
+    observer.observe(refTitle.current);
+    return () => observer.disconnect();
+  }, []);
+  const featureRefs = React.useMemo(
+    () =>
+      Array.from({ length: CONTENT_FEATURES.length }, () =>
+        React.createRef<HTMLDivElement>()
+      ),
+    []
+  );
+  const featureInViews = useIntersectionObserver(featureRefs);
   return (
     <section>
       <div className="bg-gray-100/50 py-24">
         <div className="mx-auto w-full max-w-5xl px-6">
-          <div className="text-center mb-12">
+          <motion.div
+            ref={refTitle}
+            initial={{ opacity: 0, y: 40 }}
+            animate={
+              titleAnimated ? { opacity: 1, y: 0 } : { opacity: 0, y: 40 }
+            }
+            transition={{ duration: 0.7 }}
+            className="text-center mb-12"
+          >
             <span className="text-blue-600 font-semibold uppercase tracking-wider text-sm">
               Smart Editor
             </span>
@@ -14,32 +50,38 @@ const ContentSection: React.FC = () => {
               Edit, Organize, and Create with Ease
             </h2>
             <p className="text-base lg:text-lg font-normal text-gray-600 leading-7 lg:leading-8 mb-4 mt-4 max-w-prose mx-auto">
-              Quikmemo&apos;s editor lets you do more than just write.
               Effortlessly format, embed, and organize your notes with powerful
               tools built for productivity.
             </p>
-          </div>
+          </motion.div>
 
           <div className="border-gray-200 space-y-10 sm:space-y-0 sm:divide-y sm:divide-gray-200">
             {CONTENT_FEATURES.map((feature, index) => {
               const IconComponent = feature.icon;
               const isEven = index % 2 === 0;
-
               return (
-                <div
+                <motion.div
+                  ref={featureRefs[index]}
                   key={feature.title}
-                  className="grid sm:grid-cols-5 sm:divide-x sm:divide-gray-200 items-center pt-10"
+                  initial={{ opacity: 0, y: 40 }}
+                  animate={
+                    featureInViews[index]
+                      ? { opacity: 1, y: 0 }
+                      : { opacity: 0, y: 40 }
+                  }
+                  transition={{ duration: 0.6, delay: index * 0.1 }}
+                  className="grid sm:grid-cols-5 sm:divide-x sm:divide-gray-200 items-center md:pt-10 pt-0"
                 >
                   {isEven ? (
                     <>
-                      <div className="sm:col-span-2 flex justify-center items-center py-8">
+                      <div className="sm:col-span-2 flex justify-center items-center md:py-8 py-2">
                         <IconComponent className="w-16 h-16 text-blue-600" />
                       </div>
-                      <div className="mt-6 sm:col-span-3 sm:mt-0 sm:border-l sm:border-gray-200 sm:pl-12">
+                      <div className="md:mt-6 mt-2 sm:col-span-3 sm:mt-0 sm:border-l sm:border-gray-200 sm:pl-12">
                         <h3 className="text-gray-900 text-xl font-semibold">
                           {feature.title}
                         </h3>
-                        <p className="text-gray-600 my-4 md:text-base text-sm leading-relaxed">
+                        <p className="text-gray-600 md:my-4 my-0 md:text-base text-sm leading-relaxed">
                           {feature.description}
                         </p>
                       </div>
@@ -59,7 +101,7 @@ const ContentSection: React.FC = () => {
                       </div>
                     </>
                   )}
-                </div>
+                </motion.div>
               );
             })}
           </div>
