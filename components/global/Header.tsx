@@ -1,12 +1,76 @@
 "use client";
 import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
-import { Menu, X } from "lucide-react";
 import MobileNav from "./MobileNav";
 import MegaMenu from "./MegaMenu";
 import { useClickOutside } from "@/hooks/useClickOutside";
 import Image from "next/image";
 import Logo from "../../public/icons/quikmemo-mark-logo.svg";
+import { motion } from "motion/react";
+
+const HamburgerButton: React.FC<{
+  isOpen: boolean;
+  toggle: () => void;
+}> = ({ isOpen, toggle }) => (
+  <button
+    type="button"
+    className="md:mx-0 mx-4 p-2 inline-flex items-center justify-center rounded-md text-gray-700 hover:bg-gray-100 hover:text-blue-600 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-blue-500"
+    aria-controls="mobile-menu"
+    aria-label="Open main menu"
+    data-testid="mobile-menu-button"
+    aria-expanded={isOpen}
+    onClick={toggle}
+  >
+    <span className="sr-only">Open main menu</span>
+    <svg
+      width="28"
+      height="28"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      className="block h-6 w-6"
+    >
+      <motion.line
+        x1="3"
+        x2="21"
+        y1="6"
+        y2="6"
+        initial={false}
+        animate={
+          isOpen ? { y1: 12, y2: 12, rotate: 45 } : { y1: 6, y2: 6, rotate: 0 }
+        }
+        style={{ originX: "50%", originY: "50%" }}
+        transition={{ type: "spring", stiffness: 400, damping: 30 }}
+      />
+      <motion.line
+        x1="3"
+        x2="21"
+        y1="12"
+        y2="12"
+        initial={false}
+        animate={isOpen ? { opacity: 0 } : { opacity: 1 }}
+        transition={{ duration: 0.2 }}
+      />
+      <motion.line
+        x1="3"
+        x2="21"
+        y1="18"
+        y2="18"
+        initial={false}
+        animate={
+          isOpen
+            ? { y1: 12, y2: 12, rotate: -45 }
+            : { y1: 18, y2: 18, rotate: 0 }
+        }
+        style={{ originX: "50%", originY: "50%" }}
+        transition={{ type: "spring", stiffness: 400, damping: 30 }}
+      />
+    </svg>
+  </button>
+);
 
 export default function Navbar() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -126,22 +190,10 @@ export default function Navbar() {
             Get Started
           </Link>
 
-          <button
-            type="button"
-            className="md:mx-0 mx-4 p-2 inline-flex items-center justify-center rounded-md text-gray-700 hover:bg-gray-100 hover:text-blue-600 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-blue-500"
-            aria-controls="mobile-menu"
-            aria-label="Open main menu"
-            data-testid="mobile-menu-button"
-            aria-expanded={isMobileMenuOpen}
-            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-          >
-            <span className="sr-only">Open main menu</span>
-            {isMobileMenuOpen ? (
-              <X className="block h-6 w-6" aria-hidden="true" />
-            ) : (
-              <Menu className="block h-6 w-6" aria-hidden="true" />
-            )}
-          </button>
+          <HamburgerButton
+            isOpen={isMobileMenuOpen}
+            toggle={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+          />
         </div>
       </div>
 
