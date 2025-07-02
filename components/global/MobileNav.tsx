@@ -16,6 +16,7 @@ import {
   NotepadText,
 } from "lucide-react";
 import type { MobileMenuProps, MobileNavProps } from "@/types/types";
+import { motion, AnimatePresence } from "motion/react";
 
 const MobileMenu: React.FC<MobileMenuProps> = ({
   title,
@@ -67,65 +68,77 @@ const MobileNav: React.FC<MobileNavProps> = ({ setMobileMenuOpen }) => {
             className="border-b border-gray-200 pb-4 w-full flex justify-between items-center px-3 py-6 text-base font-medium text-gray-700 hover:bg-gray-50 hover:text-blue-600 rounded-md"
           >
             <span>Features</span>
-            {openSubmenu === "features" ? (
-              <ChevronDown className="h-5 w-5" />
-            ) : (
+            <motion.span
+              animate={{ rotate: openSubmenu === "features" ? 90 : 0 }}
+              transition={{ duration: 0.2 }}
+            >
               <ChevronRight className="h-5 w-5" />
-            )}
+            </motion.span>
           </button>
 
           {openSubmenu === "features" && (
-            <div className="mt-2 pl-4 space-y-2">
-              <MobileMenu
-                title="Core Features"
-                links={[
-                  {
-                    label: "WYSIWYG Editor",
-                    href: "/features/wysiwyg-editor",
-                    icon: (
-                      <FilePenLine className="h-5 w-5 mr-3 text-blue-600" />
-                    ),
-                  },
-                  {
-                    label: "AI Assistant",
-                    href: "/features/ai-assistant",
-                    icon: (
-                      <BrainCircuit className="h-5 w-5 mr-3 text-blue-600" />
-                    ),
-                  },
-                  {
-                    label: "Offline Mode",
-                    href: "/features/offline-mode",
-                    icon: <Cloud className="h-5 w-5 mr-3 text-blue-600" />,
-                  },
-                ]}
-                onLinkClick={handleLinkClick}
-              />
+            <AnimatePresence>
+              <motion.div
+                key="features-submenu"
+                initial={{ opacity: 0, y: -10, height: 0 }}
+                animate={{ opacity: 1, y: 0, height: "auto" }}
+                exit={{ opacity: 0, y: -10, height: 0 }}
+                transition={{ duration: 0.25, ease: "easeInOut" }}
+                className="mt-2 pl-4 space-y-2 overflow-hidden"
+              >
+                <MobileMenu
+                  title="Core Features"
+                  links={[
+                    {
+                      label: "WYSIWYG Editor",
+                      href: "/features/wysiwyg-editor",
+                      icon: (
+                        <FilePenLine className="h-5 w-5 mr-3 text-blue-600" />
+                      ),
+                    },
+                    {
+                      label: "AI Assistant",
+                      href: "/features/ai-assistant",
+                      icon: (
+                        <BrainCircuit className="h-5 w-5 mr-3 text-blue-600" />
+                      ),
+                    },
+                    {
+                      label: "Offline Mode",
+                      href: "/features/offline-mode",
+                      icon: <Cloud className="h-5 w-5 mr-3 text-blue-600" />,
+                    },
+                  ]}
+                  onLinkClick={handleLinkClick}
+                />
 
-              <MobileMenu
-                title="Use Cases"
-                links={[
-                  {
-                    label: "Project Planning",
-                    href: "/usecases/project-plan",
-                    icon: (
-                      <NotepadText className="h-5 w-5 mr-3 text-blue-600" />
-                    ),
-                  },
-                  {
-                    label: "Personal Journal",
-                    href: "/usecases/personal-journal",
-                    icon: <BookOpen className="h-5 w-5 mr-3 text-blue-600" />,
-                  },
-                  {
-                    label: "Brainstorming",
-                    href: "/usecases/brainstorming",
-                    icon: <Lightbulb className="h-5 w-5 mr-3 text-blue-600" />,
-                  },
-                ]}
-                onLinkClick={handleLinkClick}
-              />
-            </div>
+                <MobileMenu
+                  title="Use Cases"
+                  links={[
+                    {
+                      label: "Project Planning",
+                      href: "/usecases/project-plan",
+                      icon: (
+                        <NotepadText className="h-5 w-5 mr-3 text-blue-600" />
+                      ),
+                    },
+                    {
+                      label: "Personal Journal",
+                      href: "/usecases/personal-journal",
+                      icon: <BookOpen className="h-5 w-5 mr-3 text-blue-600" />,
+                    },
+                    {
+                      label: "Brainstorming",
+                      href: "/usecases/brainstorming",
+                      icon: (
+                        <Lightbulb className="h-5 w-5 mr-3 text-blue-600" />
+                      ),
+                    },
+                  ]}
+                  onLinkClick={handleLinkClick}
+                />
+              </motion.div>
+            </AnimatePresence>
           )}
         </div>
 
@@ -136,52 +149,66 @@ const MobileNav: React.FC<MobileNavProps> = ({ setMobileMenuOpen }) => {
             className="border-b border-gray-200 pb-4 w-full flex justify-between items-center px-3 py-6 text-base font-medium text-gray-700 hover:bg-gray-50 hover:text-blue-600 rounded-md"
           >
             <span>Resources</span>
-            {openSubmenu === "resources" ? (
-              <ChevronDown className="h-5 w-5" />
-            ) : (
+            <motion.span
+              animate={{ rotate: openSubmenu === "resources" ? 90 : 0 }}
+              transition={{ duration: 0.2 }}
+            >
               <ChevronRight className="h-5 w-5" />
-            )}
+            </motion.span>
           </button>
 
-          {openSubmenu === "resources" && (
-            <div className="mt-2 pl-4 space-y-2">
-              <MobileMenu
-                title="Learn"
-                links={[
-                  {
-                    label: "Blog",
-                    href: "/blog",
-                    icon: (
-                      <BookTextIcon className="h-5 w-5 mr-3 text-blue-600" />
-                    ),
-                  },
-                  {
-                    label: "Documentation",
-                    href: "/docs",
-                    icon: <FileText className="h-5 w-5 mr-3 text-blue-600" />,
-                  },
-                ]}
-                onLinkClick={handleLinkClick}
-              />
+          <AnimatePresence>
+            {openSubmenu === "resources" && (
+              <motion.div
+                key="resources-submenu"
+                initial={{ opacity: 0, y: -10, height: 0 }}
+                animate={{ opacity: 1, y: 0, height: "auto" }}
+                exit={{ opacity: 0, y: -10, height: 0 }}
+                transition={{ duration: 0.25, ease: "easeInOut" }}
+                className="mt-2 pl-4 space-y-2 overflow-hidden"
+              >
+                <MobileMenu
+                  title="Learn"
+                  links={[
+                    {
+                      label: "Blog",
+                      href: "/blog",
+                      icon: (
+                        <BookTextIcon className="h-5 w-5 mr-3 text-blue-600" />
+                      ),
+                    },
+                    {
+                      label: "Documentation",
+                      href: "/docs",
+                      icon: <FileText className="h-5 w-5 mr-3 text-blue-600" />,
+                    },
+                  ]}
+                  onLinkClick={handleLinkClick}
+                />
 
-              <MobileMenu
-                title="Support"
-                links={[
-                  {
-                    label: "Help Center",
-                    href: "/help",
-                    icon: <Headphones className="h-5 w-5 mr-3 text-blue-600" />,
-                  },
-                  {
-                    label: "FAQ",
-                    href: "/faq",
-                    icon: <HelpCircle className="h-5 w-5 mr-3 text-blue-600" />,
-                  },
-                ]}
-                onLinkClick={handleLinkClick}
-              />
-            </div>
-          )}
+                <MobileMenu
+                  title="Support"
+                  links={[
+                    {
+                      label: "Help Center",
+                      href: "/help",
+                      icon: (
+                        <Headphones className="h-5 w-5 mr-3 text-blue-600" />
+                      ),
+                    },
+                    {
+                      label: "FAQ",
+                      href: "/faq",
+                      icon: (
+                        <HelpCircle className="h-5 w-5 mr-3 text-blue-600" />
+                      ),
+                    },
+                  ]}
+                  onLinkClick={handleLinkClick}
+                />
+              </motion.div>
+            )}
+          </AnimatePresence>
         </div>
 
         <Link
