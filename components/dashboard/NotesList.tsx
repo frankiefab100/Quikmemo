@@ -270,41 +270,6 @@ export default function NotesList() {
                   </div>
 
                   <div className="flex flex-col gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
-                    {/* <button
-                      onClick={(e) => handleToggleFavorite(e, note.id)}
-                      className={`p-1 rounded hover:bg-yellow-100 dark:hover:bg-yellow-800  ${
-                        note.isFavorite ? "text-yellow-600" : "text-gray-400"
-                      }`}
-                    >
-                      <svg
-                        className="h-4 w-4"
-                        fill={note.isFavorite ? "currentColor" : "none"}
-                        stroke="currentColor"
-                        viewBox="0 0 24 24"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth={2}
-                          d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"
-                        />
-                      </svg>
-                    </button>
-
-                    <button
-                      onClick={(e) => handleArchiveNoteAction(e, note.id)}
-                      className="p-1 rounded text-gray-400 hover:bg-indigo-100 dark:hover:bg-indigo-800 hover:text-indigo-600"
-                    >
-                      <Archive className="h-4 w-4" />
-                    </button>
-
-                    <button
-                      onClick={(e) => handleDeleteNoteAction(e, note.id)}
-                      className="p-1 rounded text-gray-400 hover:bg-red-100 dark:hover:bg-red-900/20 hover:text-red-600"
-                    >
-                      <Trash2 className="h-4 w-4" />
-                    </button> */}
-
                     {note.isTrashed ? (
                       <>
                         <button

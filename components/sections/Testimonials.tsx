@@ -8,7 +8,6 @@ import { useIntersectionObserver } from "@/hooks/useIntersectionObserver";
 
 const Testimonials: React.FC = () => {
   const refTitle = useRef(null);
-  const titleInView = useRef(false);
   const [titleAnimated, setTitleAnimated] = useState(false);
   useEffect(() => {
     if (!refTitle.current) return;
@@ -24,7 +23,7 @@ const Testimonials: React.FC = () => {
     observer.observe(refTitle.current);
     return () => observer.disconnect();
   }, []);
-  // List refs
+
   const testimonialRefs = React.useMemo(
     () =>
       Array.from({ length: TESTIMONIALS.length }, () =>
@@ -34,7 +33,7 @@ const Testimonials: React.FC = () => {
   );
   const testimonialInViews = useIntersectionObserver(testimonialRefs);
   return (
-    <div className="py-14 max-w-screen-xl mx-auto sm:px-6 md:px-8 lg:px-12">
+    <section className="py-14 max-w-screen-xl mx-auto sm:px-6 md:px-8 lg:px-12">
       <motion.div
         ref={refTitle}
         initial={{ opacity: 0, y: 40 }}
@@ -99,7 +98,7 @@ const Testimonials: React.FC = () => {
           ))}
         </ul>
       </div>
-    </div>
+    </section>
   );
 };
 

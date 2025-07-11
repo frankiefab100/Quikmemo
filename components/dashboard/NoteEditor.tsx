@@ -6,7 +6,6 @@ import { useNotes } from "@/context/NotesContext";
 import NoteActionsMenu from "./NoteActionsMenu";
 import { ChevronLeft, Ellipsis, Plus, Tag, X } from "lucide-react";
 import TipTapEditor from "./TipTapEditor";
-import LoadingSpinner from "@/app/loading";
 
 export default function NoteEditor() {
   const {
@@ -75,7 +74,6 @@ export default function NoteEditor() {
     }
   };
 
-  // const showEditor = selectedNote || title || content || tags.length > 0;
   const showEditor = true;
 
   if (!showEditor) {

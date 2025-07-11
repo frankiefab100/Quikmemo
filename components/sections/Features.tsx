@@ -7,6 +7,7 @@ import { useIntersectionObserver } from "@/hooks/useIntersectionObserver";
 const Features: React.FC = () => {
   const refTitle = useRef(null);
   const [titleAnimated, setTitleAnimated] = useState(false);
+
   useEffect(() => {
     if (!refTitle.current) return;
     const observer = new window.IntersectionObserver(
@@ -21,6 +22,7 @@ const Features: React.FC = () => {
     observer.observe(refTitle.current);
     return () => observer.disconnect();
   }, []);
+
   const featureRefs = React.useMemo(
     () =>
       Array.from({ length: FEATURES.length }, () =>
@@ -29,6 +31,7 @@ const Features: React.FC = () => {
     []
   );
   const featureInViews = useIntersectionObserver(featureRefs);
+
   return (
     <section className="py-20 bg-gray-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 md:px-8 lg:px-12">
@@ -50,7 +53,7 @@ const Features: React.FC = () => {
             share your ideas.
           </p>
         </motion.div>
-        <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+        <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3 p-4">
           {FEATURES.map((feature, idx) => (
             <motion.div
               ref={featureRefs[idx]}
@@ -65,12 +68,14 @@ const Features: React.FC = () => {
               className="bg-white rounded-2xl shadow-sm p-8 flex flex-col items-start hover:shadow-md transition"
             >
               <feature.icon className="w-8 h-8 text-blue-600 mb-4" />
-              <h3 className="text-xl font-semibold text-gray-900 mb-2">
-                {feature.title}
-              </h3>
-              <p className="text-gray-600 md:text-base text-sm">
-                {feature.description}
-              </p>
+              <div>
+                <h3 className="text-xl font-semibold text-gray-900 mb-2">
+                  {feature.title}
+                </h3>
+                <p className="text-gray-600 md:text-base text-sm">
+                  {feature.description}
+                </p>
+              </div>
             </motion.div>
           ))}
         </div>

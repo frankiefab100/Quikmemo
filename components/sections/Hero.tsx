@@ -101,7 +101,7 @@ const Hero: React.FC = () => {
           </span>
           {""} Companion
         </h1>
-        <p className="lg:text-xl md:text-lg text-base text-gray-500 mb-12 max-w-2xl mx-auto">
+        <p className="lg:text-lg md:text-md text-base text-gray-500 mb-12 max-w-5xl mx-auto">
           Write down your ideas, inspiration, and organize your tasks
           seamlessly.
         </p>
