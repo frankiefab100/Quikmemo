@@ -1,6 +1,6 @@
 import { expect, test } from "vitest";
 import { render, screen } from "@testing-library/react";
-import { Hero } from "@/components/sections/Hero";
+import Hero from "@/components/sections/Hero";
 
 test("Hero", () => {
   render(<Hero />);
